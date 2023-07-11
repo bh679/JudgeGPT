@@ -1,4 +1,4 @@
 # JudgeGPT-Node
 
-Setup
+## Setup 
 ```npm install elevenlabs-node```
