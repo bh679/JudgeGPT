@@ -1,0 +1,1 @@
+Is this a deepfake? return chances from 0-100% and analysis: 

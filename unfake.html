@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <h2>Unfake POC</h2>
+
+    <input id="youtube-url" type="text" placeholder="Enter YouTube URL" value="https://www.youtube.com/watch?v=NoXLu9Rz70g">
+    <button onclick="sendData()" id="submitButton">Unfake</button>
+
+    <p id="name"></p>
+    <div id="video-container"></div>
+    <p id="data"></p>
+    <div id="progress-bar-container" style="width: 100%; background-color: #f3f3f3;">
+        <div id="progress-bar" style="width: 0%; height: 24px; background-color: #4caf50;">
+            <p id="loading"></p>
+        </div>
+    </div>
+    <p id="log"></p>
+
+    <div id="history"></div>
+
+    <script src="loadingMessages.js"></script>
+    <script>
+        // Define global variables
+        const dataElement = document.getElementById("data");
+        const logElement = document.getElementById("log");
+        const historyElement = document.getElementById("history");
+        const loadingElement = document.getElementById("loading");
+        const progressBarElement = document.getElementById("progress-bar");
+        const submitButton = document.getElementById('submitButton');
+        let iframe = {};
+        let progressInterval = {};
+        let loadingMessage = new LoadingMessage(logElement);
+
+
+        let youtubeVideos = [
+            "https://www.youtube.com/watch?v=NoXLu9Rz70g",
+            "https://www.youtube.com/watch?v=2tNTJhJmOkU"
+            ]
+
+        // Define asynchronous function to send data
+        async function sendData() {
+            // Get YouTube URL and ID
+            const urlInput = document.getElementById('youtube-url');
+            const youtubeUrl = urlInput.value;
+            const youtubeId = new URLSearchParams(new URL(youtubeUrl).search).get('v');
+
+            // Disable the submit button
+            submitButton.disabled = true;
+            
+            // Create an iframe for the YouTube video
+            const videoContainer = document.getElementById('video-container');
+            iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${youtubeId}`;
+            iframe.width = '560';
+            iframe.height = '315';
+            iframe.frameborder = '0';
+            iframe.allowfullscreen = true;
+            videoContainer.appendChild(iframe);
+
+            // Update data element text
+            dataElement.innerText = "";
+            loadingElement.innerText = "";
+
+            // Set interval for progress updates
+            progressInterval = setInterval(async function(){
+                try {
+                    // Make POST request to updateUnFake
+                    const response = await fetch('http://3.24.141.2:3000/updateUnFake', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ youtubeId: youtubeId }),
+                    });
+                    
+                    // Parse response data
+                    const data = await response.json();
+
+                    // Update progress bar
+                    loadingElement.innerText = data.status + '%';
+                    progressBarElement.style.width = data.status + '%';
+
+                    // If analysis is finished, handle response
+                    if(data.finished) {
+                        loadingMessage.processing();
+                        handleResponse(data);
+                    }else if(data.progress == 100) {
+                        loadingMessage.processing();
+                    }else {
+                        loadingMessage.downloading();
+                    }
+
+                } catch(error) {
+                    // If an error occurs, log it and update loading element
+                    console.error("Error fetching update: ", error);
+                    loadingElement.innerText = "Server unresponsive...";
+                    clearInterval(progressInterval);
+                }
+            }, 1000);  // Interval of 2 seconds
+
+            //loadingMessage = new LoadingMessage(logElement);
+            console.log("loadingMessage:" + loadingMessage);
+            loadingMessage.start();
+            /*console.log(loadingMessage.totalConnecting);
+            console.log(loadingMessage.counter);
+            console.log(loadingMessage.connectingToServerMessages);
+            console.log(loadingMessage.counter % loadingMessage.totalConnecting);
+            console.log(loadingMessage.connectingToServerMessages[loadingMessage.counter % loadingMessage.totalConnecting]);
+            console.log(loadingMessage.state);*/
+
+            // Make POST request to startUnFake
+            const response = await fetch('http://3.24.141.2:3000/startUnFake', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ youtubeId: youtubeId }),
+            });
+            
+            // Parse response data and handle it
+            const data = await response.json();
+            handleResponse(data);
+        }
+
+        // Define function to handle response data
+        function handleResponse(data) {
+            loadingMessage.stop();
+            clearInterval(progressInterval);
+
+            document.getElementById("name").innerText = "";
+            document.getElementById("data").innerText = "";
+
+            loadingElement.innerText = "Analyzing finished.";
+            submitButton.disabled = false; 
+
+            let resultsDiv = document.createElement('div');
+            let resultsName = document.createElement('p');
+            resultsName.innerText = data.videoName;
+            let resultsData = document.createElement('p');
+            resultsData.innerText = data.generatedText;
+
+            resultsDiv.appendChild(resultsName);
+            resultsDiv.appendChild(iframe);
+            resultsDiv.appendChild(resultsData);
+
+            historyElement.prepend(resultsDiv);
+        }
+    </script>
+
+</body>
+</html>
