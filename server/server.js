@@ -5,8 +5,10 @@ var https = require('https');
 var fs = require('fs');
 var app = express();
 const PromptGPT = require('./PromptGPT');
+const TNLMJ = require('./TNLMJ');
 
 let promptResponse = {};
+let TNLMJImages = {};
 
 // Use cors middleware for handling Cross-Origin Resource Sharing
 app.use(cors());
@@ -51,6 +53,63 @@ app.post('/AskGPT', function (req, res) {
     });
 
 });
+
+// Define a POST route for '/startUnFake'
+app.post('/MJImage', function (req, res) {
+    // Log the body of the request
+    console.log(req.body);
+
+    // Extract youtubeId from the request body
+    const prompt = req.body.prompt;
+
+    // Log the prompt
+    console.log(prompt);
+
+    // Create a new OpenAI Reponse with prompt
+    TNLMJImages[prompt] = new TNLMJ(prompt);
+
+    // Get the response 
+    TNLMJImages[prompt].GetImage().then((data) => {
+        console.log(data);
+        console.log(data.generatedText);
+        res.json({ //why not make res.json = data
+            image: data.image,
+            inputPrompt: data.inputPrompt
+        });
+    })
+    .catch((error) => {
+        // If there is an error, log it and send a response
+        console.error(error);
+        res.json("error");
+    });
+
+});
+
+const axios = require('axios');
+
+// Define a POST route for '/DiscrdWebHook'
+app.post('/DiscrdWebHook', function (req, res) {
+    // Log the body of the request
+    console.log(req.body);
+
+    // Extract message from the request body
+    const message = req.body.message;
+
+    // Log the message
+    console.log(message);
+
+    // Send a POST request to the Discord webhook URL
+    axios.post("https://discord.com/api/webhooks/1130070499758723136/zYUTrekJr89xCLwci3H4EQqtQuqPQX_ib0QedAWdEaHJFmOSDrkbrLITeMd9BBiTxoUg", {
+        content: message
+    })
+    .then(function (response) {
+        //console.log('Message sent successfully');
+    })
+    .catch(function (error) {
+        console.error('Error sending discord message:', error);
+    });
+});
+
 
 // Define HTTPS credentials
 var options = {
