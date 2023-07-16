@@ -1,8 +1,8 @@
 const fs = require('fs');
 const axios = require('axios');
 
-class PromptGPT {
-  constructor(inputPrompt) 
+class ElevenLabs {
+  constructor(TextToSpeech) 
   {
 
     this.status = {
@@ -13,7 +13,7 @@ class PromptGPT {
       inputPrompt: ""
     };
 
-    this.inputPrompt = inputPrompt;
+    this.TextToSpeech = TextToSpeech;
 
     this.callbacks = [];
 
@@ -24,21 +24,25 @@ class PromptGPT {
     this.callbacks.push(callback);
   }
 
-  async AskGPT() {
+  async TextToSpeech() {
     return new Promise((resolve, reject) => {
-      console.log(this.inputPrompt);
+      console.log(this.TextToSpeech);
 
         const maxTokens = 60;
-        const model = "text-davinci-003";//"gpt-3.5-turbo";//"text-davinci-003";
+        const voideId = "21m00Tcm4TlvDq8ikWAM";//"gpt-3.5-turbo";//"text-davinci-003";
 
-        axios.post('https://api.openai.com/v1/completions', {
-          model,
-          prompt: this.inputPrompt,
-          max_tokens: maxTokens,
+        axios.post('https://api.elevenlabs.io/v1/text-to-speech/'+voideId, {
+          text: this.TextToSpeech,
+          model_id: "eleven_monolingual_v1",
+          voice_settings: {
+            stability: 0.5,
+            similarity_boost: 0.5
+          }
         }, {
           headers: {
-            'Authorization': `Bearer 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`,
-            'Content-Type': 'application/json',
+            'accept: audio/mpeg',
+            'xi-api-key: ba2052c19dd323c5a3430d86e42f5784',
+            'Content-Type: application/json' 
           },
         }).then((response) => {
 
@@ -66,5 +70,22 @@ class PromptGPT {
     });
   }
 }
+
+/*
+curl -X 'POST' \
+  'https://api.elevenlabs.io/v1/text-to-speech/<voice-id>' \
+  --header 'accept: audio/mpeg' \
+  --header 'xi-api-key: <xi-api-key>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "text": "string",
+    "model_id": "eleven_monolingual_v1",
+    "voice_settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.5
+    }
+  }'
+
+*/
 
 module.exports = PromptGPT;
