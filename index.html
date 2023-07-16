@@ -34,12 +34,14 @@
                 font-weight: bold;
             }
 
-            .plaintiff > .sender
+            .plaintiff > .sender,
+            #winner.plaintiff
             {
                 color: blue;
             }
 
-            .defendant > .sender
+            .defendant > .sender,
+            #winner.defendant
             {
                 color: green;
             }
@@ -205,6 +207,10 @@
             prompt = "A judge rulled the following: {"+ruling+"} Give a single word repsonse of who is the winner, Plaintiff, Defendant or neither. "
             var winner = await AskGPT(prompt);
             winnerDiv.innerText = "Winner: " + winner;
+           if(winner.toLowerCase().includes(player[1].name.toLowerCase()))
+                winnerDiv.classList.add(player[1].class);
+            else
+                winnerDiv.classList.add(player[0].class);
 
         }
 
