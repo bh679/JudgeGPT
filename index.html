@@ -11,6 +11,23 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
         <style>
+            .message 
+            {
+                background-color: #f5f6f7;
+            }
+
+            .message.alt
+            {
+                background-color: #eeeeee
+            }
+
+            .messageContents 
+            {
+
+            }
+            .sender 
+            {
+            }
         </style>
 
     </head>
@@ -23,6 +40,7 @@
             <h1 class="logo">JudgeGPT</h1>
 
             <div id="chat"></div>
+
             <div id="inputGroup">
                 <div id="instructions"></div>
                 <input  id="userInput" type="text" placeholder="Plaintiff" value="" />
@@ -30,6 +48,8 @@
                     Submit
                 </button>
             </div>
+
+            <div id="winner"></div>
             
 
 
@@ -38,6 +58,7 @@
 
         // Define global variables
         const chatDiv = document.getElementById('chat');
+        const winnerDiv = document.getElementById('winner');
         const submitButton = document.getElementById('submitButton');
         const userInputFeild = document.getElementById('userInput');
         const inputGroup = document.getElementById('inputGroup');
@@ -66,6 +87,11 @@
         var gameCase = "undefined";
         var casePrompt = "Come up with an abusrd or hilarious accursation to be argued in court between two parties.";
         
+        let messages = {};
+        messages.count = 0;
+
+        var ruling = "";
+
         Start();
 
         // Define asynchronous function to send data
@@ -104,16 +130,30 @@
 
         function AddToChat(playerSpeaking, chat)
         {
+            messages[messages.count] = {};
+            messages[messages.count].sender = playerSpeaking;
+            messages[messages.count].message = chat;
+            messages.count++;
+
             const newChat = document.createElement('div');
             newChat.classList.add("row");
             newChat.classList.add("message");
 
-            const messageContents = document.createElement('div');
-            newChat.classList.add("col");
-            const sender = document.createElement('div');
-            newChat.classList.add("col-1");
+            if(messages.count % 2 == 0)
+                newChat.classList.add("alt");
 
-            sender.innerText = playerSpeaking.name;
+            if(playerSpeaking == judge)
+                newChat.classList.add("JudgeMessage");
+
+            const messageContents = document.createElement('div');
+            messageContents.classList.add("col");
+            //messageContents.classList.add("messageContents");
+            messageContents.classList.add("rounded-3");
+            const sender = document.createElement('div');
+            sender.classList.add("col-2");
+            sender.classList.add("sender");
+
+            sender.innerText = playerSpeaking.name+": ";
             messageContents.innerText = chat;
 
             newChat.appendChild(sender);
@@ -150,15 +190,15 @@
 
         async function DrawConclusion() 
         {
-
-            inputGroup.hidden = true;
-            var prompt = "You are a judge in a televised small claims court TV show. You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict, and provide a funny, absurd and unfitting punishment and lesson to be learnt . The case is:" + gameCase + ". The Plaintiff testimony is: " + player[0].testimony + " The Defendant defence testimony is: " + player[1].testimony;
-
             // Disable the submit button
             submitButton.disabled = true;
-            
 
-            try {
+            inputGroup.hidden = true;
+            var prompt = "You are a judge in a televised small claims court TV show. You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is:" + gameCase + ". The Plaintiff testimony is: " + player[0].testimony + " The Defendant defence testimony is: " + player[1].testimony;
+            ruling = await AskGPT(prompt);
+            AddToChat(judge, ruling);
+
+            /*try {
                     console.log("progressInterval = setInterval(async function(){\n                try {");
 
                     // Make POST request to updateUnFake
@@ -172,17 +212,52 @@
                     
                     // Parse response data
                     const data = await response.json();
-                    AddToChat("JudgeGPT: "+data.generatedText);
+                    ruling = data.generatedText;
+                    AddToChat(judge, ruling);
 
                     //ReadText(data.generatedText);
 
                 } catch(error) {
                     // If an error occurs, log it and update loading element
                     console.error("Error fetching update: ", error);
-                    AddToChat("JudgeGPT: Server unresponsive...");
+                    AddToChat(judge, "Server unresponsive...");
                     //outputDiv.innerText = "Server unresponsive...";
                     clearInterval(progressInterval);
-                }
+                }*/
+
+            prompt = "Provide a funny, absurd and unfitting punishment and lesson to be learnt for the following court ruling: " + ruling;
+            var punishment = await AskGPT(prompt);
+            AddToChat(judge, punishment);
+
+            prompt = "A judge rulled the following: '"+ruling+"' Give a single word repsonse of who is the winner, Plaintiff, Defendant or neither. "
+            var winner = await AskGPT(prompt);
+            winnerDiv.innerText = "Winner: " + winner;
+            //AddToChat(judge, punishment);
+            /*try {
+                console.log("progressInterval = setInterval(async function(){\n                try {");
+
+                // Make POST request to updateUnFake
+                const response = await fetch('http://3.24.141.2:3000/AskGPT', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt: prompt }),
+                });
+                
+                // Parse response data
+                const data = await response.json();
+                winnerDiv.innerText = "Winner: " + data.generatedText;
+
+                //ReadText(data.generatedText);
+
+            } catch(error) {
+                // If an error occurs, log it and update loading element
+                console.error("Error fetching update: ", error);
+                winnerDiv.innerText = "Server unresponsive...";
+                //outputDiv.innerText = "Server unresponsive...";
+                clearInterval(progressInterval);
+            }*/
 /*
             // Set interval for progress updates
             progressInterval = setInterval(async function(){
@@ -191,26 +266,33 @@
 */
         }
 
-        /*function ReadText(textInput)
+        async function AskGPT(input)
         {
-            const voice = require('elevenlabs-node');
-            const fs = require('fs');
+            try {
+                console.log("progressInterval = setInterval(async function(){\n                try {");
 
-            const apiKey = process.env.ELEVENLABS_API_KEY;
-            //const apiKey = '0e2c037kl8561005671b1de345s8765c'; // Your API key from Elevenlabs
-            const voiceID = 'pNInz6obpgDQGcFmaJgB';            // The ID of the voice you want to get
-            const fileName = 'audio.mp3';                      // The name of your audio file
-            //const textInput = 'mozzy is cool';                 // The text you wish to convert to speech
-
-            voice.textToSpeech(apiKey, voiceID, fileName, textInput).then(res => {
-                console.log(res);
-
-                // Play the audio file after text to speech conversion is done
-                player.play('audio.mp3', function(err){
-                  if (err) throw err;
+                // Make POST request to updateUnFake
+                const response = await fetch('http://3.24.141.2:3000/AskGPT', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt: input }),
                 });
-            });
-        }*/
+                
+                // Parse response data
+                const data = await response.json();
+               return data.generatedText;
+
+                //ReadText(data.generatedText);
+
+            } catch(error) {
+                // If an error occurs, log it and update loading element
+                console.error("Error fetching update: ", error);
+                return "Server unresponsive...";
+            }
+        }
+
     </script>
     </body>
 </html>
