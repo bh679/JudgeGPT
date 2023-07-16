@@ -58,58 +58,27 @@
 
             <div id="subheading"></div>
 
-            <div id="login">
-                Plaintiff
-                <input  id="playerName1" type="text" placeholder="Your name" value="" />
-                
-                <input type="radio" class="btn-check" name="player1" id="human1" autocomplete="off" checked>
-                <label class="btn btn-outline-success" for="human1">Human</label>
+            <div id="chat"></div>
+            <div id="typing"></div>
 
-                <input type="radio" class="btn-check" name="player1" id="ai1" autocomplete="off">
-                <label class="btn btn-outline-danger" for="ai1">AI</label>
-                
-                <br /><br />
-                Defendant
-                <input  id="playerName2" type="text" placeholder="Your name" value="" />
-                
-                <input type="radio" class="btn-check" name="player2" id="human2" autocomplete="off" checked>
-                <label class="btn btn-outline-success" for="human2">Human</label>
-
-                <input type="radio" class="btn-check" name="player2" id="ai2" autocomplete="off">
-                <label class="btn btn-outline-danger" for="ai2">AI</label>
-                
-                <br /><br />
-                <button id="startButton" class="button w-button" onclick="Start()">
-                    Start
+            <div id="inputGroup" class="row">
+                <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7"/>
+                <button id="submitButton" class="button w-button col-2" onclick="Next()">
+                    Submit
+                </button>
+                <button id="aiRespondButton" class="button w-button col-2" onclick="AiRespond()">
+                    Ai Suggest
                 </button>
             </div>
 
-            <div id="courtroom">
-                <div id="chat"></div>
-                <div id="typing"></div>
-
-                <div id="inputGroup">
-                    <input  id="userInput" type="text" placeholder="Plaintiff" value="" />
-                    <button id="submitButton" class="button w-button" onclick="Next()">
-                        Submit
-                    </button>
-                </div>
-
-                <div id="winner"></div>
-            </div>
+            <div id="winner"></div>
+        
 
 
     <script>
 
 
         // Define global variables
-        const loginDiv = document.getElementById('login');
-        const playerTypeButton = {};
-        playerTypeButton[0] = document.getElementById('player1TypeButton');
-        playerTypeButton[1] = document.getElementById('player2TypeButton');
-        const startButton = document.getElementById('startButton');
-
-        const courtroomDiv = document.getElementById('courtroom');
         const chatDiv = document.getElementById('chat');
         const winnerDiv = document.getElementById('winner');
         const submitButton = document.getElementById('submitButton');
@@ -127,21 +96,19 @@
         player[0].role = "Plaintiff";
         player[0].instruction = "Plaintiff, do you have anything to add?";
         player[0].testimony;
-        player[0].class = "plaintiff"
-        player[0].human = true;
+        player[0].class = "plaintiff";
 
         player[1] = {};
         player[1].name = "";
         player[1].role = "Defendant";
         player[1].instruction = "Defendant, what is your repsonse?";
         player[1].testimony;
-        player[1].class = "defendant"
-        player[1].human = true;
+        player[1].class = "defendant";
 
         let judge = {}
         judge.name = "GPT";
         judge.role = "Judge";
-        judge.class = "judge"
+        judge.class = "judge";
 
         var turn = 0;
 
@@ -160,13 +127,10 @@
 
         var ruling = "";
 
-        Setup();
+        Start();
 
         // Define asynchronous function to send data
-        async function Setup() {
-
-            loginDiv.hidden = false;
-            courtroomDiv.hidden = true;
+        async function Start() {
 
             inputGroup.hidden = true;
             gameCase = await AskGPT(prompts.cases[Math.floor(Math.random() * 3)]);
@@ -181,26 +145,6 @@
             const  img = document.createElement('img');
             img.src = imageUrl;
             inputGroup.appendChild(img);//*/
-
-        }
-
-        function Start()
-        {
-            loginDiv.hidden = true;
-            courtroomDiv.hidden = false;
-
-            player[0].name = document.getElementById('playerName1').innerText;
-            player[1].name = document.getElementById('playerName2').innerText;
-
-
-            // Get the radio input elements by their id
-            var humanRadio1 = document.getElementById('human1');
-            var humanRadio2 = document.getElementById('human2');
-
-            // Check which one is selected
-            player[0].human = humanRadio1.checked;
-            player[1].human = humanRadio2.checked;
-            console.log(player[0].human + "  "+ player[1].human);
 
         }
 
@@ -260,20 +204,19 @@
             userInputFeild.value = "";
             userInputFeild.placeholder = player[turn].role + " " + player[turn].name;
 
-            if(!player[turn].human)
-                AiPlayer();
         }
 
-        async function AiPlayer()
+        async function AiRespond()
         {
             console.log(turn);
             console.log(player[turn].role);
-            prompt =  "You are " + player[turn].role + player[turn].name + " in court case " + gameCase + ". Make a very breif testimonal, and include some suprising, abusrd and/or funny new information";//prompts.punishment.replace("$", ruling);
+            prompt =  "You are " + player[turn].role + player[turn].name + " in court case " + gameCase + ". Make a very breif testimonal, and include some suprising, abusrd and/or funny new information.";//prompts.punishment.replace("$", ruling);
             console.log(prompt);
             var testimonial = await AskGPT(prompt);
-            AddToChat(player[turn], testimonial);
+            userInputFeild.value = testimonial;
+            //AddToChat(player[turn], testimonial);
 
-            Next();
+            //Next();
         }
 
         
