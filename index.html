@@ -69,6 +69,7 @@
             #page {
                 max-width: 1200px;
                 margin: 0 auto;  /* optional: centers the element if its width is less than the max-width */
+                padding-top: 20px;
             }
 
         </style>
@@ -89,6 +90,8 @@
             <div id="chat"></div>
             <div id="typing"></div>
 
+            <div id="winner"></div>
+
             <div id="inputGroup" class="row">
                 <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7"/>
                 <button id="submitButton" class="button w-button col-2" onclick="Next()">
@@ -99,7 +102,6 @@
                 </button>
             </div>
 
-            <div id="winner"></div>
         
         </div>
 
@@ -110,9 +112,25 @@
         const chatDiv = document.getElementById('chat');
         const winnerDiv = document.getElementById('winner');
         const submitButton = document.getElementById('submitButton');
+        const aiRespondButton = document.getElementById('aiRespondButton');
         const userInputFeild = document.getElementById('userInput');
         const inputGroup = document.getElementById('inputGroup');
         const typingDiv = document.getElementById('typing');
+
+        var restartButtonLabels = [
+            "Initiate New Trial",
+            "Reset Legal Matrix",
+            "Begin Fresh Plea",
+            "Invoke Retrial Protocol",
+            "Restart Judicial Simulation",
+            "Reset Case Parameters",
+            "Reconfigure Litigation",
+            "Commence New Proceedings",
+            "Reinitialize Justice Sequence",
+            "Resurrect Case from Archive"
+        ];
+        restartButtonLabelsCount = 10;
+
 
         //const caseDiv = document.getElementById('case');
         const outputDiv = document.getElementById('output');
@@ -160,15 +178,16 @@
         // Define asynchronous function to send data
         async function Start() {
 
+           //* 
             inputGroup.hidden = true;
             gameCase = await AskGPT(prompts.cases[Math.floor(Math.random() * 3)]);
             AddToChat(judge, gameCase);
             UpdateGameState();
             inputGroup.hidden = false;
 
-            LogDiscordMessages();
+            LogDiscordMessages();/*/
 
-            /*var imageUrl = GetImage(gameCase);
+            var imageUrl = GetImage(gameCase);
             console.log(imageUrl);
             const  img = document.createElement('img');
             img.src = imageUrl;
@@ -291,6 +310,17 @@
                 winnerDiv.classList.add(player[0].class);
 
             LogDiscordMessages();  
+
+            inputGroup.hidden = false;
+            userInputFeild.hidden = true;
+            aiRespondButton.hidden = true;
+            submitButton.disabled = false;
+            submitButton.innerText = restartButtonLabels[Math.floor(Math.random() * restartButtonLabelsCount)];
+            submitButton.onclick = function() {
+              location.reload();
+            };
+
+
 
         }
 
