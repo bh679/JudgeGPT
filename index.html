@@ -54,25 +54,62 @@
         <!-- Bookstrap -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   
-            <h1 class="logo">JudgeGPT</h1>
+            <h1 >JudgeGPT</h1>
 
-            <div id="chat"></div>
-            <div id="typing"></div>
+            <div id="subheading"></div>
 
-            <div id="inputGroup">
-                <input  id="userInput" type="text" placeholder="Plaintiff" value="" />
-                <button id="submitButton" class="button w-button" onclick="Next()">
-                    Submit
+            <div id="login">
+                Plaintiff
+                <input  id="playerName1" type="text" placeholder="Your name" value="" />
+                
+                <input type="radio" class="btn-check" name="player1" id="human1" autocomplete="off" checked>
+                <label class="btn btn-outline-success" for="human1">Human</label>
+
+                <input type="radio" class="btn-check" name="player1" id="ai1" autocomplete="off">
+                <label class="btn btn-outline-danger" for="ai1">AI</label>
+                
+                <br /><br />
+                Defendant
+                <input  id="playerName2" type="text" placeholder="Your name" value="" />
+                
+                <input type="radio" class="btn-check" name="player2" id="human2" autocomplete="off" checked>
+                <label class="btn btn-outline-success" for="human2">Human</label>
+
+                <input type="radio" class="btn-check" name="player2" id="ai2" autocomplete="off">
+                <label class="btn btn-outline-danger" for="ai2">AI</label>
+                
+                <br /><br />
+                <button id="startButton" class="button w-button" onclick="Start()">
+                    Start
                 </button>
             </div>
 
-            <div id="winner"></div>
+            <div id="courtroom">
+                <div id="chat"></div>
+                <div id="typing"></div>
+
+                <div id="inputGroup">
+                    <input  id="userInput" type="text" placeholder="Plaintiff" value="" />
+                    <button id="submitButton" class="button w-button" onclick="Next()">
+                        Submit
+                    </button>
+                </div>
+
+                <div id="winner"></div>
+            </div>
 
 
     <script>
 
 
         // Define global variables
+        const loginDiv = document.getElementById('login');
+        const playerTypeButton = {};
+        playerTypeButton[0] = document.getElementById('player1TypeButton');
+        playerTypeButton[1] = document.getElementById('player2TypeButton');
+        const startButton = document.getElementById('startButton');
+
+        const courtroomDiv = document.getElementById('courtroom');
         const chatDiv = document.getElementById('chat');
         const winnerDiv = document.getElementById('winner');
         const submitButton = document.getElementById('submitButton');
@@ -86,19 +123,24 @@
 
         let player = {};
         player[0] = {};
-        player[0].name = "Plaintiff";
+        player[0].name = "";
+        player[0].role = "Plaintiff";
         player[0].instruction = "Plaintiff, do you have anything to add?";
         player[0].testimony;
         player[0].class = "plaintiff"
+        player[0].human = true;
 
         player[1] = {};
-        player[1].name = "Defendant";
+        player[1].name = "";
+        player[1].role = "Defendant";
         player[1].instruction = "Defendant, what is your repsonse?";
         player[1].testimony;
         player[1].class = "defendant"
+        player[1].human = true;
 
         let judge = {}
-        judge.name = "JudgeGPT";
+        judge.name = "GPT";
+        judge.role = "Judge";
         judge.class = "judge"
 
         var turn = 0;
@@ -107,8 +149,8 @@
         
         var prompts = {};
         prompts.judgeCharacter = "You are JudgeGPT, a judge in a televised small claims court TV show";
-        prompts.cases = [ "Come up with an abusrd or hilarious accursation to be argued in small claims court between two parties.",
-        "Come up with an abusrd or hilarious accursation to be argued in court between two parties.",
+        prompts.cases = [ "Come up with an abusrd and/or hilarious accursation to be argued in small claims court between two parties.",
+        "Come up with an abusrd and/or hilarious accursation to be argued in court between two parties.",
         "Come up with a rediculous and hilarious accursation to be argued in court between two parties."];
         prompts.punishment = "Provide a funny, absurd and unfitting punishment and lesson to be learnt for the following court ruling:{$}";
         prompts.winner = "A judge rulled the following: {$} Give a single word repsonse of who is the winner, Plaintiff, Defendant or neither. ";
@@ -118,16 +160,21 @@
 
         var ruling = "";
 
-        Start();
+        Setup();
 
         // Define asynchronous function to send data
-        async function Start() {
+        async function Setup() {
+
+            loginDiv.hidden = false;
+            courtroomDiv.hidden = true;
 
             inputGroup.hidden = true;
             gameCase = await AskGPT(prompts.cases[Math.floor(Math.random() * 3)]);
             AddToChat(judge, gameCase);
             UpdateGameState();
             inputGroup.hidden = false;
+
+            LogDiscordMessages();
 
             /*var imageUrl = GetImage(gameCase);
             console.log(imageUrl);
@@ -137,13 +184,43 @@
 
         }
 
+        function Start()
+        {
+            loginDiv.hidden = true;
+            courtroomDiv.hidden = false;
+
+            player[0].name = document.getElementById('playerName1').innerText;
+            player[1].name = document.getElementById('playerName2').innerText;
+
+
+            // Get the radio input elements by their id
+            var humanRadio1 = document.getElementById('human1');
+            var humanRadio2 = document.getElementById('human2');
+
+            // Check which one is selected
+            player[0].human = humanRadio1.checked;
+            player[1].human = humanRadio2.checked;
+            console.log(player[0].human + "  "+ player[1].human);
+
+        }
+
+        //var players = 0;
+        function SwitchHuman(playerId)
+        {
+            player[playerId].human = !player[playerId].human;
+
+            if(player[playerId].human)
+                playerTypeButton[playerId].innerText = "Human";
+            else
+                playerTypeButton[playerId].innerText = "AI";
+        }
+
         function AddToChat(playerSpeaking, chat)
         {
-            SendMessage(playerSpeaking.name+": "+chat);
-
             messages[messages.count] = {};
             messages[messages.count].sender = playerSpeaking;
             messages[messages.count].message = chat;
+            messages[messages.count].discord = false;
             messages.count++;
 
             const newChat = document.createElement('div');
@@ -168,7 +245,7 @@
 
             if(messages.count <= 1 || messages[messages.count-2].sender != playerSpeaking)
             {
-                sender.innerText = playerSpeaking.name+": ";
+                sender.innerText = playerSpeaking.role + " "+ playerSpeaking.name+": ";
             }
 
             newChat.appendChild(sender);
@@ -178,13 +255,25 @@
 
         function UpdateGameState()
         {
-            console.log(player.name);
-            console.log(player[turn]);
-            console.log(player[turn].instruction);
-            //instructionFeild.innerText = ;
+
             AddToChat(judge, player[turn].instruction);
             userInputFeild.value = "";
-            userInputFeild.placeholder = player[turn].name;
+            userInputFeild.placeholder = player[turn].role + " " + player[turn].name;
+
+            if(!player[turn].human)
+                AiPlayer();
+        }
+
+        async function AiPlayer()
+        {
+            console.log(turn);
+            console.log(player[turn].role);
+            prompt =  "You are " + player[turn].role + player[turn].name + " in court case " + gameCase + ". Make a very breif testimonal, and include some suprising, abusrd and/or funny new information";//prompts.punishment.replace("$", ruling);
+            console.log(prompt);
+            var testimonial = await AskGPT(prompt);
+            AddToChat(player[turn], testimonial);
+
+            Next();
         }
 
         
@@ -192,16 +281,22 @@
         // Define asynchronous function to send data
         async function Next() {
 
-                player[turn].testimony = userInputFeild.value;
+            player[turn].testimony = userInputFeild.value;
 
-                AddToChat(player[turn], player[turn].testimony);
+            AddToChat(player[turn], player[turn].testimony);
 
-                if(turn == 0)
-                {
-                    turn++;
-                    UpdateGameState();
-                }else
-                    DrawConclusion();
+            if(turn == 0)
+            {
+                turn++;
+                UpdateGameState();
+
+                LogDiscordMessages();
+            }else
+                DrawConclusion();
+
+
+
+
         }
 
         async function DrawConclusion() 
@@ -222,10 +317,12 @@
             prompt = prompts.winner.replace("$", ruling);
             var winner = await AskGPT(prompt);
             winnerDiv.innerText = "Winner: " + winner;
-           if(winner.toLowerCase().includes(player[1].name.toLowerCase()))
+           if(winner.toLowerCase().includes(player[1].role.toLowerCase()))
                 winnerDiv.classList.add(player[1].class);
             else
                 winnerDiv.classList.add(player[0].class);
+
+            LogDiscordMessages();  
 
         }
 
@@ -304,6 +401,30 @@
                 clearInterval(AskingGPTInterval);
                 typingDiv.innerText="";
                 return "Server unresponsive...";
+            }
+        }
+
+
+        async function LogDiscordMessages()
+        {
+            for(var i =0 ;i  < messages.count; i++)
+            {
+                if(messages[i].discord == false)
+                {
+                    
+                    
+                    var response = await fetch('https://brennan.games:3000/DiscrdWebHook', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: messages[i].sender.role + " " + messages[i].sender.name + ": " + messages[i].message }),
+                });  
+
+                    console.log(repsonse);
+
+                    messages[i].discord = true;
+                }
             }
         }
 
