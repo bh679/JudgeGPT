@@ -1,10 +1,10 @@
 // Import required modules
 var express = require('express');
 var cors = require('cors');
+var https = require('https');
+var fs = require('fs');
 var app = express();
 const PromptGPT = require('./PromptGPT');
-const fs = require('fs');
-
 
 let promptResponse = {};
 
@@ -52,8 +52,13 @@ app.post('/AskGPT', function (req, res) {
 
 });
 
+// Define HTTPS credentials
+var options = {
+  key: fs.readFileSync('/opt/bitnami/apache/conf/brennan.games.key'),
+  cert: fs.readFileSync('/opt/bitnami/apache/conf/brennan.games.crt')
+};
 
-// Start the server and listen on port 3000
-app.listen(3000, function () {
-    console.log('App listening on port 3000!');
+// Create HTTPS server
+https.createServer(options, app).listen(3000, function () {
+    console.log('HTTPS server listening on port 3000!');
 });
