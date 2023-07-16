@@ -12,7 +12,8 @@ class TNLMJ {
       image: {},
       startTime: new Date(),
       completeTime: "",
-      inputPrompt: ""
+      inputPrompt: "",
+      progress: 0
     };
 
     this.inputPrompt = inputPrompt;
@@ -51,31 +52,73 @@ class TNLMJ {
         data : data
       };
 
-      axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
+      var currentTime = new Date();
+      var timeDifference = currentTime - this.status.startTime; // This will be in milliseconds
+      console.log(timeDifference);
 
-      console.log(response.data.messageId);
-      this.status.finished = true;
-      this.status.image = response.data.messageId;
-      this.status.completeTime = new Date();
-      this.status.inputPrompt = this.inputPrompt;
-      resolve(this.status);
 
-      // Invoke all registered callbacks
-        for (const callback of this.callbacks) {
-          try {
-            callback(null, status);
-          } catch (e) {
-            console.error('Error invoking callback:', e);
-          }
-        }
+      while(this.status.progress < 100 && timeDifference <= 120000) // 120,000 milliseconds = 2 minutes
+      {
+        currentTime = new Date();
+        timeDifference = currentTime - this.status.startTime;
+        console.log(timeDifference);
 
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-                    
+        axios(config)
+        .then(function (response) {
+          
+            console.log(response.data.messageId);
+
+            //
+            var axios = require('axios');
+
+            var config = {
+              method: 'get',
+              url: 'https://api.thenextleg.io/v2/message/'+response.data.messageId,
+              headers: { 
+                'Authorization': 'Bearer '+TNL_API_KEY, 
+              },
+              data : data
+            };
+
+            axios(config)
+            .then(function (response) {
+              console.log(JSON.stringify(response.data));
+              console.log("response.data.imageUrl: " + response.data.imageUrl);
+
+              this.status.progress = response.data.progress;
+
+              if(this.status.progress == 100)
+              {
+
+                this.status.finished = true;
+                this.status.image = response.data.messageId;
+                this.status.completeTime = new Date();
+                this.status.inputPrompt = this.inputPrompt;
+                resolve(this.status);
+
+                // Invoke all registered callbacks
+                for (const callback of this.callbacks) {
+                  try {
+                    callback(null, status);
+                  } catch (e) {
+                    console.error('Error invoking callback:', e);
+                  }
+                }
+              }
+
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+            //
+
+
+        })
+        .catch(function (error) {
+          console.log("error1");
+        });
+      }        
 
 
       

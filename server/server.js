@@ -57,7 +57,7 @@ app.post('/AskGPT', function (req, res) {
 // Define a POST route for '/startUnFake'
 app.post('/MJImage', function (req, res) {
     // Log the body of the request
-    console.log(req.body);
+    //console.log(req.body);
 
     // Extract youtubeId from the request body
     const prompt = req.body.prompt;
@@ -70,10 +70,10 @@ app.post('/MJImage', function (req, res) {
 
     // Get the response 
     TNLMJImages[prompt].GetImage().then((data) => {
-        console.log(data);
-        console.log(data.generatedText);
+        //console.log(data);
+        console.log(data.imageUrl);
         res.json({ //why not make res.json = data
-            image: data.image,
+            image: data.imageUrl,
             inputPrompt: data.inputPrompt
         });
     })
