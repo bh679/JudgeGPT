@@ -15,7 +15,8 @@ Looking like this
 ENV.TNL_API_KEY = 'XXXX';
 ENV.OPENAI_API_KEY = 'XXXX';
 
-module.exports = ENV;```
+module.exports = ENV;
+```
 
 Public Client Setup
 ``npm i bootstrap@5.3.0``<br />
