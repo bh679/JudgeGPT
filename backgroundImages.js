@@ -78,9 +78,55 @@ const backgroundImages = [
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__96f4d634-c942-47fe-9425-9af8157ed7ee.png",
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__01065281-2fc6-4d6a-b8e8-9022e0a9a05e.png",
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__daaecb1b-66aa-4200-abec-10c6d3427252.png",
-    "brennanhatton_empty_ai_court_held_in_the_ocean_7e98b546-06c9-4d46-9fbd-96e7e6f1e1f0.png"
+    "brennanhatton_empty_ai_court_held_in_the_ocean_7e98b546-06c9-4d46-9fbd-96e7e6f1e1f0.png",
+    "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_54386807-c2c7-4a0a-bb76-2bbb034f6086.png",//80
+    "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_7025132c-6794-4583-9552-d59839af4495.png",
+    "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_66f1987b-c0ab-4a33-8d87-f143c3685e60.png",
+    "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_ai__3c10c649-ecb1-4bac-a711-6b559390090c.png",
+    "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_ai__474401e1-fb3c-4867-af0f-33ef10e3cf66.png",
+    "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_ai__09d2f76a-2d2f-44df-a976-54a0a5c80bb2.png",
+    "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_ai__d58c6e5f-9663-405e-be00-a7109fc65f01.png",
+    "brennanhatton_empty_ai_court_room_time_vs_reality._abyss_portal_4147a5ce-9267-496c-982a-5937d4169b7d.png",
+    "brennanhatton_empty_ai_court_room_time_vs_reality._abyss_portal_d13d2edb-393b-4c5f-aad5-849e817d2296.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_0366658d-b75f-4c90-8518-fa6072cbc58c.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_7dfed8d4-64c7-4b4a-934a-e7cf02fb1244.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_0108d82e-7833-44d7-91c1-574436ceea3a.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_bdd05f3a-b98e-4942-885c-8f6bbd737abc.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_0890d1ea-8410-443e-996e-613f74b712e1.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_342ef951-a193-4b3c-b372-f032a0e368c8.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_de955ab2-d21f-4ec2-af26-871b2b6b2996.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_1df7bfb6-0f98-4d8f-ba3e-fa6aee920070.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_2a5d98b7-69ca-4437-858a-272cac4c8fb8.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_da52921b-27ce-4701-8b86-2209ee75a585.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_68253d50-4a5a-4a0e-94f6-458b96fc023e.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_6224c5a7-6976-4da1-97ba-75364bf8aab3.png",//100
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_f8df4490-24c3-439e-ab63-741403e2fdb4.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_cb2c64f2-8b17-424f-b750-05c32f2e6c9e.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_7d79ce08-4e28-4fa0-8df2-34d34e10373b.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_d109447e-5f8e-4078-a550-5cc84f830ef5.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_e1ce34c8-ac16-4871-aec0-25a570b2815f.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_b1bedc08-2c9c-4647-863f-9160846f0b92.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_b059b0e9-4bc7-41ae-8f48-faeefca3feed.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_ba1d474f-bef5-479f-bb21-4387d862918b.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_4530b537-074e-4e77-842b-24c6c5aa79e8.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_aa035a40-4b00-4f81-99d5-886fc49bf4f1.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_8b6a76fd-b6de-469d-a1d5-bf83ddde2e5d.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_86088fb7-f91c-444c-a02d-d17165d40563.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_24439336-103c-4b86-9a6e-b909ecf846db.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_a22d8030-a729-44ae-83a9-79cd5f79ff27.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_5b9a4f30-cdb8-4b57-ba6c-69cb1866b0ff.png",
+    "brennanhatton_empty_ai_court_held_in_the_space_between_time_tim_a4a71717-26ca-4efa-9cf5-d8a4a83ceb79.png",
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_898c3c57-85d3-45ff-9443-8a0e19b988c5.png",
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_449068e6-fe59-4336-b392-ba6a379fa591.png",
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_a7d9af0c-ae35-4ba7-83a5-4381275c9adf.png",
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_0a92aacb-2486-4840-835f-334b2adf4e1d.png",//120
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_74ad8057-3389-4021-8429-ed5cc989db30.png",
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_a6b194f0-68f0-41b3-be7e-613cf00a5240.png",
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_cac9d8f3-a0f8-49ac-bd6b-a6aa23942383.png",
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_f984aafd-9f3b-467e-a564-fd82c9e3c56d.png"
+
 ];
-const backgroundImagesCount = 79;
+const backgroundImagesCount = 124;
 
 function SetBackground()
 {
