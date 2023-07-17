@@ -4,10 +4,16 @@ let progressInterval = {};
 class JudgeGPTServer {
 
     constructor() {
+        this.init();
+    }
+
+    init()
+    {
         this.player = [
             new Player("","Plaintiff","Plaintiff, do you have anything to add?","plaintiff"),
             new Player("","Defendant","Defendant, what is your repsonse?","defendant"),
         ];
+        this.player.count = 0;
 
         this.judge = new Player("GPT", "Judge", "", "judge");
 
@@ -52,6 +58,7 @@ class JudgeGPTServer {
             if(this.player[i].clientID == "")
             {
                 this.player[i].clientID = clientID;
+                this.player.count++;
 
                 return;
             }
@@ -110,6 +117,10 @@ class JudgeGPTServer {
             await this.CreateRuling();
             await this.CreatePunsihment();
             await this.DeclareWinner();
+            for(var i = 0 ; i < this.player.count; i++)
+                await this.Analysis(i);
+            await this.RestartGame();
+
 
         }
 
@@ -144,7 +155,12 @@ class JudgeGPTServer {
         }
 
         this.running = false;
+    }
 
+    async RestartGame()
+    {
+        await new Promise(resolve => setTimeout(resolve, 10000));
+        init();
     }
 
     async Analysis(playerid)

@@ -113,12 +113,15 @@
 
 
         judgeGPTServer = new JudgeGPTServer();
-
-        client = new JudgeGPTClient(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv, judgeGPTServer);
-
         judgeGPTServer.Start();
-        
-        client.Start();
+
+        client = new JudgeGPTClient();
+        client.ConnectToServer(judgeGPTServer);
+
+        UI = new JudgeGPTClient(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv, client);
+
+
+        UI.Start();
 
 
         BackgroundImages.SetBackground();

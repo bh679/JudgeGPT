@@ -1,6 +1,54 @@
 class JudgeGPTClient
 {
-    constructor(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv, server) {
+    constructor()
+    {
+        this.server;
+        this.messages;
+        this.myTurn = false;
+
+        this.onMyTurnCallbacks = {};
+        this.onMyTurnCallbacks.count = 0;
+    }
+
+    ConnectToServer(server)
+    {
+        this.server = server;
+        this.GetGameState();
+    }
+
+    async GetGameState()
+    {
+        while(this.server.running) 
+        {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            this.messages = this.server.messagesChat.messages;
+
+            //is it my turn?
+            if(this.server.player[this.server.turn].clientID == this.uniqueID && this.server.aiTurn == false)
+            {
+                this.myTurn = true;
+
+                for(var i = 0; i < this.onMyTurnCallbacks.count; i++)
+                {
+                    this.onMyTurnCallbacks[i]();
+                }
+
+                return;
+            }
+        }
+    }
+
+    AddOnMyTurnCallback(callback)
+    {
+        this.onMyTurnCallbacks[this.onMyTurnCallbacks.count] = callback;
+        this.onMyTurnCallbacks.count++;
+    }
+}
+
+class JudgeGPTUI
+{
+    constructor(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv, client) {
         // Define global variables
         this.chatDiv = chatDiv;
         this.winnerDiv = winnerDiv;
@@ -12,7 +60,7 @@ class JudgeGPTClient
 
         this.typingDiv = typingDiv;
 
-        this.server = server;// = new JudgeGPT();
+        this.client = client;// = new JudgeGPT();
 
         this.messageUI = new MessageUI(chatDiv);
 
@@ -31,7 +79,7 @@ class JudgeGPTClient
         this.userInput.group.hidden = true;
         this.analysis.group.hidden = true;
 
-        this.server.Join(this.uniqueID);
+        //this.server.Join(this.uniqueID);
 
         this.GetGameState();
     }
@@ -43,24 +91,7 @@ class JudgeGPTClient
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
     }
 
-    async GetGameState()
-    {
-        while(this.server.running) 
-        {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            this.messageUI.UpdateChat(this.server.messagesChat.messages);
-
-            //is it my turn?
-            if(this.server.player[this.server.turn].clientID == this.uniqueID && this.server.aiTurn == false)
-            {
-                this.MyTurn(this.server.player[this.server.turn]);
-
-                return;
-            }
-        }
-
-    }
+    
 
     TypeIntoInput()
     {
