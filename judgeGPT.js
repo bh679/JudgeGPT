@@ -15,6 +15,7 @@ class JudgeGPT {
 
         this.gameCase = "undefined";
         this.ruling = "";
+        this.punishment = "";
 
         this.UI = UI;
 
@@ -103,7 +104,7 @@ class JudgeGPT {
 
         prompt =  this.prompts.punishment.replace("$", this.ruling);
         console.log(prompt);
-        var punishment = await AskGPT(prompt);
+        this.punishment = await AskGPT(prompt);
         this.messagesChat.AddToChat(this.judge, this.punishment);
 
         prompt = this.prompts.winner.replace("$", this.ruling);
