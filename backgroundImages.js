@@ -128,93 +128,98 @@ const backgroundImages = [
     "brennanhatton_empty_ai_legal_court_held_in_a_desert_wasteland_c2064fc9-7997-4ea3-af16-3d6bac97975b.png",
     "brennanhatton_empty_ai_legal_court_held_in_a_desert_wasteland_d0d529b9-e4d7-43ce-8944-4ea294a74d5c.png",
     "brennanhatton_empty_ai_legal_court_held_in_a_desert_wasteland_20b9b398-d5cd-4d9f-97f0-ad5777d09543.png",
-    "brennanhatton_empty_ai_legal_court_for_the_case_of_life_vs_deat_0cc9a232-6690-407a-8d4c-19d33cb24cad.png"
+    "brennanhatton_empty_ai_legal_court_for_the_case_of_life_vs_deat_0cc9a232-6690-407a-8d4c-19d33cb24cad.png",
+    "brennanhatton_fractal_courtroom_65de8530-2aab-4f40-86fe-2964294c029d.png"//130
 
 ];
-const backgroundImagesCount = 129;
+const backgroundImagesCount = 130;
 
 var bgId = 0;
 
-async function SetBackground()
+class BackgroundImages
 {
-    bgId = Math.floor(Math.random() * backgroundImagesCount);
-    var bgImage = backgroundImages[bgId];
-    document.body.style.setProperty('--bg-opacity', 0);
 
-            // Create new image object
-    var img = new Image();
-
-    var imageLoadPromise = new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-        img.src = './images/' + bgImage;
-    });
-
-    try 
+    static async SetBackground()
     {
-        await imageLoadPromise;
-
-        // Image has loaded, you can continue with the next part of your code.
+        bgId = Math.floor(Math.random() * backgroundImagesCount);
+        var bgImage = backgroundImages[bgId];
         document.body.style.setProperty('--bg-opacity', 0);
-        document.documentElement.style.setProperty('--bg-image', `url('${img.src}')`);
 
-        // Then, fade in the background
-        document.body.style.setProperty('--bg-opacity', 0.5);
-    } catch (error) {
-        console.error("Failed to load image: ", error);
-        SetBackground();
+                // Create new image object
+        var img = new Image();
+
+        var imageLoadPromise = new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = './images/' + bgImage;
+        });
+
+        try 
+        {
+            await imageLoadPromise;
+
+            // Image has loaded, you can continue with the next part of your code.
+            document.body.style.setProperty('--bg-opacity', 0);
+            document.documentElement.style.setProperty('--bg-image', `url('${img.src}')`);
+
+            // Then, fade in the background
+            document.body.style.setProperty('--bg-opacity', 0.5);
+        } catch (error) {
+            console.error("Failed to load image: ", error);
+            SetBackground();
+        }
+
+    }
+
+    static async GlitchBackground() {
+
+        // Choose a random image.
+        var nextBgId = Math.floor(Math.random() * backgroundImagesCount);
+
+        // Create a new image object.
+        var img = new Image();
+
+        // Once the image is loaded, switch between the current and glitch image.
+        var imageLoadPromise = new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = './images/' + backgroundImages[nextBgId];
+        });
+
+        try {
+            await imageLoadPromise;
+
+            // Image has loaded, you can continue with the next part of your code.
+
+            var glitchInterval = setInterval(function() {
+
+                if(Math.floor(Math.random()*2)==0)
+                    switchBG = './images/' + backgroundImages[bgId];
+                else
+                    switchBG = './images/' + backgroundImages[nextBgId];
+
+                document.documentElement.style.setProperty('--bg-image', `url(`+switchBG+`)`);
+                console.log(getComputedStyle(document.documentElement).getPropertyValue('--bg-image'));
+
+            }, 100);  // Change the image every 100 milliseconds.
+
+            // After 1 second, stop glitching and set the new background image.
+            setTimeout(function() {
+                clearInterval(glitchInterval);
+
+                bgId = nextBgId;
+                var bgImage = './images/'+backgroundImages[bgId];
+                document.documentElement.style.setProperty('--bg-image', `url('${bgImage}')`);
+                
+            }, 3000);  // Stop glitching after 1 second.
+
+
+        } catch (error) {
+            console.error("Failed to load image: ", error);
+        }
+
+
+        
     }
 
 }
-
-async function GlitchBackground() {
-
-    // Choose a random image.
-    var nextBgId = Math.floor(Math.random() * backgroundImagesCount);
-
-    // Create a new image object.
-    var img = new Image();
-
-    // Once the image is loaded, switch between the current and glitch image.
-    var imageLoadPromise = new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-        img.src = './images/' + backgroundImages[nextBgId];
-    });
-
-    try {
-        await imageLoadPromise;
-
-        // Image has loaded, you can continue with the next part of your code.
-
-        var glitchInterval = setInterval(function() {
-
-            if(Math.floor(Math.random()*2)==0)
-                switchBG = './images/' + backgroundImages[bgId];
-            else
-                switchBG = './images/' + backgroundImages[nextBgId];
-
-            document.documentElement.style.setProperty('--bg-image', `url(`+switchBG+`)`);
-            console.log(getComputedStyle(document.documentElement).getPropertyValue('--bg-image'));
-
-        }, 100);  // Change the image every 100 milliseconds.
-
-        // After 1 second, stop glitching and set the new background image.
-        setTimeout(function() {
-            clearInterval(glitchInterval);
-
-            bgId = nextBgId;
-            var bgImage = './images/'+backgroundImages[bgId];
-            document.documentElement.style.setProperty('--bg-image', `url('${bgImage}')`);
-            
-        }, 3000);  // Stop glitching after 1 second.
-
-
-    } catch (error) {
-        console.error("Failed to load image: ", error);
-    }
-
-
-    
-}
-

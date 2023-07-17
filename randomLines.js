@@ -26,34 +26,6 @@ const taglines =
     "In courtrooms of the future, everyone will be a coder."
 ]
 
-
-
-/*
-
-
-[
-    "Empowering the Future of Justice: One Case at a Time.",
-    "Small Claims, Big Impact: Shaping the Legal System of Tomorrow.",
-    "Justice, Reimagined: Envisioning a Brighter Legal Future.",
-    "The Dawn of a New Era: Reinventing Small Claims for the Future.",
-    "The Future of Justice: Where Innovation Meets Fairness.",
-    "Transforming Small Claims: Pioneering the Legal Landscape of Tomorrow.",
-    "Next-Gen Justice: Shaping the Future of the Legal System Today.",
-    "The Future of Small Claims: Streamlined, Efficient, and Just.",
-    "Redefining Justice: Building the Legal System of the Future.",
-    "Small Claims, Future-Proofed: Redefining Justice for a New Era.",
-    "AI: The New Face of Justice and the Legal System.",
-    "Embracing the Future: AI Revolutionizes the Legal System.",
-    "The Future is Now: AI Transforming Legal Proceedings.",
-    "AI: Redefining Justice for the Next Generation.",
-    "Legal System Reimagined: AI at the Heart of Tomorrow's Justice.",
-    "Unveiling the Future: AI at the Helm of the Legal System.",
-    "Justice Gets an Upgrade: The Future of Law is AI.",
-    "The Future of Law: AI-Powered, Efficient, and Just.",
-    "AI: Spearheading the Legal Revolution of the Future.",
-    "Tomorrow's Justice Today: AI Transforms the Legal Landscape."
-];*/
-
 const tagLineCount = 20;
 
 const restartButtonLabels = [
@@ -71,13 +43,15 @@ const restartButtonLabels = [
 var restartButtonLabelsCount = 10;
 
 
-function GetTagLine()
+class RandomLines
 {
-    return taglines[Math.floor(Math.random() * tagLineCount)];
-}
+    static GetTagLine()
+    {
+        return taglines[Math.floor(Math.random() * tagLineCount)];
+    }
 
-function GetRestartButtonLabel()
-{
-    return restartButtonLabels[Math.floor(Math.random() * restartButtonLabelsCount)];
+    static GetRestartButtonLabel()
+    {
+        return restartButtonLabels[Math.floor(Math.random() * restartButtonLabelsCount)];
+    }   
 }
-
