@@ -123,14 +123,19 @@ const backgroundImages = [
     "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_74ad8057-3389-4021-8429-ed5cc989db30.png",
     "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_a6b194f0-68f0-41b3-be7e-613cf00a5240.png",
     "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_cac9d8f3-a0f8-49ac-bd6b-a6aa23942383.png",
-    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_f984aafd-9f3b-467e-a564-fd82c9e3c56d.png"
+    "brennanhatton_non-euclidian_empty_ai_court_held_in_the_space_be_f984aafd-9f3b-467e-a564-fd82c9e3c56d.png",
+    "brennanhatton_empty_ai_court_held_in_a_desert_wasteland_16c60478-5f35-4bc6-a7b9-2274cb19c6bc.png",
+    "brennanhatton_empty_ai_legal_court_held_in_a_desert_wasteland_c2064fc9-7997-4ea3-af16-3d6bac97975b.png",
+    "brennanhatton_empty_ai_legal_court_held_in_a_desert_wasteland_d0d529b9-e4d7-43ce-8944-4ea294a74d5c.png",
+    "brennanhatton_empty_ai_legal_court_held_in_a_desert_wasteland_20b9b398-d5cd-4d9f-97f0-ad5777d09543.png",
+    "brennanhatton_empty_ai_legal_court_for_the_case_of_life_vs_deat_0cc9a232-6690-407a-8d4c-19d33cb24cad.png"
 
 ];
-const backgroundImagesCount = 124;
+const backgroundImagesCount = 129;
 
 var bgId = 0;
 
-function SetBackground()
+async function SetBackground()
 {
     bgId = Math.floor(Math.random() * backgroundImagesCount);
     var bgImage = backgroundImages[bgId];
@@ -139,17 +144,26 @@ function SetBackground()
             // Create new image object
     var img = new Image();
 
-    // Assign source to image object
-    img.src = './images/'+bgImage;
+    var imageLoadPromise = new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = './images/' + bgImage;
+    });
 
-    // Once image is loaded, update CSS variable
-    img.onload = function() {
+    try 
+    {
+        await imageLoadPromise;
+
+        // Image has loaded, you can continue with the next part of your code.
         document.body.style.setProperty('--bg-opacity', 0);
         document.documentElement.style.setProperty('--bg-image', `url('${img.src}')`);
 
         // Then, fade in the background
         document.body.style.setProperty('--bg-opacity', 0.5);
-    };
+    } catch (error) {
+        console.error("Failed to load image: ", error);
+        SetBackground();
+    }
 
 }
 
