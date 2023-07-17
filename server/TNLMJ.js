@@ -1,10 +1,6 @@
-//import { TNL } from 'tnl-midjourney-api';
-require('dotenv').config();
+const ENV = require('./env');
+const TNL_API_KEY = ENV.TNL_API_KEY;
 
-//const TNL_API_KEY = '4a59484c-51ee-4f26-aefe-91558be8e283';
-const apiKey = process.env.TNL_API_KEY;
-
-//const tnl = new TNL(TNL_API_KEY);
 
 class TNLMJ {
   constructor(inputPrompt) 

@@ -1,6 +1,9 @@
 const fs = require('fs');
 const axios = require('axios');
 
+const ENV = require('./env');
+const OPENAI_API_KEY = ENV.OPENAI_API_KEY;
+
 class PromptGPT {
   constructor(inputPrompt) 
   {
@@ -37,7 +40,7 @@ class PromptGPT {
           max_tokens: maxTokens,
         }, {
           headers: {
-            'Authorization': `Bearer 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`,
+            'Authorization': `Bearer `+OPENAI_API_KEY,
             'Content-Type': 'application/json',
           },
         }).then((response) => {
