@@ -59,10 +59,10 @@
                     <div id="analysis1" class="Analysis col-6"></div>
                 </div>
                 <div class="row">
-                    <button id="restartButton" class="button w-button col" onclick="AiRespond()">
+                    <button id="restartButton" class="button w-button col" onclick="judgeGPT.AiRespond()">
                         Restart
                     </button>
-                    <button id="analysisButton" class="button w-button col" onclick="Analysis()">
+                    <button id="analysisButton" class="button w-button col" onclick="judgeGPT.Analysis()">
                         Analyze Responses
                     </button>
                 </div>
@@ -70,11 +70,11 @@
 
 
             <div id="inputGroup" class="row">
-                <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="TypeIntoInput()"/>
-                <button id="submitButton" class="button w-button col-2" onclick="Next()">
+                <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="UI.TypeIntoInput()"/>
+                <button id="submitButton" class="button w-button col-2" onclick="judgeGPT.Next()">
                     Submit
                 </button>
-                <button id="aiRespondButton" class="button w-button col-2" onclick="AiRespond()">
+                <button id="aiRespondButton" class="button w-button col-2" onclick="judgeGPT.AiRespond()">
                     AI Response
                 </button>
             </div>
@@ -89,29 +89,47 @@
         // Define global variables
         const chatDiv = document.getElementById('chat');
         const winnerDiv = document.getElementById('winner');
+        const subheading = document.getElementById('subheading');
 
-        const analysisGroup = document.getElementById('analysisGroup');
+        const gameOverUI = {};
+        gameOverUI.group= document.getElementById('endButtons');
+        gameOverUI.restartButton = document.getElementById('restartButton');
+
+        const analysis = {};
+        analysis.player = {};
+        analysis.player[0] = document.getElementById('analysis0');
+        analysis.player[1] = document.getElementById('analysis1');
+        analysis.group = document.getElementById('analysisGroup');
+        analysis.button = document.getElementById('analysisButton');
+
+        /*const analysisGroup = document.getElementById('analysisGroup');
         const analysisButton = document.getElementById('analysisButton')
         const analysis = {};
         analysis[0] = document.getElementById('analysis0');
-        analysis[1] = document.getElementById('analysis1');
-        endButtons = document.getElementById('endButtons');
-        const restartButton = document.getElementById('restartButton');
+        analysis[1] = document.getElementById('analysis1');*/
+        //endButtons = document.getElementById('endButtons');
 
-        const submitButton = document.getElementById('submitButton');
+        /*const submitButton = document.getElementById('submitButton');
         const aiRespondButton = document.getElementById('aiRespondButton');
         const userInputFeild = document.getElementById('userInput');
-        const inputGroup = document.getElementById('inputGroup');
+        const inputGroup = document.getElementById('inputGroup');*/
         const typingDiv = document.getElementById('typing');
 
+        const userInput = {};
+        userInput.submitButton = document.getElementById('submitButton');
+        userInput.aiRespondButton = document.getElementById('aiRespondButton');
+        userInput.inputFeild = document.getElementById('userInput');
+        userInput.group = document.getElementById('inputGroup');
 
-        //const caseDiv = document.getElementById('case');
-        const outputDiv = document.getElementById('output');
-        const subheading = document.getElementById('subheading');
 
-        Start();
+        UI = new JudgeGPTUI(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv);
+
+        judgeGPT = new JudgeGPT(UI);
+
+        judgeGPT.Start();
 
         BackgroundImages.SetBackground();
+
         restartButton.innerText = RandomLines.GetRestartButtonLabel();
         subheading.innerText = RandomLines.GetTagLine();
     </script>
