@@ -77,9 +77,10 @@ const backgroundImages = [
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__21afdafa-51de-4979-839d-975a8f38eea2.png",
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__96f4d634-c942-47fe-9425-9af8157ed7ee.png",
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__01065281-2fc6-4d6a-b8e8-9022e0a9a05e.png",
-    "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__daaecb1b-66aa-4200-abec-10c6d3427252.png"
+    "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__daaecb1b-66aa-4200-abec-10c6d3427252.png",
+    "brennanhatton_empty_ai_court_held_in_the_ocean_7e98b546-06c9-4d46-9fbd-96e7e6f1e1f0.png"
 ];
-const backgroundImagesCount = 78;
+const backgroundImagesCount = 79;
 
 function SetBackground()
 {
