@@ -28,7 +28,7 @@ class PromptGPT {
     return new Promise((resolve, reject) => {
       console.log(this.inputPrompt);
 
-        const maxTokens = 60;
+        const maxTokens = 200;
         const model = "text-davinci-003";//"gpt-3.5-turbo";//"text-davinci-003";
 
         axios.post('https://api.openai.com/v1/completions', {

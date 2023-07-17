@@ -93,7 +93,7 @@
             <div id="winner"></div>
 
             <div id="inputGroup" class="row">
-                <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7"/>
+                <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="TypeIntoInput()"/>
                 <button id="submitButton" class="button w-button col-2" onclick="Next()">
                     Submit
                 </button>
@@ -101,6 +101,11 @@
                     Ai Suggest
                 </button>
             </div>
+
+
+            <button id="restartButton" class="button w-button" onclick="AiRespond()">
+                Ai Suggest
+            </button>
 
         
         </div>
@@ -112,6 +117,7 @@
         const chatDiv = document.getElementById('chat');
         const winnerDiv = document.getElementById('winner');
         const submitButton = document.getElementById('submitButton');
+        const restartButton = document.getElementById('restartButton');
         const aiRespondButton = document.getElementById('aiRespondButton');
         const userInputFeild = document.getElementById('userInput');
         const inputGroup = document.getElementById('inputGroup');
@@ -179,6 +185,7 @@
         async function Start() {
 
            //* 
+            restartButton.hidden = true;
             inputGroup.hidden = true;
             gameCase = await AskGPT(prompts.cases[Math.floor(Math.random() * 3)]);
             AddToChat(judge, gameCase);
@@ -284,6 +291,13 @@
             }else
                 DrawConclusion();
 
+            aiRespondButton.disabled = false;
+
+        }
+
+        function TypeIntoInput()
+        {
+            aiRespondButton.disabled = userInputFeild.value.length > 0;
         }
 
         async function DrawConclusion() 
@@ -311,12 +325,10 @@
 
             LogDiscordMessages();  
 
-            inputGroup.hidden = false;
-            userInputFeild.hidden = true;
-            aiRespondButton.hidden = true;
-            submitButton.disabled = false;
-            submitButton.innerText = restartButtonLabels[Math.floor(Math.random() * restartButtonLabelsCount)];
-            submitButton.onclick = function() {
+
+            restartButton.hidden = false;
+            restartButton.innerText = restartButtonLabels[Math.floor(Math.random() * restartButtonLabelsCount)];
+            restartButton.onclick = function() {
               location.reload();
             };
 
