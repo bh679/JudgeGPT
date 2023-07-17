@@ -128,9 +128,12 @@ const backgroundImages = [
 ];
 const backgroundImagesCount = 124;
 
+var bgId = 0;
+
 function SetBackground()
 {
-    var bgImage = backgroundImages[Math.floor(Math.random() * backgroundImagesCount)];
+    bgId = Math.floor(Math.random() * backgroundImagesCount);
+    var bgImage = backgroundImages[bgId];
     document.body.style.setProperty('--bg-opacity', 0);
 
             // Create new image object
@@ -149,3 +152,55 @@ function SetBackground()
     };
 
 }
+
+async function GlitchBackground() {
+
+    // Choose a random image.
+    var nextBgId = Math.floor(Math.random() * backgroundImagesCount);
+
+    // Create a new image object.
+    var img = new Image();
+
+    // Once the image is loaded, switch between the current and glitch image.
+    var imageLoadPromise = new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = './images/' + backgroundImages[nextBgId];
+    });
+
+    try {
+        await imageLoadPromise;
+
+        // Image has loaded, you can continue with the next part of your code.
+
+        var glitchInterval = setInterval(function() {
+
+            if(Math.floor(Math.random()*2)==0)
+                switchBG = './images/' + backgroundImages[bgId];
+            else
+                switchBG = './images/' + backgroundImages[nextBgId];
+
+            document.documentElement.style.setProperty('--bg-image', `url(`+switchBG+`)`);
+            console.log(getComputedStyle(document.documentElement).getPropertyValue('--bg-image'));
+
+        }, 100);  // Change the image every 100 milliseconds.
+
+        // After 1 second, stop glitching and set the new background image.
+        setTimeout(function() {
+            clearInterval(glitchInterval);
+
+            bgId = nextBgId;
+            var bgImage = './images/'+backgroundImages[bgId];
+            document.documentElement.style.setProperty('--bg-image', `url('${bgImage}')`);
+            
+        }, 3000);  // Stop glitching after 1 second.
+
+
+    } catch (error) {
+        console.error("Failed to load image: ", error);
+    }
+
+
+    
+}
+
