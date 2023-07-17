@@ -34,6 +34,10 @@
         <!-- Bookstrap -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 
+        <div id="background">
+            <!-- This div will serve as your background. -->
+        </div>
+        
         <div id="page">
   
             <h1 >JudgeGPT</h1>
@@ -242,12 +246,14 @@
 
         async function AiRespond()
         {
+            aiRespondButton.disabled = true;
             console.log(turn);
             console.log(player[turn].role);
             prompt =  "You are " + player[turn].role + player[turn].name + " in court case " + gameCase + ". Make a very breif testimonal, and include some suprising, abusrd and/or funny new information.";//prompts.punishment.replace("$", ruling);
             console.log(prompt);
             var testimonial = await AskGPT(prompt);
             userInputFeild.value = testimonial;
+            aiRespondButton.disabled = false;
             //AddToChat(player[turn], testimonial);
 
             //Next();
