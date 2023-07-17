@@ -9,10 +9,13 @@ Server Setup
 ``npm install elevenlabs-node``<br />
 ``npm install play-sound``<br />
 ``npm install dotenv``//cant tell if I am using this<br /> 
-Put evnionment variables into ``/opt/bitnami/scripts/bitnami-env.sh``
-``export TNL_API_KEY=XXXXXXXXXXXXXXX``
-``sudo /opt/bitnami/ctlscript.sh restart``
+Put evnionment variables into ``env.js``
+Looking like this
+```const ENV = {};
+ENV.TNL_API_KEY = 'XXXX';
+ENV.OPENAI_API_KEY = 'XXXX';
 
+module.exports = ENV;```
 
 Public Client Setup
 ``npm i bootstrap@5.3.0``<br />
