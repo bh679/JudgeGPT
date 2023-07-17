@@ -166,7 +166,7 @@ class BackgroundImages
             document.body.style.setProperty('--bg-opacity', 0.5);
         } catch (error) {
             console.error("Failed to load image: ", error);
-            SetBackground();
+            this.SetBackground();
         }
 
     }

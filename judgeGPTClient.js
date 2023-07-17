@@ -16,7 +16,14 @@ class JudgeGPTClient
 
         this.messageUI = new MessageUI(chatDiv);
 
+        this.uniqueID = this.generateID();
+
     }
+
+    generateID() {
+        return Math.floor(Math.random() * Date.now()).toString();
+    }
+
 
     async Start()
     {
@@ -24,7 +31,7 @@ class JudgeGPTClient
         this.userInput.group.hidden = true;
         this.analysis.group.hidden = true;
 
-        server.Join();
+        this.server.Join(this.uniqueID);
 
         this.GetGameState();
     }
@@ -40,12 +47,17 @@ class JudgeGPTClient
     {
         while(this.server.running) 
         {
-            console.log("await new Promise(resolve => setTimeout(resolve, 1000));");
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            console.log(this.server);
-            console.log(this.server.messagesChat);
             this.messageUI.UpdateChat(this.server.messagesChat.messages);
+
+            //is it my turn?
+            if(this.server.player[this.server.turn].clientID == this.uniqueID && this.server.aiTurn == false)
+            {
+                this.MyTurn(this.server.player[this.server.turn]);
+
+                return;
+            }
         }
 
     }
@@ -57,7 +69,14 @@ class JudgeGPTClient
 
     SubmitTestimony()
     {
-        this.judegGPT.SubmitTestimony(userInput.inputFeild.value);
+
+        this.userInput.submitButton.disabled = true;
+        this.userInput.group.hidden = true;
+
+        this.server.SubmitTestimony(userInput.inputFeild.value);
+        this.GetGameState();
+
+        this.userInput.aiRespondButton.disabled = false;
     }
 
     async AiRespond()
@@ -157,12 +176,9 @@ class MessageUI
     {
         this.chatDiv.innerHTML = '';
 
-        console.log("UpdateChat() messages.count:" + messages.count);
-
         for(var i = 0; i < messages.count; i++)
         {
-            console.log(messages[i].messages);
-            var consecutive = (i > 1 && messages[i-1].sender != messages[i].sender);
+            var consecutive = (i >= 1 && messages[i-1].sender == messages[i].sender);
 
             this.messagesDivs[i] = new ChatLineUI(messages[i], (i % 2 == 0), consecutive);
 

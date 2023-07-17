@@ -21,12 +21,14 @@ class JudgeGPTServer {
         this.prompts = new Prompts(this.player);
 
         this.running = false;
+        this.aiTurn = true;
     }
 
     // Start the game
     async Start() {
 
         this.running = true;
+        this.aiTurn = true;
 
        //* 
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * 3)]);
@@ -43,12 +45,31 @@ class JudgeGPTServer {
 
     }
 
+    async Join(clientID)
+    {
+        for(var i = 0; i < 2; i++)
+        {
+            if(this.player[i].clientID == "")
+            {
+                this.player[i].clientID = clientID;
+
+                return;
+            }
+        }
+    }
    
 
-    UpdateGameState()
+    async UpdateGameState()
     {
         this.messagesChat.AddToChat(this.judge, this.player[this.turn].instruction);
 
+
+        if(this.player[this.turn].clientID == "")
+        {
+            await this.SubmitTestimony(await this.AiRespond());
+        }
+        
+        this.aiTurn = false;
         //send message to clients
 
     }
@@ -60,6 +81,7 @@ class JudgeGPTServer {
         var prompt =  "You are " + this.player[this.turn].role + this.player[this.turn].name + " in court case " + this.gameCase + ". Make a very breif testimonal, of one or two sentences and include some suprising, abusrd and/or funny new information.";//prompts.punishment.replace("$", ruling);
         console.log(prompt);
         var testimonial = await AskGPT(prompt);
+        console.log(testimonial);
         return testimonial;
         
     }
@@ -68,6 +90,10 @@ class JudgeGPTServer {
     async SubmitTestimony(testimony) {
 
         //GlitchBackground();
+
+        console.log(testimony);
+
+        this.aiTurn = true;
 
         this.player[this.turn].testimony = testimony;//this.UI.userInput.inputFeild.value;
 
@@ -80,9 +106,12 @@ class JudgeGPTServer {
 
             LogDiscordMessages(this.messagesChat);
         }else
-            this.DrawConclusion();
+        {
+            await this.CreateRuling();
+            await this.CreatePunsihment();
+            await this.DeclareWinner();
 
-        this.UI.userInput.aiRespondButton.disabled = false;
+        }
 
     }
 
@@ -156,7 +185,7 @@ class Player {
         this.testimony = "";
         this.class = styleClass;
         this.score;
-        this.client = "";
+        this.clientID = "";
     }
 }
 
@@ -270,7 +299,7 @@ async function GetImage(input)
 
 async function LogDiscordMessages(msgChat)
 {
-    var messages = msgChat.messages;
+    /*var messages = msgChat.messages;
 
     for(var i =0 ;i  < messages.count; i++)
     {
@@ -290,7 +319,7 @@ async function LogDiscordMessages(msgChat)
 
             messages[i].discord = true;
         }
-    }
+    }*/
 }
 
 async function SendMessage(input) {
