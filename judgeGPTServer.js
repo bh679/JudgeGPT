@@ -1,9 +1,9 @@
 
 let progressInterval = {};
 
-class JudgeGPT {
+class JudgeGPTServer {
 
-    constructor(UI) {
+    constructor() {
         this.player = [
             new Player("","Plaintiff","Plaintiff, do you have anything to add?","plaintiff"),
             new Player("","Defendant","Defendant, what is your repsonse?","defendant"),
@@ -17,23 +17,21 @@ class JudgeGPT {
         this.ruling = "";
         this.punishment = "";
 
-        this.UI = UI;
-
-        this.messagesChat = new MessageChat(UI.chatDiv);
+        this.messagesChat = new MessageBackEnd();
         this.prompts = new Prompts(this.player);
+
+        this.running = false;
     }
 
     // Start the game
     async Start() {
 
+        this.running = true;
+
        //* 
-        this.UI.gameOverUI.group.hidden = true;
-        this.UI.userInput.group.hidden = true;
-        this.UI.analysis.group.hidden = true;
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * 3)]);
         this.messagesChat.AddToChat(this.judge, this.gameCase);
         this.UpdateGameState();
-        this.UI.userInput.group.hidden = false;
 
         LogDiscordMessages(this.messagesChat);/*
 
@@ -50,32 +48,28 @@ class JudgeGPT {
     UpdateGameState()
     {
         this.messagesChat.AddToChat(this.judge, this.player[this.turn].instruction);
-        this.UI.userInput.inputFeild.value = "";
-        this.UI.userInput.inputFeild.placeholder = this.player[this.turn].role + " " + this.player[this.turn].name;
+
+        //send message to clients
 
     }
 
     async AiRespond()
     {
-        this.UI.userInput.aiRespondButton.disabled = true;
         console.log(this.turn);
         console.log(this.player[this.turn].role);
         var prompt =  "You are " + this.player[this.turn].role + this.player[this.turn].name + " in court case " + this.gameCase + ". Make a very breif testimonal, of one or two sentences and include some suprising, abusrd and/or funny new information.";//prompts.punishment.replace("$", ruling);
         console.log(prompt);
         var testimonial = await AskGPT(prompt);
-        this.UI.userInput.inputFeild.value = testimonial;
-        this.UI.userInput.aiRespondButton.disabled = false;
-        //AddToChat(player[turn], testimonial);
-
-        //Next();
+        return testimonial;
+        
     }
 
     // Define asynchronous function to send data
-    async Next() {
+    async SubmitTestimony(testimony) {
 
         //GlitchBackground();
 
-        this.player[this.turn].testimony = this.UI.userInput.inputFeild.value;
+        this.player[this.turn].testimony = testimony;//this.UI.userInput.inputFeild.value;
 
         this.messagesChat.AddToChat(this.player[this.turn], this.player[this.turn].testimony);
 
@@ -92,86 +86,55 @@ class JudgeGPT {
 
     }
 
-    async DrawConclusion() 
+    async CreateRuling() 
     {
-        // Disable the submit button
-        this.UI.userInput.submitButton.disabled = true;
-        this.UI.userInput.group.hidden = true;
 
         var prompt = this.prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.player[0].role+"'s' testimony is: {" + this.player[0].testimony + "} The "+this.player[1].role+"'s' defence testimony is: {" + this.player[1].testimony + "}";
         this.ruling = await AskGPT(prompt);
         this.messagesChat.AddToChat(this.judge, this.ruling);
+    }
+
+    async CreatePunsihment()
+    {
 
         prompt =  this.prompts.punishment.replace("$", this.ruling);
         console.log(prompt);
         this.punishment = await AskGPT(prompt);
         this.messagesChat.AddToChat(this.judge, this.punishment);
+    }
 
+    async DeclareWinner()
+    {
+        LogDiscordMessages(this.messagesChat);  
         prompt = this.prompts.winner.replace("$", this.ruling);
         var winner = await AskGPT(prompt);
-        this.UI.winnerDiv.innerText = "Winner: " + winner;
-        if(winner.toLowerCase().includes(this.player[1].role.toLowerCase()))
-            this.UI.winnerDiv.classList.add(this.player[1].class);
-        else
-            this.UI.winnerDiv.classList.add(this.player[0].class);
-
-        LogDiscordMessages(this.messagesChat);  
-
-        this.UI.analysis.group.hidden = false;
-        this.UI.gameOverUI.group.hidden = false;
-        this.UI.gameOverUI.restartButton.onclick = function() {
-          location.reload();
-        };
-
-    }
-
-    async Analysis()
-    {
-        this.UI.analysis.group.hidden = false;
-        this.UI.analysis.button.hidden = true;
-        prompt =  this.prompts.scoring.replace("$", this.player[0].testimony).replace("%", this.player[0].role);
-        console.log(prompt);
-        var p0Score = await AskGPT(prompt);
-        this.UI.analysis.player[0].innerText = this.player[0].role +"\n"+this.player[0].testimony + "\n\n" + p0Score;
-
-
-        prompt =  this.prompts.scoring.replace("$", this.player[1].testimony).replace("%", this.player[1].role);
-        console.log(prompt);
-        var p1Score = await AskGPT(prompt);
-        this.UI.analysis.player[1].innerText = this.player[1].role +"\n"+this.player[1].testimony+ "\n\n" + p1Score;
-    }
-
-}
-
-class JudgeGPTUI
-{
-    constructor(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv) {
-        // Define global variables
-        this.chatDiv = chatDiv;
-        this.winnerDiv = winnerDiv;
-        this.subheading = subheading;
         
-        this.gameOverUI = gameOverUI;
-        this.analysis = analysis;
-        this.userInput = userInput;
+        if(winner.toLowerCase().includes(this.player[1].role.toLowerCase()))
+        {
+            return this.player[1];
+        }
 
-        this.typingDiv = typingDiv;
+        this.running = false;
 
     }
 
-    TypeIntoInput()
+    async Analysis(playerid)
     {
-        this.userInput.aiRespondButton.disabled = this.userInput.inputFeild.value.length > 0;
+        prompt =  this.prompts.scoring.replace("$", this.player[playerid].testimony).replace("%", this.player[playerid].role);
+        console.log(prompt);
+        player[playerid].score = await AskGPT(prompt);
+
+        return player[playerid];
     }
+
 }
 
-class MessageChat
+class MessageBackEnd
 {
-    constructor(chatDiv)
+    constructor()
     {
         this.messages = {};
         this.messages.count = 0;
-        this.chatDiv = chatDiv;
     }
 
      //Add a message to the chat - maybe this should be in a message class
@@ -182,33 +145,6 @@ class MessageChat
         this.messages[this.messages.count].message = chat;
         this.messages[this.messages.count].discord = false;
         this.messages.count++;
-
-        const newChat = document.createElement('div');
-        newChat.classList.add("row");
-        newChat.classList.add("message");
-        newChat.classList.add(playerSpeaking.class);
-
-        if(this.messages.count % 2 == 0)
-            newChat.classList.add("alt");
-
-        const messageContents = document.createElement('div');
-        messageContents.classList.add("col");
-        //messageContents.classList.add("messageContents");
-        messageContents.classList.add("rounded-3");
-        messageContents.innerText = chat;
-        
-        const sender = document.createElement('div');
-        sender.classList.add("col-2");
-        sender.classList.add("sender");
-
-        if(this.messages.count <= 1 || this.messages[this.messages.count-2].sender != playerSpeaking)
-        {
-            sender.innerText = playerSpeaking.role + " "+ playerSpeaking.name+": ";
-        }
-
-        newChat.appendChild(sender);
-        newChat.appendChild(messageContents);
-        this.chatDiv.appendChild(newChat);
     }
 }
 
@@ -219,6 +155,8 @@ class Player {
         this.instruction = instruction;
         this.testimony = "";
         this.class = styleClass;
+        this.score;
+        this.client = "";
     }
 }
 

@@ -27,7 +27,8 @@
         <!-- -->
         <script src="backgroundImages.js"></script>
         <script src="randomLines.js"></script>
-        <script src="judgeGPT.js"></script>
+        <script src="judgeGPTServer.js"></script>
+        <script src="judgeGPTClient.js"></script>
 
     </head>
 
@@ -59,10 +60,10 @@
                     <div id="analysis1" class="Analysis col-6"></div>
                 </div>
                 <div class="row">
-                    <button id="restartButton" class="button w-button col" onclick="judgeGPT.AiRespond()">
+                    <button id="restartButton" class="button w-button col" onclick="location.reload()">
                         Restart
                     </button>
-                    <button id="analysisButton" class="button w-button col" onclick="judgeGPT.Analysis()">
+                    <button id="analysisButton" class="button w-button col" onclick="client.Analysis()">
                         Analyze Responses
                     </button>
                 </div>
@@ -70,11 +71,11 @@
 
 
             <div id="inputGroup" class="row">
-                <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="UI.TypeIntoInput()"/>
-                <button id="submitButton" class="button w-button col-2" onclick="judgeGPT.Next()">
+                <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="client.TypeIntoInput()"/>
+                <button id="submitButton" class="button w-button col-2" onclick="client.SubmitTestimony()">
                     Submit
                 </button>
-                <button id="aiRespondButton" class="button w-button col-2" onclick="judgeGPT.AiRespond()">
+                <button id="aiRespondButton" class="button w-button col-2" onclick="client.AiRespond()">
                     AI Response
                 </button>
             </div>
@@ -102,17 +103,6 @@
         analysis.group = document.getElementById('analysisGroup');
         analysis.button = document.getElementById('analysisButton');
 
-        /*const analysisGroup = document.getElementById('analysisGroup');
-        const analysisButton = document.getElementById('analysisButton')
-        const analysis = {};
-        analysis[0] = document.getElementById('analysis0');
-        analysis[1] = document.getElementById('analysis1');*/
-        //endButtons = document.getElementById('endButtons');
-
-        /*const submitButton = document.getElementById('submitButton');
-        const aiRespondButton = document.getElementById('aiRespondButton');
-        const userInputFeild = document.getElementById('userInput');
-        const inputGroup = document.getElementById('inputGroup');*/
         const typingDiv = document.getElementById('typing');
 
         const userInput = {};
@@ -122,11 +112,14 @@
         userInput.group = document.getElementById('inputGroup');
 
 
-        UI = new JudgeGPTUI(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv);
+        judgeGPTServer = new JudgeGPTServer();
 
-        judgeGPT = new JudgeGPT(UI);
+        client = new JudgeGPTClient(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv, judgeGPTServer);
 
-        judgeGPT.Start();
+        judgeGPTServer.Start();
+        
+        client.Start();
+
 
         BackgroundImages.SetBackground();
 
