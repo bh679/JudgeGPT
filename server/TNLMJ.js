@@ -82,7 +82,7 @@ async GetImage() {
     var currentTime = new Date();
     var timeDifference = currentTime - this.status.startTime; 
 
-    while (this.status.progress != "incomplete" && this.status.progress < 100 && timeDifference <= 120000) 
+    while (this.status.progress != "incomplete" && this.status.progress < 100 && timeDifference <= 60000) 
     {
       currentTime = new Date();
       timeDifference = currentTime - this.status.startTime;

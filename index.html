@@ -3,6 +3,17 @@
 <!-- Last Published: Thu May 18 2023 15:06:15 GMT+0000 (Coordinated Universal Time) -->
 <html data-wf-domain="">
     <head>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-1760E3YTQP"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-1760E3YTQP');
+        </script>
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>JudgeGPT</title>
@@ -72,6 +83,20 @@
                 padding-top: 20px;
             }
 
+            .Analysis
+            {
+
+            }
+
+            #analysis0
+            {
+                background-color: rgba(200, 200, 247, 0.75);
+            }
+
+            #analysis1{
+                background-color: rgba(200, 246, 200, 0.75);
+            }
+
         </style>
 
     </head>
@@ -90,7 +115,25 @@
             <div id="chat"></div>
             <div id="typing"></div>
 
-            <div id="winner"></div>
+            <div id="winner">
+            </div>
+
+
+            <div id="endButtons">
+                <div class="row">
+                    <button id="restartButton" class="button w-button col" onclick="AiRespond()">
+                        Restart
+                    </button>
+                    <button id="analysisButton" class="button w-button col" onclick="Analysis()">
+                        Analyze Responses
+                    </button>
+                </div>
+                <div id="analysisGroup" class="row">
+                    <div id="analysis0" class="Analysis col-6"></div>
+                    <div id="analysis1" class="Analysis col-6"></div>
+                </div>
+            </div>
+
 
             <div id="inputGroup" class="row">
                 <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="TypeIntoInput()"/>
@@ -103,9 +146,6 @@
             </div>
 
 
-            <button id="restartButton" class="button w-button" onclick="AiRespond()">
-                Ai Suggest
-            </button>
 
         
         </div>
@@ -116,8 +156,16 @@
         // Define global variables
         const chatDiv = document.getElementById('chat');
         const winnerDiv = document.getElementById('winner');
-        const submitButton = document.getElementById('submitButton');
+
+        const analysisGroup = document.getElementById('analysisGroup');
+        const analysisButton = document.getElementById('analysisButton')
+        const analysis = {};
+        analysis[0] = document.getElementById('analysis0');
+        analysis[1] = document.getElementById('analysis1');
+        endButtons = document.getElementById('endButtons');
         const restartButton = document.getElementById('restartButton');
+
+        const submitButton = document.getElementById('submitButton');
         const aiRespondButton = document.getElementById('aiRespondButton');
         const userInputFeild = document.getElementById('userInput');
         const inputGroup = document.getElementById('inputGroup');
@@ -130,7 +178,7 @@
             "Invoke Retrial Protocol",
             "Restart Judicial Simulation",
             "Reset Case Parameters",
-            "Reconfigure Litigation",
+            "New Litigation Configuration",
             "Commence New Proceedings",
             "Reinitialize Justice Sequence",
             "Resurrect Case from Archive"
@@ -167,12 +215,13 @@
         var gameCase = "undefined";
         
         var prompts = {};
-        prompts.judgeCharacter = "You are JudgeGPT, a judge in a televised small claims court TV show";
-        prompts.cases = [ "Come up with an abusrd and/or hilarious accursation to be argued in small claims court between two parties.",
+        prompts.judgeCharacter = "You are JudgeGPT, a judge in a televised small claims court TV show. You are similar to Judge Judy.";
+        prompts.cases = [ "Come up with an abusrd and/or hilarious accursation to be argued in small claims court between two parties.",//" ("+player[0].role + "&" +player[1].role+ ")",
         "Come up with an abusrd and/or hilarious accursation to be argued in court between two parties.",
         "Come up with a rediculous and hilarious accursation to be argued in court between two parties."];
         prompts.punishment = "Provide a funny, absurd and unfitting punishment and lesson to be learnt for the following court ruling:{$}";
-        prompts.winner = "A judge rulled the following: {$} Give a single word repsonse of who is the winner, Plaintiff, Defendant or neither. ";
+        prompts.winner = "A judge rulled the following: {$} Give a single word repsonse of who is the winner, "+player[0].role +", "+player[1].role +" or neither. ";
+        prompts.scoring = "You are scoring the result of a text based improve game, by %. Score the setence on each of the four metrics, creativity, intelligence, humor and provide explinations on each. The sentence to be scored is {$}. At the end, provide a total score.";
 
         let messages = {};
         messages.count = 0;
@@ -184,9 +233,10 @@
         // Define asynchronous function to send data
         async function Start() {
 
-           //* 
-            restartButton.hidden = true;
+           /* 
+            endButtons.hidden = true;
             inputGroup.hidden = true;
+            analysisGroup.hidden = true;
             gameCase = await AskGPT(prompts.cases[Math.floor(Math.random() * 3)]);
             AddToChat(judge, gameCase);
             UpdateGameState();
@@ -304,9 +354,9 @@
         {
             // Disable the submit button
             submitButton.disabled = true;
-
             inputGroup.hidden = true;
-            var prompt = prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + gameCase + "}. The Plaintiff testimony is: {" + player[0].testimony + "} The Defendant defence testimony is: {" + player[1].testimony + "}";
+
+            var prompt = prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + gameCase + "}. The "+player[0].role+"'s' testimony is: {" + player[0].testimony + "} The "+player[1].role+"'s' defence testimony is: {" + player[1].testimony + "}";
             ruling = await AskGPT(prompt);
             AddToChat(judge, ruling);
 
@@ -326,14 +376,29 @@
             LogDiscordMessages();  
 
 
-            restartButton.hidden = false;
+            analysisGroup.hidden = false;
+            endButtons.hidden = false;
             restartButton.innerText = restartButtonLabels[Math.floor(Math.random() * restartButtonLabelsCount)];
             restartButton.onclick = function() {
               location.reload();
             };
 
+        }
+
+        async function Analysis()
+        {
+            analysisGroup.hidden = false;
+            analysisButton.hidden = true;
+            prompt =  prompts.scoring.replace("$", player[0].testimony).replace("%", player[0].role);
+            console.log(prompt);
+            var p0Score = await AskGPT(prompt);
+            analysis[0].innerText = player[0].role +"\n"+player[0].testimony + "\n\n" + p0Score;
 
 
+            prompt =  prompts.scoring.replace("$", player[1].testimony).replace("%", player[1].role);
+            console.log(prompt);
+            var p1Score = await AskGPT(prompt);
+            analysis[1].innerText = player[1].role +"\n"+player[1].testimony+ "\n\n" + p1Score;
         }
 
         async function AskGPT(input)
