@@ -130,3 +130,4 @@ dist
 .pnp.*
 bitnami-env.sh
 env.js
+images
