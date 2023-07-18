@@ -27,7 +27,6 @@
         <!-- -->
         <script src="backgroundImages.js"></script>
         <script src="randomLines.js"></script>
-        <script src="judgeGPTServer.js"></script>
         <script src="judgeGPTClient.js"></script>
 
     </head>
@@ -126,12 +125,8 @@
         userInput.inputFeild = document.getElementById('userInput');
         userInput.group = document.getElementById('inputGroup');
 
-
-        judgeGPTServer = new JudgeGPTServer();
-        judgeGPTServer.Start();
-
         client = new JudgeGPTClient();
-        client.ConnectToServer(judgeGPTServer);
+        client.ConnectToServer();
 
         UI = new JudgeGPTUI(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, client);
 

@@ -4,11 +4,10 @@ var cors = require('cors');
 var https = require('https');
 var fs = require('fs');
 var app = express();
-const PromptGPT = require('./PromptGPT');
-const TNLMJ = require('./TNLMJ');
 
-let promptResponse = {};
-let TNLMJImages = {};
+const JudgeGPTServer = require('./JudgeGPTServer');
+const judgeGPTServer = new JudgeGPTServer();
+judgeGPTServer.Start();
 
 // Use cors middleware for handling Cross-Origin Resource Sharing
 app.use(cors());
@@ -23,8 +22,18 @@ app.use(function(req, res, next) {
 });
 
 
-// Define a POST route for '/startUnFake'
-app.post('/AskGPT', function (req, res) {
+// Define a GET route for '/getData'
+app.get('/GetGameState', function (req, res) {
+    res.send({ 
+        messages: judgeGPTServer.messagesChat.messages,
+        playerTurn: judgeGPTServer.playersTurn()
+        });
+});
+
+app.post
+
+/*/ Define a POST route for '/startUnFake'
+app.post('/IsMyTurn', function (req, res) {
     // Log the body of the request
     console.log(req.body);
 
@@ -52,9 +61,9 @@ app.post('/AskGPT', function (req, res) {
         res.json("error");
     });
 
-});
+});*/
 
-// Define a POST route for '/startUnFake'
+/*/ Define a POST route for '/startUnFake'
 app.post('/MJImage', function (req, res) {
     // Log the body of the request
     //console.log(req.body);
@@ -83,10 +92,11 @@ app.post('/MJImage', function (req, res) {
         res.json("error");
     });
 
-});
+});*/
 
 const axios = require('axios');
 
+/*
 // Define a POST route for '/DiscrdWebHook'
 app.post('/DiscrdWebHook', function (req, res) {
     // Log the body of the request
@@ -108,7 +118,7 @@ app.post('/DiscrdWebHook', function (req, res) {
     .catch(function (error) {
         console.error('Error sending discord message:', error);
     });
-});
+});*/
 
 
 // Define HTTPS credentials
@@ -118,6 +128,6 @@ var options = {
 };
 
 // Create HTTPS server
-https.createServer(options, app).listen(3000, function () {
-    console.log('HTTPS server listening on port 3000!');
+https.createServer(options, app).listen(3001, function () {
+    console.log('HTTPS server listening on port 3001!');
 });

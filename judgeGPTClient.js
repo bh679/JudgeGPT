@@ -2,7 +2,6 @@ class JudgeGPTClient
 {
     constructor()
     {
-        this.server;
         this.messages = {length:0};
         this.myTurn = false;
 
@@ -20,31 +19,50 @@ class JudgeGPTClient
         return Math.floor(Math.random() * Date.now()).toString();
     }
 
-    ConnectToServer(server)
+    ConnectToServer()
     {
-        this.server = server;
         this.GetGameState();
     }
 
     async GetGameState()
     {
-        while(true)//this.server.running) 
+        while(true)
         {
-            await new Promise(resolve => setTimeout(resolve, 100));
+            try {
+                console.log("GetGameState");
 
-            if(this.messages == null || this.messages.length != this.server.messagesChat.messages.length)
-            {
-                this.UpdateState(this.server.messagesChat.messages);
-            }
+                // Make POST request to updateUnFake
+                const response = await fetch('https://brennan.games:3001/GetGameState', 
+                {
+                    method: 'GET'
+                });
+                
+                // Parse response data
+                const data = await response.json();
+                console.log(data);
+                if(this.messages == null || this.messages.length != data.messages.length)
+                {
+                    this.UpdateState(data.messages);
+                }
 
-            //is it my turn?
-            if(this.server.player[this.server.turn].clientID == this.uniqueID && this.server.aiTurn == false)
-            {
-                this.myTurn = true;
+                //is it my turn?
+                if(data.playerTurn.clientId = this.uniqueID)
+                {
+                    this.myTurn = true;
 
-                this.onMyTurn.Invoke(this.player);
+                    this.onMyTurn.Invoke(this.player);
 
-                return;
+                    return;
+                }
+
+                //ReadText(data.generatedText);
+
+            } catch(error) {
+                // If an error occurs, log it and update loading element
+                console.error("Error fetching update: ", error);
+                clearInterval(AskingGPTInterval);
+                typingDiv.innerText="";
+                return "Server unresponsive...";
             }
         }
     }

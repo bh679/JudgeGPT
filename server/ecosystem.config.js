@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    name: 'OpenAi GPT',
+    name: 'JudgeGPT Singleton',
     script: 'server.js',
     instances: '1', // or a number to specify how many instances you want
     //exec_mode: 'cluster', // optional, only needed if 'instances' is more than 1
