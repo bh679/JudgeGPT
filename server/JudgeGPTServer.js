@@ -1,5 +1,6 @@
 
 const PromptGPT = require('./PromptGPT');
+const RandomLines = require('./RandomLines');
 
 
 class JudgeGPTServer {
@@ -57,8 +58,8 @@ class JudgeGPTServer {
 
         this.NextPlayer();
 
-        LogDiscordMessages(this.messagesChat);/*
-
+        //LogDiscordMessages(this.messagesChat);/*
+        /*
         var imageUrl = GetImage(gameCase);
         console.log(imageUrl);
         const  img = document.createElement('img');
@@ -132,7 +133,8 @@ class JudgeGPTServer {
             return;
         }
 
-        if(this.player[this.turn].clientID == "")
+        console.log(this.player[this.turn].clientID);
+        if(this.player[this.turn].clientID == "" || this.player[this.turn].clientID == null)
         {
             this.player[this.turn].clientID = "AI";  
             this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
@@ -171,7 +173,7 @@ class JudgeGPTServer {
             this.turn++;
             this.NextPlayer();
 
-            LogDiscordMessages(this.messagesChat);
+            //LogDiscordMessages(this.messagesChat);
         }else
         {
             await this.CreateRuling();
@@ -206,7 +208,7 @@ class JudgeGPTServer {
 
     async DeclareWinner()
     {
-        LogDiscordMessages(this.messagesChat);  
+        //LogDiscordMessages(this.messagesChat);  
         prompt = this.prompts.winner.replace("$", this.ruling);
         var winner = await AskGPT(prompt);
         

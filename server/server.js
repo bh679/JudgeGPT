@@ -8,6 +8,8 @@ var app = express();
 const PromptGPT = require('./PromptGPT');
 let promptResponse = {};
 
+const RandomLines = require('./RandomLines');
+
 const JudgeGPTServer = require('./JudgeGPTServer');
 const judgeGPTServer = new JudgeGPTServer();
 judgeGPTServer.Start();
@@ -32,17 +34,26 @@ app.use(express.json());
 
 // Log all incoming requests
 app.use(function(req, res, next) {
-    console.log(`${req.method} request for '${req.url}'`);
+    if(req.url != "/GetGameState")
+        console.log(`${req.method} request for '${req.url}'`);
     next();  // Pass control to the next middleware function
 });
 
 
 // Define a GET route for '/getData'
 app.get('/GetGameState', function (req, res) {
-    console.log(judgeGPTServer.messagesChat.messages);
+    //console.log(judgeGPTServer.messagesChat.messages);
     res.send({ 
         messages: judgeGPTServer.messagesChat.messages,
         playerTurn: judgeGPTServer.GetPlayersTurn()
+        });
+});
+
+// Define a GET route for '/getData'
+app.get('/RandomName', function (req, res) {
+    //console.log(judgeGPTServer.messagesChat.messages);
+    res.send({ 
+        name: RandomLines.GetRandomName()
         });
 });
 
@@ -56,6 +67,22 @@ app.post('/SubmitTestimony', function (req, res) {
     const testimony = req.body.testimony;
 
     judgeGPTServer.SubmitTestimony(testimony);
+
+    res.send("success");
+
+});
+
+// Define a POST route for '/startUnFake'
+app.post('/TryJoinHearing', function (req, res) {
+    // Log the body of the request
+    console.log(req.body);
+
+    // Extract youtubeId from the request body
+    const playerData = req.body.playerData;
+    var playerRef = judgeGPTServer.JoinHearing(playerData);
+    res.json({ //why not make res.json = data
+            playerRef: playerRef
+        });
 
 });
 

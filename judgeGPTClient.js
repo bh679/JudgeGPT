@@ -26,10 +26,10 @@ class JudgeGPTClient
 
     async GetGameState()
     {
+        console.log("GetGameState");
         while(true)
         {
             try {
-                console.log("GetGameState");
 
                 // 
                 const response = await fetch('https://brennan.games:3000/GetGameState', 
@@ -43,13 +43,16 @@ class JudgeGPTClient
                 // Parse response data
                 const data = await response.json();
                 console.log(data);
+
                 if(this.messages == null || this.messages.length != data.messages.length)
                 {
                     this.UpdateState(data.messages);
                 }
 
+                console.log("if(data.playerTurn.clientId == this.uniqueID)");
+                console.log(data.playerTurn.clientID + " == " +this.uniqueID);
                 //is it my turn?
-                if(data.playerTurn.clientId = this.uniqueID)
+                if(data.playerTurn.clientID == this.uniqueID)
                 {
                     this.myTurn = true;
                     this.player = data.playerTurn;
@@ -73,7 +76,6 @@ class JudgeGPTClient
 
     UpdateState(newState)
     {
-        console.log(newState);
         this.messages = { ...newState };
 
         if(this.messages.length == 0)
@@ -84,28 +86,42 @@ class JudgeGPTClient
         this.onStateChange.Invoke(this.messages);
     }
 
-    TryJoinHearing(playerData)
+    async TryJoinHearing(playerData)
     {
+        console.log("TryJoinHearing");
         playerData.clientID = this.uniqueID;
 
-        console.log(playerData.uniqueID);
+        console.log(playerData.clientID);
 
-        var playerRef = this.server.JoinHearing(playerData);
-        if(playerRef != null)
-            this.player = { ...playerRef};
-        else
-            this.player = playerRef;
+        //var playerRef = this.server.JoinHearing(playerData);
 
+        // Make POST request to JudgeGPTServer
+        var response = await fetch('https://brennan.games:3000/TryJoinHearing', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ playerData: playerData }),
+        });
+
+        var data = await response.json();
+
+        console.log("playerRef");
+        console.log(data);
+        console.log(data.playerRef);
+
+        this.player = data.playerRef;
         console.log(this.player);
+
 
         this.onJoinHearing.Invoke(this.player);
     }
 
 
-    SubmitTestimony(testimony)
+    async SubmitTestimony(testimony)
     {
-        // Make POST request to updateUnFake
-        fetch('https://brennan.games:3000/SubmitTestimony', {
+        // Make POST request to JudgeGPTServer
+        var response = await fetch('https://brennan.games:3000/SubmitTestimony', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -267,7 +283,8 @@ class CourtRoomIdentity
         this.playerData = {};
 
         this.playerData.profileUrl = GetRandomProfileImage();
-        this.playerData.name = RandomLines.GetRandomName();
+        // = RandomLines.GetRandomName();
+        this.playerData.name = "";
 
         this.groupDiv = courtRoomIdentity;
         this.joinHearingButton = joinHearingButton;
@@ -303,6 +320,24 @@ class CourtRoomIdentity
         this.EditNameMode(false);
 
         this.Reset();
+        this.RandomName();
+    }
+
+    async RandomName()
+    {
+        const response = await fetch('https://brennan.games:3000/RandomName', 
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        // Parse response data
+        const data = await response.json();
+        this.playerData.name = data.name;
+        this.nameInput.placeholder=this.playerData.name;
+        this.nameDiv.innerText = this.playerData.name;
     }
 
     Reset()
