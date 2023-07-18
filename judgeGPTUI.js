@@ -159,7 +159,10 @@ class JudgeGPTUI
     UpdatePlayerList(playerList)
     {
         this.playerListUI.CreateAudience(playerList.audience);
-        this.playerListUI.CreatePlayerList(playerList.players);
+
+        var hearingParticipants = playerList.players;
+        hearingParticipants[0] = playerList.judge;
+        this.playerListUI.CreatePlayerList(hearingParticipants);
         //do same for playerlist
     }
 
@@ -244,19 +247,20 @@ class PlayerList
         profileImg.src = playerMember.profileUrl;
 
 
-        var nameDiv = document.createElement('div');
-        nameDiv.style = "font-size:10px"
-        nameDiv.innerText = playerMember.name;
 
         var roleDiv = document.createElement('div');
         roleDiv.style = "font-size:10px"
         roleDiv.innerText = playerMember.role;
+        
+        var nameDiv = document.createElement('div');
+        nameDiv.style = "font-size:10px"
+        nameDiv.innerText = playerMember.name;
 
         var center = document.createElement('center');
         center.style = "margin:5px;";
         center.appendChild(profileImg);
-        center.appendChild(nameDiv);
         center.appendChild(roleDiv);
+        center.appendChild(nameDiv);
 
         var card = document.createElement('div');
         card.classList.add("card");

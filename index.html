@@ -49,38 +49,6 @@
 
             <div class="row">
 
-                <!-- Audience / Gallery -->
-                <div class="col-2">
-
-                    <!-- User Profile / Identity -->
-                    <div class="row">
-                        <div class="card" style="margin:5px">
-                            <center style="margin:20px">
-                                <div id="courtRoomIdentity">
-                                </div>
-                                <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button>
-                            </center>
-                        </div>
-                    </div>
-
-
-                    <!-- Hearing Participants -->
-                    <div class="row">
-                        <h3>Hearing Participants</h3>
-                    </div>
-                    <div id="playerList" class="row">
-                        <div class="card col-4" style="margin:5px">
-                            <center style="margin:5px;">
-                                    <img src="./images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
-                                    <div>Name</div>
-                            </center>
-                        </div>
-                    </div>
-                    <div class="row" >
-                        <h5>Audience: <div id="audience"></div></h5>
-                    </div>
-                </div>
-
                 <!-- Courtroom -->
                 <div id="courtRoom" class="col-9">
 
@@ -116,6 +84,38 @@
                         <button id="aiRespondButton" class="button w-button col-2" onclick="UI.AiRespond()">
                             AI Response
                         </button>
+                    </div>
+                </div>
+
+                <!-- Audience / Gallery -->
+                <div class="col-2">
+
+                    <!-- User Profile / Identity -->
+                    <div class="row" hidden>
+                        <div class="card" style="margin:5px">
+                            <center style="margin:20px">
+                                <div id="courtRoomIdentity">
+                                </div>
+                                <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button>
+                            </center>
+                        </div>
+                    </div>
+
+
+                    <!-- Hearing Participants -->
+                    <div class="row">
+                        <h3>Hearing Participants</h3>
+                    </div>
+                    <div id="playerList" class="row">
+                        <div class="card col-4" style="margin:5px">
+                            <center style="margin:5px;">
+                                    <img src="./images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
+                                    <div>Name</div>
+                            </center>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <h5>Audience: <div id="audience"></div></h5>
                     </div>
                 </div>
             </div>

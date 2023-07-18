@@ -80,6 +80,7 @@ class JudgeGPTServer {
     {
         var playerlist = {};
         playerlist.players = this.player;
+        playerlist.judge = this.judge;
 
         this.CleanAudience(this.audience);
         playerlist.audience = this.audience;
