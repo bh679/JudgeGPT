@@ -52,6 +52,7 @@ class JudgeGPTClient
                 if(data.playerTurn.clientId = this.uniqueID)
                 {
                     this.myTurn = true;
+                    this.player = data.playerTurn;
 
                     this.onMyTurn.Invoke(this.player);
 
@@ -103,7 +104,15 @@ class JudgeGPTClient
 
     SubmitTestimony(testimony)
     {
-        this.server.SubmitTestimony(testimony);
+        // Make POST request to updateUnFake
+        fetch('https://brennan.games:3000/SubmitTestimony', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ testimony: testimony }),
+        });
+        
         this.GetGameState();
     }
 }

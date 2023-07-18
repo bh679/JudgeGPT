@@ -6,6 +6,7 @@ var fs = require('fs');
 var app = express();
 
 const PromptGPT = require('./PromptGPT');
+let promptResponse = {};
 
 const JudgeGPTServer = require('./JudgeGPTServer');
 const judgeGPTServer = new JudgeGPTServer();
@@ -38,10 +39,24 @@ app.use(function(req, res, next) {
 
 // Define a GET route for '/getData'
 app.get('/GetGameState', function (req, res) {
+    console.log(judgeGPTServer.messagesChat.messages);
     res.send({ 
         messages: judgeGPTServer.messagesChat.messages,
-        playerTurn: judgeGPTServer.playersTurn()
+        playerTurn: judgeGPTServer.GetPlayersTurn()
         });
+});
+
+
+// Define a POST route for '/startUnFake'
+app.post('/SubmitTestimony', function (req, res) {
+    // Log the body of the request
+    console.log(req.body);
+
+    // Extract youtubeId from the request body
+    const testimony = req.body.testimony;
+
+    judgeGPTServer.SubmitTestimony(testimony);
+
 });
 
 app.post

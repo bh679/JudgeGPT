@@ -43,8 +43,7 @@ class JudgeGPTServer {
         this.running = true;
         this.aiTurn = true;
 
-       //* 
-        this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * 3)]);
+        this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
         this.messagesChat.AddToChat(this.judge, this.gameCase);
         await new Promise(resolve => setTimeout(resolve, 3000));
 
@@ -103,9 +102,6 @@ class JudgeGPTServer {
         {
             return AddPlayer();
         }
-
-        console.log("is not joining");
-        return null;
 
         console.log("is not joining");
         return null;
@@ -241,10 +237,10 @@ class JudgeGPTServer {
 
     GetPlayersTurn()
     {
-        if(this.server.aiTurn)
-            return judge;
+        if(this.aiTurn)
+            return this.judge;
 
-        return this.server.player[this.server.turn];
+        return this.player[this.turn];
     }
 
 }
@@ -260,7 +256,6 @@ class MessageBackEnd
      //Add a message to the chat - maybe this should be in a message class
     AddToChat(playerSpeaking, chat)
     {
-        console.log(this.messages.length);
         this.messages[this.messages.length] = {};
         this.messages[this.messages.length].sender = playerSpeaking;
         this.messages[this.messages.length].message = chat;
@@ -298,29 +293,21 @@ class Prompts {
 
 module.exports = JudgeGPTServer;
 
-
-async function AskGPT(input)
-{
+async function AskGPT(input) {
     // Create a new OpenAI Reponse with prompt
     var promptResponse = new PromptGPT(input);
 
-    // Get the response 
-    promptResponse.AskGPT().then((data) => {
-        console.log(data);
-        console.log(data.generatedText);
-        /*res.json({ //why not make res.json = data
-            generatedText: data.generatedText,
-            inputPrompt: data.inputPrompt
-        });*/
-
+    try {
+        // Get the response 
+        const data = await promptResponse.AskGPT();
         return data.generatedText;
-    })
-    .catch((error) => {
-        // If there is an error, log it and send a response
+    } catch(error) {
+        // If there is an error, log it
         console.error(error);
-        res.json("error");
-    });
+        return "error";
+    }
 }
+
 
 
 /*
