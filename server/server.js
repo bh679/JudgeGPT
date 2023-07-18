@@ -131,3 +131,8 @@ var options = {
 https.createServer(options, app).listen(3001, function () {
     console.log('HTTPS server listening on port 3001!');
 });
+
+app.use(cors({
+  origin: 'https://brennan.games'
+}));
+

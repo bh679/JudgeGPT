@@ -32,7 +32,7 @@ class JudgeGPTClient
                 console.log("GetGameState");
 
                 // Make POST request to updateUnFake
-                const response = await fetch('https://brennan.games:3001/GetGameState', 
+                const response = await fetch('https://brennan.games/JudgeGPTServer/GetGameState', 
                 {
                     method: 'GET'
                 });
