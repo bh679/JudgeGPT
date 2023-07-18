@@ -180,7 +180,10 @@ class PlayerList
     CreateAudience(audienceList)
     {
         console.log(audienceList);
-        this.audienceDiv.innerHTML = "";
+        this.audienceDiv.innerText = Object.keys(audienceList).length;
+
+    }
+        /*this.audienceDiv.innerHTML = "";
 
         for (var key in audienceList) {
             if (audienceList.hasOwnProperty(key)) {
@@ -218,7 +221,7 @@ class PlayerList
         groupDiv.appendChild(card);
 
         return groupDiv;
-    }
+    }*/
 
     CreatePlayerList(playerList)
     {
@@ -226,7 +229,7 @@ class PlayerList
         this.playerListDiv.innerHTML = "";
 
         for (var key in playerList) {
-            if (playerList.hasOwnProperty(key)) {
+            if (playerList.hasOwnProperty(key) && playerList[key].name != "") {
                 this.playerListDiv.appendChild(this.CreatePlayerListMember(playerList[key]));
             }
         }
@@ -242,13 +245,18 @@ class PlayerList
 
 
         var nameDiv = document.createElement('div');
-        //nameDiv.style = "font-size:10px"
+        nameDiv.style = "font-size:10px"
         nameDiv.innerText = playerMember.name;
+
+        var roleDiv = document.createElement('div');
+        roleDiv.style = "font-size:10px"
+        roleDiv.innerText = playerMember.role;
 
         var center = document.createElement('center');
         center.style = "margin:5px;";
         center.appendChild(profileImg);
         center.appendChild(nameDiv);
+        center.appendChild(roleDiv);
 
         var card = document.createElement('div');
         card.classList.add("card");
@@ -256,7 +264,7 @@ class PlayerList
         card.appendChild(center);
 
         var groupDiv = document.createElement('div');
-        groupDiv.classList.add("col-2");
+        groupDiv.classList.add("col-3");
         groupDiv.style = "padding:0";
         groupDiv.appendChild(card);
 

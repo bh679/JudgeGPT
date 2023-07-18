@@ -180,6 +180,15 @@ class JudgeGPTServer {
         this.aiTurn = false;
         //send message to clients
 
+        await new Promise(resolve => setTimeout(resolve, 6000));
+
+        if(this.player[this.turn].testimony == null)
+        {
+            //this.player[this.turn].clientID = "AI";  
+            this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
+            await this.SubmitTestimony(await this.AiRespond());
+        }
+
     }
 
     async AiRespond()
@@ -303,7 +312,7 @@ class Player {
     constructor(name, role, clientID) {
         this.name = name;
         this.role = role;
-        this.testimony = "";
+        this.testimony = null;
         this.class = role.toLowerCase();
         this.score;
         this.clientID = clientID;
