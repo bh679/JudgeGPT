@@ -1,5 +1,6 @@
 
-let progressInterval = {};
+const PromptGPT = require('./PromptGPT');
+
 
 class JudgeGPTServer {
 
@@ -9,13 +10,18 @@ class JudgeGPTServer {
 
     init()
     {
-        this.judge = new Player("GPT", "Judge", "", "judge", "ai");
+        this.judge = new Player("GPT", "Judge", "ai");
 
         this.player = [
             //this.judge,
-            new Player("","Plaintiff","Plaintiff, do you have anything to add?","plaintiff", ""),
-            new Player("","Defendant","Defendant, what is your repsonse?","defendant", "")
+            new Player("","Plaintiff", ""),
+            new Player("","Defendant", "")
         ];
+
+        this.roles = [
+            "Plaintiff",
+            "Defendant"
+            ];
 
         this.turn = 0;
 
@@ -43,7 +49,7 @@ class JudgeGPTServer {
         await new Promise(resolve => setTimeout(resolve, 3000));
 
         if(this.courtEmpty)
-            this.messagesChat.AddToChat(this.judge, "The court is waiting for the Plaintiff & Defendant to arrive.");
+            this.messagesChat.AddToChat(this.judge, "The court will begin when the members arrive.");
 
         while(this.courtEmpty)
         {
@@ -62,34 +68,68 @@ class JudgeGPTServer {
 
     }
 
+    AddPlayer(playerData)
+    {
+            this.courtEmpty = false;
+            var newPlayer = new Player(playerData.name, roles[this.player.length], playerData.clientID);
+
+            this.player[this.player.length] = newPLayer;
+            
+            this.messagesChat.AddToChat(this.judge, "The " + newPLayer.role + " " + newPLayer.name + " entered the courtroom.");
+
+            return newPLayer;
+    }
+
     JoinHearing(playerData)
     {
+
         console.log(playerData.clientID);
         for(var i = 0; i < this.player.length; i++)
         {
             if(this.player[i].clientID == "")
             {
+                this.courtEmpty = false;
                 this.player[i].clientID = playerData.clientID;
                 this.player[i].name = playerData.name;
                 this.player[i].profileUrl = playerData.profileUrl;
 
                 this.messagesChat.AddToChat(this.judge, "The " + this.player[i].role + " " + this.player[i].name + " entered the courtroom.");
 
-                this.courtEmpty = false;
-
                 return this.player[i];
             }
         }
+
+        if(this.running && this.player.length < this.roles.length)
+        {
+            return AddPlayer();
+        }
+
+        console.log("is not joining");
+        return null;
 
         console.log("is not joining");
         return null;
     }
    
+    PlayerIntroduction()
+    {
+        switch(this.player[this.turn].role)
+        {
+            case "Plaintiff":
+                return "Plaintiff, do you have anything to add?";
+            case "Defendant":
+                return "Defendant, what is your repsonse?";
+            default:
+                return "Does anyon else have anything to say?";
+        }
+    }
 
     async NextPlayer()
     {
         console.log(this.turn);
-        this.messagesChat.AddToChat(this.judge, this.player[this.turn].instruction);
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.messagesChat.AddToChat(this.judge, this.PlayerIntroduction(this.player[this.turn]));
 
         if(this.turn >= this.player.length)
         {
@@ -145,7 +185,6 @@ class JudgeGPTServer {
                 await this.Analysis(i);
             await this.RestartGame();
 
-
         }
 
     }
@@ -156,6 +195,7 @@ class JudgeGPTServer {
         var prompt = this.prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.player[0].role+"'s' testimony is: {" + this.player[0].testimony + "} The "+this.player[1].role+"'s' defence testimony is: {" + this.player[1].testimony + "}";
         this.ruling = await AskGPT(prompt);
         this.messagesChat.AddToChat(this.judge, this.ruling);
+        await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
     async CreatePunsihment()
@@ -165,6 +205,7 @@ class JudgeGPTServer {
         console.log(prompt);
         this.punishment = await AskGPT(prompt);
         this.messagesChat.AddToChat(this.judge, this.punishment);
+        await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
     async DeclareWinner()
@@ -198,6 +239,14 @@ class JudgeGPTServer {
         this.Start();
     }
 
+    GetPlayersTurn()
+    {
+        if(this.server.aiTurn)
+            return judge;
+
+        return this.server.player[this.server.turn];
+    }
+
 }
 
 class MessageBackEnd
@@ -221,12 +270,11 @@ class MessageBackEnd
 }
 
 class Player {
-    constructor(name, role, instruction, styleClass, clientID) {
+    constructor(name, role, clientID) {
         this.name = name;
         this.role = role;
-        this.instruction = instruction;
         this.testimony = "";
-        this.class = styleClass;
+        this.class = role.toLowerCase();
         this.score;
         this.clientID = clientID;
     }
@@ -248,66 +296,34 @@ class Prompts {
 }
 
 
-//var players = 0;
-function SwitchHuman(playerId)
-{
-    player[playerId].human = !player[playerId].human;
-
-    if(player[playerId].human)
-        playerTypeButton[playerId].innerText = "Human";
-    else
-        playerTypeButton[playerId].innerText = "AI";
-}
-
+module.exports = JudgeGPTServer;
 
 
 async function AskGPT(input)
 {
+    // Create a new OpenAI Reponse with prompt
+    var promptResponse = new PromptGPT(input);
 
-    // Set interval for progress updates
-    AskingGPTInterval = setInterval(async function(){
-
-        typingDiv.innerText += ".";
-
-        if(typingDiv.innerText == ".....")
-        {
-            typingDiv.innerText = ".";
-        }
-
-        //interval
-    }, 250);  // Interval of 2 seconds
-
-    try {
-        console.log("progressInterval = setInterval(async function(){\n                try {");
-
-        // Make POST request to updateUnFake
-        const response = await fetch('https://brennan.games:3000/AskGPT', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ prompt: input }),
+    // Get the response 
+    promptResponse.AskGPT().then((data) => {
+        console.log(data);
+        console.log(data.generatedText);
+        res.json({ //why not make res.json = data
+            generatedText: data.generatedText,
+            inputPrompt: data.inputPrompt
         });
-        
-        // Parse response data
-        const data = await response.json();
-        clearInterval(AskingGPTInterval);
-        typingDiv.innerText="";
-       return data.generatedText;
 
-        //ReadText(data.generatedText);
-
-    } catch(error) {
-        // If an error occurs, log it and update loading element
-        console.error("Error fetching update: ", error);
-        clearInterval(AskingGPTInterval);
-        typingDiv.innerText="";
-        return "Server unresponsive...";
-    }
+        return data.generatedText;
+    })
+    .catch((error) => {
+        // If there is an error, log it and send a response
+        console.error(error);
+        res.json("error");
+    });
 }
 
 
-
+/*
 async function GetImage(input)
 {
 
@@ -362,7 +378,7 @@ async function LogDiscordMessages(msgChat)
 
             messages[i].discord = true;
         }
-    }*/
+    }*/ /*
 }
 
 async function SendMessage(input) {
@@ -373,4 +389,4 @@ async function SendMessage(input) {
             },
             body: JSON.stringify({ message: input }),
         });
-}
+}*/
