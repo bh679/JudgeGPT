@@ -28,6 +28,7 @@
         <script src="backgroundImages.js"></script>
         <script src="randomLines.js"></script>
         <script src="judgeGPTClient.js"></script>
+        <script src="judgeGPTUI.js"></script>
 
     </head>
 
@@ -47,47 +48,76 @@
             <h5 id="subheading"></h5>
 
             <div class="row">
+
+                <!-- Audience / Gallery -->
                 <div class="col-3">
-                    <div class="card">
-                        <center style="margin:20px">
-                            <div id="courtRoomIdentity">
-                            </div>
-                            <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button>
-                        </center>
+
+                    <!-- User Profile / Identity -->
+                    <div class="row">
+                        <div class="card" style="margin:5px">
+                            <center style="margin:20px">
+                                <div id="courtRoomIdentity">
+                                </div>
+                                <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button>
+                            </center>
+                        </div>
+                    </div>
+
+
+                    <!-- Audience -->
+                    <div class="row">
+                        <h3>Audience</h3>
+                    </div>
+                    <div id="audience" class="row">
+                        <div class="card col-4" style="margin:5px">
+                            <center style="margin:5px;">
+                                    <img src="./images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
+                                    <div>Name</div>
+                            </center>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Courtroom -->
                 <div id="courtRoom" class="col-9">
-                    <div id="chat"></div>
-                    <div id="typing"></div>
 
-                    <div id="winner">
-                    </div>
+                    <!-- Hearing Member List-->
+                    <div id="playerList" class="row" style="padding-right: calc(var(--bs-gutter-x) * 1);padding-left: calc(var(--bs-gutter-x) * 1);"></div>
 
+                    <!-- Hearing -->
+                    <div class="row">
+                        <div id="chat"></div>
+                        <div id="typing"></div>
 
-                    <div id="endButtons">
-                        <div id="analysisGroup" class="row">
-                            <div id="analysis0" class="Analysis col-6"></div>
-                            <div id="analysis1" class="Analysis col-6"></div>
+                        <div id="winner">
                         </div>
-                        <div class="row">
-                            <button id="restartButton" class="button w-button col" onclick="location.reload()">
-                                Restart
+
+
+                        <div id="endButtons">
+                            <div id="analysisGroup" class="row">
+                                <div id="analysis0" class="Analysis col-6"></div>
+                                <div id="analysis1" class="Analysis col-6"></div>
+                            </div>
+                            <div class="row">
+                                <button id="restartButton" class="button w-button col" onclick="location.reload()">
+                                    Restart
+                                </button>
+                                <button id="analysisButton" class="button w-button col" onclick="UI.Analysis()">
+                                    Analyze Responses
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div id="inputGroup" class="row">
+                            <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="UI.TypeIntoInput()"/>
+                            <button id="submitButton" class="button w-button col-2" onclick="UI.SubmitTestimony()">
+                                Submit
                             </button>
-                            <button id="analysisButton" class="button w-button col" onclick="UI.Analysis()">
-                                Analyze Responses
+                            <button id="aiRespondButton" class="button w-button col-2" onclick="UI.AiRespond()">
+                                AI Response
                             </button>
                         </div>
-                    </div>
-
-
-                    <div id="inputGroup" class="row">
-                        <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="UI.TypeIntoInput()"/>
-                        <button id="submitButton" class="button w-button col-2" onclick="UI.SubmitTestimony()">
-                            Submit
-                        </button>
-                        <button id="aiRespondButton" class="button w-button col-2" onclick="UI.AiRespond()">
-                            AI Response
-                        </button>
                     </div>
                 </div>
             </div>
@@ -125,10 +155,13 @@
         userInput.inputFeild = document.getElementById('userInput');
         userInput.group = document.getElementById('inputGroup');
 
+        const audienceDiv = document.getElementById('audience');
+        const playerListDiv = document.getElementById('playerList');
+
         client = new JudgeGPTClient();
         client.ConnectToServer();
 
-        UI = new JudgeGPTUI(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, client);
+        UI = new JudgeGPTUI(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, audienceDiv, playerListDiv, client);
 
 
         UI.Start();

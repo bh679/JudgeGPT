@@ -17,36 +17,14 @@ judgeGPTServer.Start();
 // Use cors middleware for handling Cross-Origin Resource Sharing
 app.use(cors());
 
-/*app.use(cors({
-  origin: function(origin, callback){
-    // allow requests with no origin (like mobile apps or curl requests)
-    if(!origin) return callback(null, true);
-    return callback(null, true);
-  }
-}));*/
-
-/*app.use(cors({
-  origin: 'https://brennan.games'
-}));*/
-
 // Tell Express to parse JSON in the body of incoming requests.
 app.use(express.json());
 
 // Log all incoming requests
 app.use(function(req, res, next) {
-    if(req.url != "/GetGameState")
+    if(req.url != "/Update")
         console.log(`${req.method} request for '${req.url}'`);
     next();  // Pass control to the next middleware function
-});
-
-
-// Define a GET route for '/getData'
-app.get('/GetGameState', function (req, res) {
-    //console.log(judgeGPTServer.messagesChat.messages);
-    res.send({ 
-        messages: judgeGPTServer.messagesChat.messages,
-        playerTurn: judgeGPTServer.GetPlayersTurn()
-        });
 });
 
 // Define a GET route for '/getData'
@@ -57,6 +35,25 @@ app.get('/RandomName', function (req, res) {
         });
 });
 
+
+// Define a POST route for '/startUnFake'
+app.post('/Update', function (req, res) {
+    // Log the body of the request
+    //console.log(req.body);
+
+    // Extract youtubeId from the request body
+    const playerData = req.body.playerData;
+
+    judgeGPTServer.InAudience(playerData);
+
+    //console.log(judgeGPTServer.messagesChat.messages);
+    res.send({ 
+        messages: judgeGPTServer.messagesChat.messages,
+        playerTurn: judgeGPTServer.GetPlayersTurn(),
+        playerList: judgeGPTServer.GetPlayers()
+        });
+
+});
 
 // Define a POST route for '/startUnFake'
 app.post('/SubmitTestimony', function (req, res) {

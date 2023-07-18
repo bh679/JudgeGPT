@@ -65,6 +65,12 @@ body, html {
     padding: 20px;
 }
 
+#chat
+{
+    padding-right: calc(var(--bs-gutter-x) * 1);
+    padding-left: calc(var(--bs-gutter-x) * 1);
+}
+
 #courtRoom
 {
 }

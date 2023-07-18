@@ -19,6 +19,8 @@ class JudgeGPTServer {
             new Player("","Defendant", "")
         ];
 
+        this.audience = {};
+
         this.roles = [
             "Plaintiff",
             "Defendant"
@@ -68,22 +70,55 @@ class JudgeGPTServer {
 
     }
 
-    AddPlayer(playerData)
+    InAudience(playerData)
+    {
+        playerData.lastHeard = new Date();
+        this.audience[playerData.clientID] = playerData;
+    }
+
+    GetPlayers()
+    {
+        var playerlist = {};
+        playerlist.players = this.player;
+
+        this.CleanAudience(this.audience);
+        playerlist.audience = this.audience;
+
+        return playerlist;
+    }
+
+    CleanAudience(audienceList)
+    {
+        for (var key in audienceList) {
+            if (audienceList.hasOwnProperty(key)) {
+
+                var differenceInMilliseconds = new Date() - audienceList[key].lastHeard;
+
+                if (differenceInMilliseconds >= 0.5 * 60 * 1000)
+                {
+                    delete audienceList[key];
+                }
+            }
+        }
+    }
+
+    /*AddPlayer(playerData)
     {
             this.courtEmpty = false;
             var newPlayer = new Player(playerData.name, roles[this.player.length], playerData.clientID);
+            newPlayer.profileUrl = playerData.profileUrl;
 
             this.player[this.player.length] = newPLayer;
             
             this.messagesChat.AddToChat(this.judge, "The " + newPLayer.role + " " + newPLayer.name + " entered the courtroom.");
 
             return newPLayer;
-    }
+    }*/
 
     JoinHearing(playerData)
     {
 
-        console.log(playerData.clientID);
+        console.log("playerData.clientID: " + playerData.clientID);
         for(var i = 0; i < this.player.length; i++)
         {
             if(this.player[i].clientID == "")
@@ -99,10 +134,10 @@ class JudgeGPTServer {
             }
         }
 
-        if(this.running && this.player.length < this.roles.length)
+        /*if(this.running && this.player.length < this.roles.length)
         {
             return AddPlayer();
-        }
+        }*/
 
         console.log("is not joining");
         return null;
@@ -272,6 +307,7 @@ class Player {
         this.class = role.toLowerCase();
         this.score;
         this.clientID = clientID;
+        this.profileUrl = "";
     }
 }
 
