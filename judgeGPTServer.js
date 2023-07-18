@@ -9,13 +9,13 @@ class JudgeGPTServer {
 
     init()
     {
-        this.player = [
-            new Player("","Plaintiff","Plaintiff, do you have anything to add?","plaintiff"),
-            new Player("","Defendant","Defendant, what is your repsonse?","defendant"),
-        ];
-        this.player.count = 0;
+        this.judge = new Player("GPT", "Judge", "", "judge", "ai");
 
-        this.judge = new Player("GPT", "Judge", "", "judge");
+        this.player = [
+            //this.judge,
+            new Player("","Plaintiff","Plaintiff, do you have anything to add?","plaintiff", ""),
+            new Player("","Defendant","Defendant, what is your repsonse?","defendant", "")
+        ];
 
         this.turn = 0;
 
@@ -28,6 +28,7 @@ class JudgeGPTServer {
 
         this.running = false;
         this.aiTurn = true;
+        this.courtEmpty = true;
     }
 
     // Start the game
@@ -39,7 +40,17 @@ class JudgeGPTServer {
        //* 
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * 3)]);
         this.messagesChat.AddToChat(this.judge, this.gameCase);
-        this.UpdateGameState();
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        if(this.courtEmpty)
+            this.messagesChat.AddToChat(this.judge, "The court is waiting for the Plaintiff & Defendant to arrive.");
+
+        while(this.courtEmpty)
+        {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        this.NextPlayer();
 
         LogDiscordMessages(this.messagesChat);/*
 
@@ -51,28 +62,45 @@ class JudgeGPTServer {
 
     }
 
-    async Join(clientID)
+    JoinHearing(playerData)
     {
-        for(var i = 0; i < 2; i++)
+        console.log(playerData.clientID);
+        for(var i = 0; i < this.player.length; i++)
         {
             if(this.player[i].clientID == "")
             {
-                this.player[i].clientID = clientID;
-                this.player.count++;
+                this.player[i].clientID = playerData.clientID;
+                this.player[i].name = playerData.name;
+                this.player[i].profileUrl = playerData.profileUrl;
 
-                return;
+                this.messagesChat.AddToChat(this.judge, "The " + this.player[i].role + " " + this.player[i].name + " entered the courtroom.");
+
+                this.courtEmpty = false;
+
+                return this.player[i];
             }
         }
+
+        console.log("is not joining");
+        return null;
     }
    
 
-    async UpdateGameState()
+    async NextPlayer()
     {
+        console.log(this.turn);
         this.messagesChat.AddToChat(this.judge, this.player[this.turn].instruction);
 
+        if(this.turn >= this.player.length)
+        {
+            return;
+        }
 
         if(this.player[this.turn].clientID == "")
         {
+            this.player[this.turn].clientID = "AI";  
+            this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
+            this.messagesChat.AddToChat(this.judge, "The " + this.player[this.turn].role + " " + this.player[this.turn].name + " entered the courtroom.");
             await this.SubmitTestimony(await this.AiRespond());
         }
         
@@ -83,12 +111,8 @@ class JudgeGPTServer {
 
     async AiRespond()
     {
-        console.log(this.turn);
-        console.log(this.player[this.turn].role);
         var prompt =  "You are " + this.player[this.turn].role + this.player[this.turn].name + " in court case " + this.gameCase + ". Make a very breif testimonal, of one or two sentences and include some suprising, abusrd and/or funny new information.";//prompts.punishment.replace("$", ruling);
-        console.log(prompt);
         var testimonial = await AskGPT(prompt);
-        console.log(testimonial);
         return testimonial;
         
     }
@@ -106,10 +130,10 @@ class JudgeGPTServer {
 
         this.messagesChat.AddToChat(this.player[this.turn], this.player[this.turn].testimony);
 
-        if(this.turn == 0)
+        if(this.turn < this.player.length-1)
         {
             this.turn++;
-            this.UpdateGameState();
+            this.NextPlayer();
 
             LogDiscordMessages(this.messagesChat);
         }else
@@ -117,7 +141,7 @@ class JudgeGPTServer {
             await this.CreateRuling();
             await this.CreatePunsihment();
             await this.DeclareWinner();
-            for(var i = 0 ; i < this.player.count; i++)
+            for(var i = 0 ; i < this.player.length; i++)
                 await this.Analysis(i);
             await this.RestartGame();
 
@@ -157,19 +181,21 @@ class JudgeGPTServer {
         this.running = false;
     }
 
-    async RestartGame()
-    {
-        await new Promise(resolve => setTimeout(resolve, 10000));
-        init();
-    }
-
     async Analysis(playerid)
     {
         prompt =  this.prompts.scoring.replace("$", this.player[playerid].testimony).replace("%", this.player[playerid].role);
         console.log(prompt);
-        player[playerid].score = await AskGPT(prompt);
+        this.player[playerid].score = await AskGPT(prompt);
 
-        return player[playerid];
+        return this.player[playerid];
+    }
+
+    async RestartGame()
+    {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log("restart");
+        this.init();
+        this.Start();
     }
 
 }
@@ -179,29 +205,30 @@ class MessageBackEnd
     constructor()
     {
         this.messages = {};
-        this.messages.count = 0;
+        this.messages.length = 0;
     }
 
      //Add a message to the chat - maybe this should be in a message class
     AddToChat(playerSpeaking, chat)
     {
-        this.messages[this.messages.count] = {};
-        this.messages[this.messages.count].sender = playerSpeaking;
-        this.messages[this.messages.count].message = chat;
-        this.messages[this.messages.count].discord = false;
-        this.messages.count++;
+        console.log(this.messages.length);
+        this.messages[this.messages.length] = {};
+        this.messages[this.messages.length].sender = playerSpeaking;
+        this.messages[this.messages.length].message = chat;
+        this.messages[this.messages.length].discord = false;
+        this.messages.length++;
     }
 }
 
 class Player {
-    constructor(name, role, instruction, styleClass) {
+    constructor(name, role, instruction, styleClass, clientID) {
         this.name = name;
         this.role = role;
         this.instruction = instruction;
         this.testimony = "";
         this.class = styleClass;
         this.score;
-        this.clientID = "";
+        this.clientID = clientID;
     }
 }
 

@@ -26,8 +26,6 @@ const taglines =
     "In courtrooms of the future, everyone will be a coder."
 ]
 
-const tagLineCount = 20;
-
 const restartButtonLabels = [
             "Initiate New Trial",
             "Reset Legal Matrix",
@@ -40,18 +38,56 @@ const restartButtonLabels = [
             "Reinitialize Justice Sequence",
             "Resurrect Case from Archive"
         ];
-var restartButtonLabelsCount = 10;
+
+
+const names = [
+  "Emma",
+  "Olivia",
+  "Ava",
+  "Isabella",
+  "Sophia",
+  "Mia",
+  "Charlotte",
+  "Amelia",
+  "Harper",
+  "Evelyn",
+  "Liam",
+  "Noah",
+  "William",
+  "James",
+  "Oliver",
+  "Benjamin",
+  "Elijah",
+  "Lucas",
+  "Mason",
+  "Logan",
+  "Alexander",
+  "Ethan",
+  "Jacob",
+  "Michael",
+  "Daniel",
+  "Henry",
+  "Jackson",
+  "Sebastian",
+  "Aiden",
+  "Matthew"
+];
 
 
 class RandomLines
 {
     static GetTagLine()
     {
-        return taglines[Math.floor(Math.random() * tagLineCount)];
+        return taglines[Math.floor(Math.random() * taglines.length)];
     }
 
     static GetRestartButtonLabel()
     {
-        return restartButtonLabels[Math.floor(Math.random() * restartButtonLabelsCount)];
+        return restartButtonLabels[Math.floor(Math.random() * restartButtonLabels.length)];
     }   
+
+    static GetRandomName()
+    {
+        return names[Math.floor(Math.random() * names.length)];
+    }
 }

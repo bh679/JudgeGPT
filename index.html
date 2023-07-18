@@ -47,39 +47,51 @@
 
             <h5 id="subheading"></h5>
 
-            <div id="chat"></div>
-            <div id="typing"></div>
-
-            <div id="winner">
-            </div>
-
-
-            <div id="endButtons">
-                <div id="analysisGroup" class="row">
-                    <div id="analysis0" class="Analysis col-6"></div>
-                    <div id="analysis1" class="Analysis col-6"></div>
+            <div class="row">
+                <div class="col-3">
+                    <div class="card">
+                        <center style="margin:20px">
+                            <div id="courtRoomIdentity">
+                            </div>
+                            <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button>
+                        </center>
+                    </div>
                 </div>
-                <div class="row">
-                    <button id="restartButton" class="button w-button col" onclick="location.reload()">
-                        Restart
-                    </button>
-                    <button id="analysisButton" class="button w-button col" onclick="client.Analysis()">
-                        Analyze Responses
-                    </button>
+                <div id="courtRoom" class="col-9">
+                    <div id="chat"></div>
+                    <div id="typing"></div>
+
+                    <div id="winner">
+                    </div>
+
+
+                    <div id="endButtons">
+                        <div id="analysisGroup" class="row">
+                            <div id="analysis0" class="Analysis col-6"></div>
+                            <div id="analysis1" class="Analysis col-6"></div>
+                        </div>
+                        <div class="row">
+                            <button id="restartButton" class="button w-button col" onclick="location.reload()">
+                                Restart
+                            </button>
+                            <button id="analysisButton" class="button w-button col" onclick="UI.Analysis()">
+                                Analyze Responses
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div id="inputGroup" class="row">
+                        <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="UI.TypeIntoInput()"/>
+                        <button id="submitButton" class="button w-button col-2" onclick="UI.SubmitTestimony()">
+                            Submit
+                        </button>
+                        <button id="aiRespondButton" class="button w-button col-2" onclick="UI.AiRespond()">
+                            AI Response
+                        </button>
+                    </div>
                 </div>
             </div>
-
-
-            <div id="inputGroup" class="row">
-                <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="client.TypeIntoInput()"/>
-                <button id="submitButton" class="button w-button col-2" onclick="client.SubmitTestimony()">
-                    Submit
-                </button>
-                <button id="aiRespondButton" class="button w-button col-2" onclick="client.AiRespond()">
-                    AI Response
-                </button>
-            </div>
-        </div>
 
         <div id="settings">
             
@@ -88,6 +100,9 @@
     <script>
 
         // Define global variables
+        const courtRoomIdentityGroup = document.getElementById('courtRoomIdentity');
+        const joinHearingButton = document.getElementById('joinHearingButton');
+
         const chatDiv = document.getElementById('chat');
         const winnerDiv = document.getElementById('winner');
         const subheading = document.getElementById('subheading');
@@ -118,7 +133,7 @@
         client = new JudgeGPTClient();
         client.ConnectToServer(judgeGPTServer);
 
-        UI = new JudgeGPTClient(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv, client);
+        UI = new JudgeGPTUI(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, client);
 
 
         UI.Start();

@@ -65,6 +65,9 @@ body, html {
     padding: 20px;
 }
 
+#courtRoom
+{
+}
 
 .Analysis
 {
@@ -78,4 +81,17 @@ body, html {
 
 #analysis1{
     background-color: rgba(200, 246, 200, 0.75);
+}
+
+
+/*
+
+Identity
+
+*/
+
+.profilePicture
+{
+    width:60%;
+    margin:20px
 }

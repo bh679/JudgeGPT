@@ -3,11 +3,21 @@ class JudgeGPTClient
     constructor()
     {
         this.server;
-        this.messages;
+        this.messages = {length:0};
         this.myTurn = false;
 
-        this.onMyTurnCallbacks = {};
-        this.onMyTurnCallbacks.count = 0;
+        this.uniqueID = this.GenerateID();
+
+        this.onMyTurn = new CallBack();
+        this.onStateChange = new CallBack();
+        this.onJoinHearing = new CallBack();
+        this.onNewHearing = new CallBack();
+
+        this.player;
+    }
+
+    GenerateID() {
+        return Math.floor(Math.random() * Date.now()).toString();
     }
 
     ConnectToServer(server)
@@ -18,37 +28,68 @@ class JudgeGPTClient
 
     async GetGameState()
     {
-        while(this.server.running) 
+        while(true)//this.server.running) 
         {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 100));
 
-            this.messages = this.server.messagesChat.messages;
+            if(this.messages == null || this.messages.length != this.server.messagesChat.messages.length)
+            {
+                this.UpdateState(this.server.messagesChat.messages);
+            }
 
             //is it my turn?
             if(this.server.player[this.server.turn].clientID == this.uniqueID && this.server.aiTurn == false)
             {
                 this.myTurn = true;
 
-                for(var i = 0; i < this.onMyTurnCallbacks.count; i++)
-                {
-                    this.onMyTurnCallbacks[i]();
-                }
+                this.onMyTurn.Invoke(this.player);
 
                 return;
             }
         }
     }
 
-    AddOnMyTurnCallback(callback)
+    UpdateState(newState)
     {
-        this.onMyTurnCallbacks[this.onMyTurnCallbacks.count] = callback;
-        this.onMyTurnCallbacks.count++;
+        console.log(newState);
+        this.messages = { ...newState };
+
+        if(this.messages.length == 0)
+        {
+            this.onNewHearing.Invoke();
+        }
+
+        this.onStateChange.Invoke(this.messages);
+    }
+
+    TryJoinHearing(playerData)
+    {
+        playerData.clientID = this.uniqueID;
+
+        console.log(playerData.uniqueID);
+
+        var playerRef = this.server.JoinHearing(playerData);
+        if(playerRef != null)
+            this.player = { ...playerRef};
+        else
+            this.player = playerRef;
+
+        console.log(this.player);
+
+        this.onJoinHearing.Invoke(this.player);
+    }
+
+
+    SubmitTestimony(testimony)
+    {
+        this.server.SubmitTestimony(testimony);
+        this.GetGameState();
     }
 }
 
 class JudgeGPTUI
 {
-    constructor(chatDiv, winnerDiv, subheading, gameOverUI, userInput, typingDiv, client) {
+    constructor(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, client) {
         // Define global variables
         this.chatDiv = chatDiv;
         this.winnerDiv = winnerDiv;
@@ -58,18 +99,21 @@ class JudgeGPTUI
         this.analysis = analysis;
         this.userInput = userInput;
 
-        this.typingDiv = typingDiv;
-
-        this.client = client;// = new JudgeGPT();
+        //this.typingDiv = typingDiv;
 
         this.messageUI = new MessageUI(chatDiv);
+        this.courtRoomIdentity = new CourtRoomIdentity(courtRoomIdentityGroup, joinHearingButton);
+        this.OnMyTurn = this.OnMyTurn.bind(this);
+        this.OnJoinHearing = this.OnJoinHearing.bind(this);
+        this.OnNewHearing = this.OnNewHearing.bind(this);
 
-        this.uniqueID = this.generateID();
+        this.client = client;// = new JudgeGPT();
+        this.client.onStateChange.AddListener(this.messageUI.UpdateChat);
+        this.client.onMyTurn.AddListener(this.OnMyTurn);
+        this.client.onJoinHearing.AddListener(this.OnJoinHearing);
+        this.client.onNewHearing.AddListener(this.OnNewHearing);
 
-    }
-
-    generateID() {
-        return Math.floor(Math.random() * Date.now()).toString();
+        this.joinNextHearing = false;
     }
 
 
@@ -78,20 +122,48 @@ class JudgeGPTUI
         this.gameOverUI.group.hidden = true;
         this.userInput.group.hidden = true;
         this.analysis.group.hidden = true;
+        this.userInput.submitButton.disabled = false;
 
-        //this.server.Join(this.uniqueID);
+        this.courtRoomIdentity.Reset();
 
-        this.GetGameState();
+        if(this.joinNextHearing)
+        {
+            this.TryJoinHearing();
+        }
     }
 
-    MyTurn(player)
+    OnNewHearing()
+    {
+        this.Start();
+    }
+
+    OnMyTurn(player)
     {
         this.userInput.group.hidden = false;
         this.userInput.inputFeild.value = "";
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
     }
 
-    
+    TryJoinHearing()
+    {
+        this.courtRoomIdentity.OnTryJoinHearing();
+        this.client.TryJoinHearing(this.courtRoomIdentity.playerData);
+    }
+
+    OnJoinHearing(player)
+    {
+        console.log(player);
+
+        if(player == null)
+        {
+            this.joinNextHearing = true;
+        }else
+        {
+            this.courtRoomIdentity.OnJoinHearing(player.role);
+        }
+
+    }
+
 
     TypeIntoInput()
     {
@@ -104,8 +176,7 @@ class JudgeGPTUI
         this.userInput.submitButton.disabled = true;
         this.userInput.group.hidden = true;
 
-        this.server.SubmitTestimony(userInput.inputFeild.value);
-        this.GetGameState();
+        this.client.SubmitTestimony(userInput.inputFeild.value);
 
         this.userInput.aiRespondButton.disabled = false;
     }
@@ -158,6 +229,116 @@ class JudgeGPTUI
     }
 }
 
+class CourtRoomIdentity
+{
+    constructor(courtRoomIdentity, joinHearingButton){
+
+
+        this.playerData = {};
+
+        this.playerData.profileUrl = GetRandomProfileImage();
+        this.playerData.name = RandomLines.GetRandomName();
+
+        this.groupDiv = courtRoomIdentity;
+        this.joinHearingButton = joinHearingButton;
+
+        this.profileImg = document.createElement('img');
+        this.profileImg.classList.add("rounded-circle");
+        this.profileImg.style = "width:60%;margin:20px";
+        this.profileImg.src = this.playerData.profileUrl;
+
+        this.nameInput = document.createElement('input');
+        this.nameInput.type="text";
+        this.nameInput.placeholder=this.playerData.name;
+        this.nameInput.style = "width:60%;margin:20px";
+        this.nameInput.oninput=() => {
+            this.ChangeName();
+        };
+
+        this.nameDiv = document.createElement('h5');
+        this.nameDiv.innerText = this.playerData.name;
+        this.nameDiv.onclick = () => {
+            this.EditNameMode(true);
+        };
+
+
+        this.roleDiv = document.createElement('h5');
+
+
+        this.groupDiv.appendChild(this.profileImg);
+        this.groupDiv.appendChild(this.nameInput);
+        this.groupDiv.appendChild(this.nameDiv);
+        this.groupDiv.appendChild(this.roleDiv);
+
+        this.EditNameMode(false);
+
+        this.Reset();
+    }
+
+    Reset()
+    {
+        this.roleDiv.innerText = "Audience";
+        this.joinHearingButton.disabled = false;
+        this.joinHearingButton.hidden = false;
+    }
+
+    EditNameMode(isEditing)
+    {
+        this.nameInput.hidden = !isEditing;
+        this.nameDiv.hidden = isEditing;
+    }
+
+    ChangeName()
+    {
+        this.playerData.name = this.nameInput.value;
+        this.nameDiv.innerText = this.playerData.name;
+    }
+
+    OnTryJoinHearing()
+    {
+        this.roleDiv.innerText = "Joining Hearing";
+    }
+
+    OnJoinHearing(role)
+    {
+        this.UpdateRole(role);
+
+    }
+
+    UpdateRole(role)
+    {
+        this.joinHearingButton.hidden = true;
+        console.log(role);
+        this.roleDiv.innerText = role;
+    }
+}
+
+class MessageUI
+{
+    constructor(chatDiv) {
+        this.chatDiv = chatDiv;
+
+        this.messagesDivs = {};
+
+        this.UpdateChat = this.UpdateChat.bind(this);
+    }
+
+    UpdateChat(messages)
+    {
+        this.chatDiv.innerHTML = '';
+
+        for(var i = 0; i < messages.length; i++)
+        {
+            var consecutive = (i >= 1 && messages[i-1].sender == messages[i].sender);
+
+            this.messagesDivs[i] = new ChatLineUI(messages[i], (i % 2 == 0), consecutive);
+
+            this.chatDiv.appendChild(this.messagesDivs[i].groupDiv);
+        }
+
+    }
+}
+
 class ChatLineUI
 {
     constructor(message, alt, consecutive) {
@@ -195,26 +376,39 @@ class ChatLineUI
     }
 }
 
-class MessageUI
-{
-    constructor(chatDiv) {
-        this.chatDiv = chatDiv;
 
-        this.messagesDivs = {};
+
+class CallBack
+{
+    constructor()
+    {
+        this.callbacks = {};
+        this.count = 0;
     }
 
-    UpdateChat(messages)
+    Invoke()
     {
-        this.chatDiv.innerHTML = '';
-
-        for(var i = 0; i < messages.count; i++)
+        for(var i = 0; i < this.count; i++)
         {
-            var consecutive = (i >= 1 && messages[i-1].sender == messages[i].sender);
-
-            this.messagesDivs[i] = new ChatLineUI(messages[i], (i % 2 == 0), consecutive);
-
-            this.chatDiv.appendChild(this.messagesDivs[i].groupDiv);
+            this.callbacks[i]();
         }
+    }
 
+    Invoke(input)
+    {
+        for(var i = 0; i < this.count; i++)
+        {
+            this.callbacks[i](input);
+        }
+    }
+
+    AddListener(newFunc)
+    {
+        if (newFunc && typeof newFunc === 'function')
+        {
+            this.callbacks[this.count] = newFunc;
+            this.count++;
+        }else
+            console.error("Callback not a function");
     }
 }

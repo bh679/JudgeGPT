@@ -132,7 +132,6 @@ const backgroundImages = [
     "brennanhatton_fractal_courtroom_65de8530-2aab-4f40-86fe-2964294c029d.png"//130
 
 ];
-const backgroundImagesCount = 130;
 
 var bgId = 0;
 
@@ -141,7 +140,7 @@ class BackgroundImages
 
     static async SetBackground()
     {
-        bgId = Math.floor(Math.random() * backgroundImagesCount);
+        bgId = Math.floor(Math.random() * backgroundImages.length);
         var bgImage = backgroundImages[bgId];
         document.body.style.setProperty('--bg-opacity', 0);
 
@@ -174,7 +173,7 @@ class BackgroundImages
     static async GlitchBackground() {
 
         // Choose a random image.
-        var nextBgId = Math.floor(Math.random() * backgroundImagesCount);
+        var nextBgId = Math.floor(Math.random() * backgroundImages.length);
 
         // Create a new image object.
         var img = new Image();
@@ -216,10 +215,23 @@ class BackgroundImages
 
         } catch (error) {
             console.error("Failed to load image: ", error);
-        }
-
-
-        
+        }   
     }
-
 }
+
+
+
+const profileImages = [
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_6afb3b07-5722-4095-99b5-674658d56429.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_d5de75c4-d7fa-40e5-b370-b4e97ee8920d.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_b44a92bc-be0e-45d7-add5-349f4c2c0687.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_01f3ff74-4a43-4f8e-b067-e027b01445ba.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_7304d215-0a0f-46ab-a971-5516a8790cc7.png"
+    ];
+
+function GetRandomProfileImage()
+{
+    return './images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
+}
+
