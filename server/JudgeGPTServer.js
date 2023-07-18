@@ -189,7 +189,6 @@ class JudgeGPTServer {
 
     async CreateRuling() 
     {
-
         var prompt = this.prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.player[0].role+"'s' testimony is: {" + this.player[0].testimony + "} The "+this.player[1].role+"'s' defence testimony is: {" + this.player[1].testimony + "}";
         this.ruling = await AskGPT(prompt);
         this.messagesChat.AddToChat(this.judge, this.ruling);
@@ -198,8 +197,7 @@ class JudgeGPTServer {
 
     async CreatePunsihment()
     {
-
-        prompt =  this.prompts.punishment.replace("$", this.ruling);
+        var prompt =  this.prompts.punishment.replace("$", this.ruling);
         console.log(prompt);
         this.punishment = await AskGPT(prompt);
         this.messagesChat.AddToChat(this.judge, this.punishment);
@@ -209,7 +207,7 @@ class JudgeGPTServer {
     async DeclareWinner()
     {
         //LogDiscordMessages(this.messagesChat);  
-        prompt = this.prompts.winner.replace("$", this.ruling);
+        var prompt = this.prompts.winner.replace("$", this.ruling);
         var winner = await AskGPT(prompt);
         
         if(winner.toLowerCase().includes(this.player[1].role.toLowerCase()))
@@ -222,7 +220,7 @@ class JudgeGPTServer {
 
     async Analysis(playerid)
     {
-        prompt =  this.prompts.scoring.replace("$", this.player[playerid].testimony).replace("%", this.player[playerid].role);
+        var prompt =  this.prompts.scoring.replace("$", this.player[playerid].testimony).replace("%", this.player[playerid].role);
         console.log(prompt);
         this.player[playerid].score = await AskGPT(prompt);
 
