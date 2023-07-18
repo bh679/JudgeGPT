@@ -2,6 +2,11 @@
 
 ## Setup 
 Server Setup
+
+AWS Lightsail NodeJS<br />
+Replace the ``/opt/bitnami/apache/conf/bitnami/bitnami-ssl.conf``<br />
+``sudo /opt/bitnami/ctlscript.sh restart apache``<br />
+<br />
 ````npm install -g pm2````<br />
 ``npm installc cors``<br />
 ``npm install express``<br />
