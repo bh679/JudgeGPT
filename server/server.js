@@ -5,12 +5,26 @@ var https = require('https');
 var fs = require('fs');
 var app = express();
 
+const PromptGPT = require('./PromptGPT');
+
 const JudgeGPTServer = require('./JudgeGPTServer');
 const judgeGPTServer = new JudgeGPTServer();
 judgeGPTServer.Start();
 
 // Use cors middleware for handling Cross-Origin Resource Sharing
 app.use(cors());
+
+/*app.use(cors({
+  origin: function(origin, callback){
+    // allow requests with no origin (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    return callback(null, true);
+  }
+}));*/
+
+/*app.use(cors({
+  origin: 'https://brennan.games'
+}));*/
 
 // Tell Express to parse JSON in the body of incoming requests.
 app.use(express.json());
@@ -32,8 +46,8 @@ app.get('/GetGameState', function (req, res) {
 
 app.post
 
-/*/ Define a POST route for '/startUnFake'
-app.post('/IsMyTurn', function (req, res) {
+// Define a POST route for '/startUnFake'
+app.post('/AskGPT', function (req, res) {
     // Log the body of the request
     console.log(req.body);
 
@@ -61,7 +75,7 @@ app.post('/IsMyTurn', function (req, res) {
         res.json("error");
     });
 
-});*/
+});
 
 /*/ Define a POST route for '/startUnFake'
 app.post('/MJImage', function (req, res) {
@@ -128,11 +142,9 @@ var options = {
 };
 
 // Create HTTPS server
-https.createServer(options, app).listen(3001, function () {
-    console.log('HTTPS server listening on port 3001!');
+https.createServer(options, app).listen(3000, function () {
+    console.log('HTTPS server listening on port 3000!');
 });
 
-app.use(cors({
-  origin: 'https://brennan.games'
-}));
+
 

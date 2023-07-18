@@ -308,10 +308,10 @@ async function AskGPT(input)
     promptResponse.AskGPT().then((data) => {
         console.log(data);
         console.log(data.generatedText);
-        res.json({ //why not make res.json = data
+        /*res.json({ //why not make res.json = data
             generatedText: data.generatedText,
             inputPrompt: data.inputPrompt
-        });
+        });*/
 
         return data.generatedText;
     })
