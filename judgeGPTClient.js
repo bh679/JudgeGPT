@@ -14,15 +14,15 @@ class JudgeGPTClient
         this.onUpdatePlayerList = new CallBack();
 
         this.player = {}
-        this.player.clientID = this.GenerateID();
-        this.playerList = {};
+        //this.player.clientID = this.GenerateID();
+        //this.playerList = {};
     }
 
     GenerateID() {
         return Math.floor(Math.random() * Date.now()).toString();
     }
 
-    async ConnectToServer()
+    /*async ConnectToServer()
     {
         await this.GetGameState();
     }
@@ -75,7 +75,7 @@ class JudgeGPTClient
                 console.error("Error fetching update: ", error);
             }
         }
-    }
+    }*/
 
     UpdatePlayerList(playerList)
     {
@@ -103,6 +103,13 @@ class JudgeGPTClient
 
         this.onStateChange.Invoke(this.messages);
     }
+
+    OnJoinGame(playerData)
+    {
+        this.player = playerData;
+        this.onJoinHearing.Invoke(this.player);
+    }
+
 
     async TryJoinHearing(playerData)
     {

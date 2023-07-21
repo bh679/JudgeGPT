@@ -14,18 +14,14 @@ class JudgeGPTServer {
         this.judge = new Player("GPT", "Judge", "ai");
         this.narrator = new Player("","", "system");
 
-        this.players = {};//[
-            //this.judge,
-            //new Player("","Plaintiff", ""),
-            //new Player("","Defendant", "")
-        //];
-
-        this.audience = {};
+        this.players = {};
 
         this.roles = [
             "Plaintiff",
             "Defendant"
             ];
+
+        this.activeRoles = {}
 
         this.turn = 0;
 
@@ -59,15 +55,7 @@ class JudgeGPTServer {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        this.NextPlayer();
-
-        //LogDiscordMessages(this.messagesChat);/*
-        /*
-        var imageUrl = GetImage(gameCase);
-        console.log(imageUrl);
-        const  img = document.createElement('img');
-        img.src = imageUrl;
-        inputGroup.appendChild(img);//*/
+        this.NextPlayerTurn();
 
     }
 
@@ -92,6 +80,86 @@ class JudgeGPTServer {
             return newPlayer;
     }
 
+
+    async NextPlayerTurn()
+    {
+        console.log(this.turn);
+
+        //Judge Sends Message
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.messagesChat.AddToChat(this.judge, this.PlayerIntroduction(this.activeRoles[this.turn]));
+
+        if(this.turn >= this.activeRoles.length)
+        {
+            return;
+        }
+
+        console.log(this.activeRoles[this.turn].clientID);
+        if(this.activeRoles[this.turn].clientID == "" || this.activeRoles[this.turn].clientID == null)
+        {
+            this.activeRoles[this.turn].clientID = "AI";  
+            this.activeRoles[this.turn].name = RandomLines.GetRandomName() + " ai"; 
+            this.messagesChat.AddToChat(this.narrator, "The " + this.activeRoles[this.turn].role + " " + this.activeRoles[this.turn].name + " entered the courtroom.");
+            await this.SubmitTestimony(await this.AiRespond());
+            return;
+        }
+        
+        this.aiTurn = false;
+        //send message to clients
+
+
+        //if there are multiple players, they have a time limit to respond.
+        if(this.PlayersInGame() > 1)
+        {
+            await new Promise(resolve => setTimeout(resolve, 60000));
+
+            if(this.player[this.turn].testimony == null)
+            {
+                //this.player[this.turn].clientID = "AI";  
+                this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
+                await this.SubmitTestimony(await this.AiRespond());
+            }
+        }
+
+    }
+
+
+
+
+    // Define asynchronous function to send data
+    async SubmitTestimony(testimony) {
+
+        //GlitchBackground();
+
+        console.log(testimony);
+
+        this.aiTurn = true;
+
+        this.player[this.turn].testimony = testimony;//this.UI.userInput.inputFeild.value;
+
+        this.messagesChat.AddToChat(this.player[this.turn], this.player[this.turn].testimony);
+
+        if(this.turn < this.player.length-1)
+        {
+            this.turn++;
+            this.NextPlayer();
+
+            //LogDiscordMessages(this.messagesChat);
+        }else
+        {
+            await this.CreateRuling();
+            await this.CreatePunsihment();
+            await this.DeclareWinner();
+            for(var i = 0 ; i < this.player.length; i++)
+                await this.Analysis(i);
+            await this.RestartGame();
+
+        }
+
+    }
+
+
+
     InAudience(playerData)
     {
         playerData.lastHeard = new Date();
@@ -114,11 +182,12 @@ class JudgeGPTServer {
     GetPlayers()
     {
         var playerlist = {};
-        playerlist.players = this.player;
+        playerlist.inGame = this.players;
         playerlist.judge = this.judge;
 
         this.CleanAudience(this.audience);
         playerlist.audience = this.audience;
+        playerList.length = this.players.length;
 
         return playerlist;
     }
@@ -198,46 +267,7 @@ class JudgeGPTServer {
         }
     }
 
-    async NextPlayer()
-    {
-        console.log(this.turn);
-
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        this.messagesChat.AddToChat(this.judge, this.PlayerIntroduction(this.player[this.turn]));
-
-        if(this.turn >= this.player.length)
-        {
-            return;
-        }
-
-        console.log(this.player[this.turn].clientID);
-        if(this.player[this.turn].clientID == "" || this.player[this.turn].clientID == null)
-        {
-            this.player[this.turn].clientID = "AI";  
-            this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
-            this.messagesChat.AddToChat(this.narrator, "The " + this.player[this.turn].role + " " + this.player[this.turn].name + " entered the courtroom.");
-            await this.SubmitTestimony(await this.AiRespond());
-            return;
-        }
-        
-        this.aiTurn = false;
-        //send message to clients
-
-
-        //if there are multiple players, they have a time limit to respond.
-        if(this.PlayersInGame() > 1)
-        {
-            await new Promise(resolve => setTimeout(resolve, 60000));
-
-            if(this.player[this.turn].testimony == null)
-            {
-                //this.player[this.turn].clientID = "AI";  
-                this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
-                await this.SubmitTestimony(await this.AiRespond());
-            }
-        }
-
-    }
+    
 
     async AiRespond()
     {
@@ -245,38 +275,6 @@ class JudgeGPTServer {
         var testimonial = await AskGPT(prompt);
         return testimonial;
         
-    }
-
-    // Define asynchronous function to send data
-    async SubmitTestimony(testimony) {
-
-        //GlitchBackground();
-
-        console.log(testimony);
-
-        this.aiTurn = true;
-
-        this.player[this.turn].testimony = testimony;//this.UI.userInput.inputFeild.value;
-
-        this.messagesChat.AddToChat(this.player[this.turn], this.player[this.turn].testimony);
-
-        if(this.turn < this.player.length-1)
-        {
-            this.turn++;
-            this.NextPlayer();
-
-            //LogDiscordMessages(this.messagesChat);
-        }else
-        {
-            await this.CreateRuling();
-            await this.CreatePunsihment();
-            await this.DeclareWinner();
-            for(var i = 0 ; i < this.player.length; i++)
-                await this.Analysis(i);
-            await this.RestartGame();
-
-        }
-
     }
 
     async CreateRuling() 
@@ -419,7 +417,7 @@ const profileImages = [
 
 function GetRandomProfileImage()
 {
-    return './images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
+    return 'https://brennan.games/JudgeGPT/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
 }
 
 /*

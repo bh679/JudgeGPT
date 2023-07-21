@@ -99,24 +99,32 @@ io.on('connection', (socket) => {
     //Log client joining
     console.log(`A user connected with ID: ${socket.id} from ${clientIpAddress}`);
 
-
+    //Player has successful joined game, here is player details
     socket.emit('OnJoinEvent', { 
             player: judgeGPTServer.OnPlayerConnected(clientIpAddress), 
         });
 
-    
     // Emit status updates to the client at regular intervals
     const interval = setInterval(() => {
-        socket.emit('StatusUpdate', { 
-            message: `Hello ${socket.id} from the server! Your IP is ${clientIpAddress}` 
+
+        //All details of game
+        socket.emit('GameUpdate', { 
+            messages: judgeGPTServer.messagesChat.messages,
+            playerTurn: judgeGPTServer.GetPlayersTurn(),
+            playerList: judgeGPTServer.GetPlayers()
         });
     }, 1000);
 
-    // Handle the 'GetName' event from the client
-    socket.on('GetName', () => {
-        console.log('Received GetName');
+    //Called when it is your turn
+    socket.emit('OnYourTurnEvent', { 
+            message: `Hello ${socket.id} from the server! Your IP is ${clientIpAddress}` 
+        });
 
-        socket.emit('GetStatusResponse', { message: 'Hello from the server!' });
+
+    // Handle client disconnection and clean up resources
+    socket.on('SubmitTestimony', (data) => {
+        console.log('A user submitted a testimony ' + data.testimony);
+        
     });
 
     // Handle client disconnection and clean up resources

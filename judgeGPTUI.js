@@ -60,7 +60,7 @@ class JudgeGPTUI
 
         //if(this.joinNextHearing)
         //{
-            this.TryJoinHearing();
+            //this.TryJoinHearing();
         //}
     }
 
@@ -331,28 +331,8 @@ class CourtRoomIdentity
         this.EditNameMode(false);
 
         this.Reset();
-        this.RandomName();
 
         this.onSetupComplete = new CallBack();
-    }
-
-    async RandomName()
-    {
-        const response = await fetch('https://brennan.games:3000/RandomName', 
-        {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        
-        // Parse response data
-        const data = await response.json();
-        this.playerData.name = data.name;
-        this.nameInput.placeholder=this.playerData.name;
-        this.nameDiv.innerText = this.playerData.name;
-
-        this.onSetupComplete.Invoke();
     }
 
     Reset()

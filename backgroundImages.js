@@ -134,6 +134,7 @@ const backgroundImages = [
 ];
 
 var bgId = 0;
+var url = 'https://brennan.games/JudgeGPT/';
 
 class BackgroundImages
 {
@@ -150,7 +151,7 @@ class BackgroundImages
         var imageLoadPromise = new Promise((resolve, reject) => {
             img.onload = resolve;
             img.onerror = reject;
-            img.src = './images/' + bgImage;
+            img.src = url+'/images/' + bgImage;
         });
 
         try 
@@ -170,7 +171,7 @@ class BackgroundImages
 
     }
 
-    static async GlitchBackground() {
+    /*static async GlitchBackground() {
 
         // Choose a random image.
         var nextBgId = Math.floor(Math.random() * backgroundImages.length);
@@ -216,7 +217,7 @@ class BackgroundImages
         } catch (error) {
             console.error("Failed to load image: ", error);
         }   
-    }
+    }*/
 }
 
 const judgeProfileImages = [
@@ -238,7 +239,7 @@ const judgeProfileImages = [
 
 function GetRandomJudgeProfileImage()
 {
-    return './images/profiles/judge/' + judgeProfileImages[Math.floor(Math.random() * judgeProfileImages.length)];
+    return url+'/images/profiles/judge/' + judgeProfileImages[Math.floor(Math.random() * judgeProfileImages.length)];
 }
 
 const profileImages = [
@@ -252,6 +253,6 @@ const profileImages = [
 
 function GetRandomProfileImage()
 {
-    return './images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
+    return url+'/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
 }
 
