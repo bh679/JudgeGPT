@@ -1,3 +1,4 @@
+</html>
 <!DOCTYPE html>
 <!-- This site was created in Webflow. https://www.webflow.com -->
 <!-- Last Published: Thu May 18 2023 15:06:15 GMT+0000 (Coordinated Universal Time) -->
@@ -24,11 +25,14 @@
         <!-- Judge GPT Style Shee -->
         <link rel="stylesheet" type="text/css" href="./style.css">
 
-        <!-- -->
+        <!-- JdugeGPT -->
         <script src="backgroundImages.js"></script>
         <script src="randomLines.js"></script>
         <script src="judgeGPTClient.js"></script>
         <script src="judgeGPTUI.js"></script>
+
+        <!-- Socket.io -->
+        <script src="https://brennan.games:3000/socket.io/socket.io.js"></script>
 
     </head>
 
@@ -111,7 +115,7 @@
                     <div id="playerList" class="row">
                         <div class="card col-4" style="margin:5px">
                             <center style="margin:5px;">
-                                    <img src="./images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
+                                    <img src="https://brennan.games/JudgeGPT/images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
                                     <div>Name</div>
                             </center>
                         </div>
@@ -161,13 +165,11 @@
         const playerListDiv = document.getElementById('playerList');
 
         client = new JudgeGPTClient();
-        client.ConnectToServer();
+        //client.ConnectToServer();
 
         UI = new JudgeGPTUI(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, audienceDiv, playerListDiv, client);
 
-
         UI.Start();
-
 
         BackgroundImages.SetBackground();
 
@@ -184,6 +186,31 @@
                 }
             });
         }
+
+
+        const socket = io('https://brennan.games:3000');
+
+            // Emit the 'testEvent' after connecting
+            socket.on('connect', () => {
+                console.log('Connected to the server!');
+                //socket.emit('testEvent', { data: 'Hello from the client!' });
+            });
+
+            
+            socket.on('OnJoinEvent', (data) => {
+                console.log('Received data.player:', data.player);
+                client.OnJoinGame(data.player);
+            });
+
+            
+            socket.on('GameUpdate', (data) => {
+                console.log('Received ChatUpdate:', data);
+                console.log('Received ChatUpdate:', data.messages);
+                client.UpdateState(data.messages);
+                client.SetPlayersTurn(data.playerTurn);
+            });
+
+
     </script>
     </body>
 </html>

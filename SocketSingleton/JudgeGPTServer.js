@@ -64,7 +64,13 @@ class JudgeGPTServer {
         if(this.players.hasOwnProperty(ClientID))
             return this.players[ClientID];
 
-        return this.AddNewPlayerToAudience(ClientID);
+        return this.AddNewPlayerToAudience(ClientID);//.socket = socket;
+    }
+
+    OnPlayerDisconnected(ClientID)
+    {
+        if(this.players.hasOwnProperty(ClientID)) //Consider a delay or something
+            delete this.players[ClientID];
         
     }
 

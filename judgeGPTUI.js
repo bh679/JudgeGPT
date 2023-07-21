@@ -408,7 +408,9 @@ class ChatLineUI
         this.groupDiv = document.createElement('div');
         this.groupDiv.classList.add("row");
         this.groupDiv.classList.add("message");
-        this.groupDiv.classList.add(this.message.sender.class);
+        console.log(this.message.sender.class);
+        if(this.message.sender.class != null && this.message.sender.class != "")
+            this.groupDiv.classList.add(this.message.sender.class);
         if(alt)
             this.groupDiv.classList.add("alt");
 

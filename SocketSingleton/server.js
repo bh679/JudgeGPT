@@ -113,6 +113,7 @@ io.on('connection', (socket) => {
             playerTurn: judgeGPTServer.GetPlayersTurn(),
             playerList: judgeGPTServer.GetPlayers()
         });
+        //console.log(judgeGPTServer.messagesChat.messages);
     }, 1000);
 
     //Called when it is your turn

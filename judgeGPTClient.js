@@ -22,62 +22,17 @@ class JudgeGPTClient
         return Math.floor(Math.random() * Date.now()).toString();
     }
 
-    /*async ConnectToServer()
+    SetPlayersTurn(playerTurn)
     {
-        await this.GetGameState();
+        if(playerTurn.ClientID == this.player.ClientID)
+        {
+            this.myTurn = true;
+            this.onMyTurn.Invoke(playerTurn);
+        }
     }
 
-    async GetGameState()
-    {
-        //console.log("GetGameState");
-        while(true)
-        {
-            try {
 
-                var playerData = {...this.player};
-
-                // Make POST request to JudgeGPTServer
-                var response = await fetch('https://brennan.games:3000/Update', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ playerData: playerData }),
-                });
-
-                var data = await response.json();
-
-                if(this.playerList != data.playerList)
-                {
-                    this.UpdatePlayerList(data.playerList);
-                }
-
-                //console.log(data);
-
-                if(this.messages == null || this.messages.length != data.messages.length)
-                {
-                    this.UpdateState(data.messages);
-                }
-
-                //is it my turn?
-                if(!this.myTurn && data.playerTurn.clientID == this.player.clientID)
-                {
-                    this.myTurn = true;
-                    this.player = data.playerTurn;
-
-                    this.onMyTurn.Invoke(this.player);
-                }
-
-                //ReadText(data.generatedText);
-
-            } catch(error) {
-                // If an error occurs, log it and update loading element
-                console.error("Error fetching update: ", error);
-            }
-        }
-    }*/
-
-    UpdatePlayerList(playerList)
+    /*UpdatePlayerList(playerList)
     {
         this.playerList = playerList;
 
@@ -90,7 +45,7 @@ class JudgeGPTClient
 
         this.onUpdatePlayerList.Invoke(playerList);
         
-    }
+    }*/
 
     UpdateState(newState)
     {
@@ -111,7 +66,7 @@ class JudgeGPTClient
     }
 
 
-    async TryJoinHearing(playerData)
+    /*async TryJoinHearing(playerData)
     {
         console.log("TryJoinHearing");
         playerData.clientID = this.player.clientID;
@@ -140,7 +95,7 @@ class JudgeGPTClient
 
 
         this.onJoinHearing.Invoke(this.player);
-    }
+    }*/
 
 
     async SubmitTestimony(testimony)
