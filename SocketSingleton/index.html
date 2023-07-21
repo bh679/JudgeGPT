@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.IO Client</title>
+  <script src="https://brennan.games:3000/socket.io/socket.io.js"></script>
+
+</head>
+<body>
+  <!-- Add your client-side code here -->
+  <script>
+    const socket = io('https://brennan.games:3000');
+
+    // Emit the 'testEvent' after connecting
+    socket.on('connect', () => {
+        console.log('Connected to the server!');
+        socket.emit('testEvent', { data: 'Hello from the client!' });
+    });
+
+    // Listen for the 'testEventResponse' event
+    socket.on('StatusUpdate', (data) => {
+        console.log('Received StatusUpdate:', data.message);
+    });
+
+  </script>
+</body>
+</html>

@@ -5,7 +5,7 @@ const backgroundImages = [
     "brennanhatton_empty_ai_courtroom_of_the_future._db5537cc-e696-4798-ae08-a473c6e5bcdc.png",
     "brennanhatton_judge_chatgpt_ai_legal_system_in_courtroom2.png",
     "brennanhatton_judgegpt_d2f49e17-6586-4c84-9f0e-4a1a2447f587.png",
-    "brennanhatton_empty_ai_courtroom_of_the_future._4d5f210b-ba41-40cc-a169-d80debd1394b",
+    "brennanhatton_empty_ai_courtroom_of_the_future._4d5f210b-ba41-40cc-a169-d80debd1394b.png",
     "brennanhatton_empty_ai_courtroom_of_the_future._bd41af81-d2e1-436e-8ce5-b0558089a97a.png",
     "brennanhatton_empty_ai_courtroom_of_the_future._2cb44abf-01b1-4967-b6a7-ab7fb6055c67.png",
     "brennanhatton_empty_ai_courtroom_of_the_future._2bd9c3bf-2e9e-47d6-a05b-1766eb5947e1.png",//
@@ -78,7 +78,7 @@ const backgroundImages = [
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__96f4d634-c942-47fe-9425-9af8157ed7ee.png",
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__01065281-2fc6-4d6a-b8e8-9022e0a9a05e.png",
     "brennanhatton_empty_ai_court_held_in_outter_space_galaxy_abyss__daaecb1b-66aa-4200-abec-10c6d3427252.png",
-    "brennanhatton_empty_ai_court_held_in_the_ocean_7e98b546-06c9-4d46-9fbd-96e7e6f1e1f0.png",
+   // "brennanhatton_empty_ai_court_held_in_the_ocean_7e98b546-06c9-4d46-9fbd-96e7e6f1e1f0.png",
     "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_54386807-c2c7-4a0a-bb76-2bbb034f6086.png",//80
     "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_7025132c-6794-4583-9552-d59839af4495.png",
     "brennanhatton_technology_meets_nature_in_empty_ai_courtroom_66f1987b-c0ab-4a33-8d87-f143c3685e60.png",
@@ -219,7 +219,27 @@ class BackgroundImages
     }
 }
 
+const judgeProfileImages = [
+    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge_63826ce4-a661-4b4f-9714-e24c92478dc9.png",
+    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge__8afa7999-e05d-4384-893d-1236a802ac63.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_holograph_t_c7599d91-b5e2-4bd5-a058-307300ab8428.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__e33a0d20-0bcf-4a5e-87aa-918c8fc545b1.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__c6db7b68-3486-48a2-8f4f-ad3f71c5223b.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__2ccf8b3f-d800-4344-b865-888aef0d3a6c.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__29b4582e-bbb8-4888-819e-ccc232666002.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__af4d9faa-6ea8-4c87-b6e9-7f5fd13850e3.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__f79644b5-7b4b-4bc7-8fb2-5b31fecab787.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_24aaf35e-a722-46be-a8cb-3f29357efdb6.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_0b9e7c16-63b0-4a9d-bf59-61851d07b4ea.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_15185e1d-2da9-466c-ad99-dd9ed1bac904.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_bd832eac-911f-4de0-a271-5708f8069c41.png"
+ ]
 
+
+function GetRandomJudgeProfileImage()
+{
+    return './images/profiles/judge/' + judgeProfileImages[Math.floor(Math.random() * judgeProfileImages.length)];
+}
 
 const profileImages = [
     "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",

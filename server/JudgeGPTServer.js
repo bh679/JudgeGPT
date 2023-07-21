@@ -12,6 +12,7 @@ class JudgeGPTServer {
     init()
     {
         this.judge = new Player("GPT", "Judge", "ai");
+        this.narrator = new Player("","", "system");
 
         this.player = [
             //this.judge,
@@ -51,7 +52,7 @@ class JudgeGPTServer {
         await new Promise(resolve => setTimeout(resolve, 3000));
 
         if(this.courtEmpty)
-            this.messagesChat.AddToChat(this.judge, "The court will begin when the members arrive.");
+            this.messagesChat.AddToChat(this.narrator, "The court will begin when the members arrive.");
 
         while(this.courtEmpty)
         {
@@ -73,7 +74,20 @@ class JudgeGPTServer {
     InAudience(playerData)
     {
         playerData.lastHeard = new Date();
-        this.audience[playerData.clientID] = playerData;
+
+        if(this.CheckPlayerInGame(playerData.clientID))
+            this.audience[playerData.clientID] = playerData;
+    }
+
+    CheckPlayerInGame(clientID)
+    {
+        for(var i = 0; i < this.player.length; i++)
+        {
+            if(this.player[i].clientID != clientID)
+                return true;
+        }
+
+        return false;
     }
 
     GetPlayers()
@@ -86,6 +100,20 @@ class JudgeGPTServer {
         playerlist.audience = this.audience;
 
         return playerlist;
+    }
+
+    PlayersInGame()
+    {
+        var count = 0;
+
+        for(var i = 0; i < this.player.length; i++)
+        {
+            if(this.player[i].clientID != "")
+                count++;
+        }
+
+        return count;
+
     }
 
     CleanAudience(audienceList)
@@ -129,7 +157,10 @@ class JudgeGPTServer {
                 this.player[i].name = playerData.name;
                 this.player[i].profileUrl = playerData.profileUrl;
 
-                this.messagesChat.AddToChat(this.judge, "The " + this.player[i].role + " " + this.player[i].name + " entered the courtroom.");
+                this.messagesChat.AddToChat(this.narrator, "The " + this.player[i].role + " " + this.player[i].name + " entered the courtroom.");
+
+                if (this.audience.hasOwnProperty(playerData.clientID))
+                    delete this.audience[playerData.clientID];
 
                 return this.player[i];
             }
@@ -174,20 +205,26 @@ class JudgeGPTServer {
         {
             this.player[this.turn].clientID = "AI";  
             this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
-            this.messagesChat.AddToChat(this.judge, "The " + this.player[this.turn].role + " " + this.player[this.turn].name + " entered the courtroom.");
+            this.messagesChat.AddToChat(this.narrator, "The " + this.player[this.turn].role + " " + this.player[this.turn].name + " entered the courtroom.");
             await this.SubmitTestimony(await this.AiRespond());
+            return;
         }
         
         this.aiTurn = false;
         //send message to clients
 
-        await new Promise(resolve => setTimeout(resolve, 6000));
 
-        if(this.player[this.turn].testimony == null)
+        //if there are multiple players, they have a time limit to respond.
+        if(this.PlayersInGame() > 1)
         {
-            //this.player[this.turn].clientID = "AI";  
-            this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
-            await this.SubmitTestimony(await this.AiRespond());
+            await new Promise(resolve => setTimeout(resolve, 60000));
+
+            if(this.player[this.turn].testimony == null)
+            {
+                //this.player[this.turn].clientID = "AI";  
+                this.player[this.turn].name = RandomLines.GetRandomName() + " ai"; 
+                await this.SubmitTestimony(await this.AiRespond());
+            }
         }
 
     }

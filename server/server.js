@@ -35,6 +35,11 @@ app.get('/RandomName', function (req, res) {
         });
 });
 
+// Define a GET route for '/getData'
+app.get('/Restart', function (req, res) {
+    judgeGPTServer.RestartGame();
+});
+
 
 // Define a POST route for '/startUnFake'
 app.post('/Update', function (req, res) {

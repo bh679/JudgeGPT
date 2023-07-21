@@ -22,9 +22,9 @@ class JudgeGPTClient
         return Math.floor(Math.random() * Date.now()).toString();
     }
 
-    ConnectToServer()
+    async ConnectToServer()
     {
-        this.GetGameState();
+        await this.GetGameState();
     }
 
     async GetGameState()
@@ -79,7 +79,14 @@ class JudgeGPTClient
 
     UpdatePlayerList(playerList)
     {
-        this.playerList == playerList;
+        this.playerList = playerList;
+
+        console.log(this.playerList);
+
+        for(var i = 0; i < this.playerList.players.length; i++)
+        {
+            this.playerList.players[i].isMe = (this.playerList.players[i].clientID == this.player.clientID)
+        }
 
         this.onUpdatePlayerList.Invoke(playerList);
         

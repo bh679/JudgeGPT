@@ -39,7 +39,7 @@ class JudgeGPTUI
 
         this.joinNextHearing = false;
 
-
+        this.judgeImageURL = GetRandomJudgeProfileImage();
     }
 
     GetNameFromUI()
@@ -58,10 +58,10 @@ class JudgeGPTUI
 
         this.courtRoomIdentity.Reset();
 
-        if(this.joinNextHearing)
-        {
+        //if(this.joinNextHearing)
+        //{
             this.TryJoinHearing();
-        }
+        //}
     }
 
     OnNewHearing()
@@ -161,7 +161,9 @@ class JudgeGPTUI
         this.playerListUI.CreateAudience(playerList.audience);
 
         var hearingParticipants = playerList.players;
-        hearingParticipants[0] = playerList.judge;
+        hearingParticipants.unshift(playerList.judge);
+        //hearingParticipants[0] = playerList.judge;
+        hearingParticipants[0].profileUrl = this.judgeImageURL;//GetRandomJudgeProfileImage();
         this.playerListUI.CreatePlayerList(hearingParticipants);
         //do same for playerlist
     }
@@ -182,7 +184,7 @@ class PlayerList
 
     CreateAudience(audienceList)
     {
-        console.log(audienceList);
+        //console.log(audienceList);
         this.audienceDiv.innerText = Object.keys(audienceList).length;
 
     }
@@ -232,7 +234,8 @@ class PlayerList
         this.playerListDiv.innerHTML = "";
 
         for (var key in playerList) {
-            if (playerList.hasOwnProperty(key) && playerList[key].name != "") {
+            console.log(key);
+            if (playerList.hasOwnProperty(key) && playerList[key].clientID != "") {
                 this.playerListDiv.appendChild(this.CreatePlayerListMember(playerList[key]));
             }
         }
@@ -241,6 +244,8 @@ class PlayerList
 
     CreatePlayerListMember(playerMember)
     {
+        console.log(playerMember);
+
         var profileImg = document.createElement('img');
         profileImg.classList.add("rounded-circle");
         profileImg.style = "width:80%; margin:0%";
@@ -251,7 +256,7 @@ class PlayerList
         var roleDiv = document.createElement('div');
         roleDiv.style = "font-size:10px"
         roleDiv.innerText = playerMember.role;
-        
+
         var nameDiv = document.createElement('div');
         nameDiv.style = "font-size:10px"
         nameDiv.innerText = playerMember.name;
@@ -264,11 +269,16 @@ class PlayerList
 
         var card = document.createElement('div');
         card.classList.add("card");
+        if(playerMember.isMe)
+        {
+           card.classList.add("text-white");
+            card.classList.add("bg-primary");
+        }
         card.style = "margin:1px";
         card.appendChild(center);
 
         var groupDiv = document.createElement('div');
-        groupDiv.classList.add("col-3");
+        groupDiv.classList.add("col-4");
         groupDiv.style = "padding:0";
         groupDiv.appendChild(card);
 
