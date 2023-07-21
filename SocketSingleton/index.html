@@ -13,10 +13,15 @@
     // Emit the 'testEvent' after connecting
     socket.on('connect', () => {
         console.log('Connected to the server!');
-        socket.emit('testEvent', { data: 'Hello from the client!' });
+        //socket.emit('testEvent', { data: 'Hello from the client!' });
     });
 
-    // Listen for the 'testEventResponse' event
+    
+    socket.on('OnJoinEvent', (data) => {
+        console.log('Received data.player:', data.player);
+    });
+
+    
     socket.on('StatusUpdate', (data) => {
         console.log('Received StatusUpdate:', data.message);
     });

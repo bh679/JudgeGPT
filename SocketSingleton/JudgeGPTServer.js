@@ -14,11 +14,11 @@ class JudgeGPTServer {
         this.judge = new Player("GPT", "Judge", "ai");
         this.narrator = new Player("","", "system");
 
-        this.players = [
+        this.players = {};//[
             //this.judge,
             //new Player("","Plaintiff", ""),
             //new Player("","Defendant", "")
-        ];
+        //];
 
         this.audience = {};
 
@@ -34,7 +34,7 @@ class JudgeGPTServer {
         this.punishment = "";
 
         this.messagesChat = new MessageBackEnd();
-        this.prompts = new Prompts(this.player);
+        this.prompts = new Prompts();
 
         this.running = false;
         this.aiTurn = true;
@@ -76,23 +76,20 @@ class JudgeGPTServer {
         if(this.players.hasOwnProperty(ClientID))
             return this.players[ClientID];
 
-        return AddNewPlayerToAudience(ClientID);
+        return this.AddNewPlayerToAudience(ClientID);
         
     }
 
     AddNewPlayerToAudience(ClientID)
     {
-            var newPlayer = new Player(playerData.name, "Audience", ClientID);
-
-            //Generate Name
-            newPlayer.name = RandomLines.GetRandomName();
+            var newPlayer = new Player(RandomLines.GetRandomName(), "Audience", ClientID);
 
             //Genearte ProfileURL
             newPlayer.profileUrl = GetRandomProfileImage();
 
-            this.players[ClientID] = newPLayer;
+            this.players[ClientID] = newPlayer;
             
-            return newPLayer;
+            return newPlayer;
     }
 
     InAudience(playerData)
@@ -372,16 +369,14 @@ class Player {
 }
 
 class Prompts {
-    constructor(player) {
-
-        this.player = player;
+    constructor() {
 
         this.judgeCharacter = "You are JudgeGPT, a judge in a televised small claims court TV show. You are similar to Judge Judy.";
         this.cases = [ "Come up with an absurd and/or hilarious accusation to be argued in small claims court between two parties.",
             "Come up with an absurd and/or hilarious accusation to be argued in court between two parties.",
             "Come up with a ridiculous and hilarious accusation to be argued in court between two parties."];
         this.punishment = "Provide a funny, absurd and unfitting punishment and lesson to be learnt for the following court ruling:{$}";
-        this.winner = "A judge ruled the following: {$} Give a single word response of who is the winner, " + player[0].role + ", " + player[1].role + " or neither. ";
+        this.winner = "A judge ruled the following: {$} Give a single word response of who is the winner, Plaintiff, Defendant or neither. ";
         this.scoring = "You are scoring the result of a text based improv game, by %. Score the sentence on each of the four metrics, creativity, intelligence, humor and provide explanations on each. The sentence to be scored is {$}. At the end, provide a total score.";
     }
 }

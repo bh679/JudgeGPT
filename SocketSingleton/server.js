@@ -35,8 +35,7 @@ app.use(express.json());
 
 // Log all incoming requests
 app.use(function(req, res, next) {
-    if(req.url != "/Update")
-        console.log(`${req.method} request for '${req.url}'`);
+    console.log(`${req.method} request for '${req.url}'`);
     next();  // Pass control to the next middleware function
 });
 
@@ -71,52 +70,58 @@ app.post('/AskGPT', function (req, res) {
 
 });
 
-
+// Serve static files related to socket.io from the node_modules directory
 app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io/client-dist'));
 
-// Create HTTPS server
-const server = https.createServer(options, app);/*.listen(3000, function () {
-    console.log('HTTPS server listening on port 3000!');
-});*/
+// Define the port and HTTPS server options
+const port = 3000;  // Define server port. Note: HTTPS servers typically use port 443 by default.
 
-//const io = new socketIO.Server(server);
-//const io = require('socket.io')(server, { transports: ['polling', 'websocket'] });
-const io = require('socket.io')(server, {
-    cors: {
-        origin: "https://brennan.games", // This is the origin that is allowed to connect
-        methods: ["GET", "POST"]
-    },
-    transports: ['polling', 'websocket']
-});
-
-const port = 3000; // Typically, HTTPS servers use port 443 by default
-server.listen(port, () => {
+// Create and start the HTTPS server
+const server = https.createServer(options, app).listen(port, () => {
     console.log(`Secure server is running on port ${port}`);
 });
 
+// Socket.io configuration
+const io = socketIO(server, {
+    cors: {
+        origin: "https://brennan.games", // Specify the origins allowed to connect
+        methods: ["GET", "POST"]         // Allowed HTTP methods
+    },
+    transports: ['polling', 'websocket'] // Specify the transports for socket.io
+});
+
+// Handle client connections using socket.io
 io.on('connection', (socket) => {
+
+    // Get client's IP address
     const clientIpAddress = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
     
+    //Log client joining
     console.log(`A user connected with ID: ${socket.id} from ${clientIpAddress}`);
+
+
+    socket.emit('OnJoinEvent', { 
+            player: judgeGPTServer.OnPlayerConnected(clientIpAddress), 
+        });
+
     
-    // Set up an interval to emit messages
+    // Emit status updates to the client at regular intervals
     const interval = setInterval(() => {
-        socket.emit('StatusUpdate', { message: `Hello ${socket.id} from the server! Your IP is ${clientIpAddress}` });
+        socket.emit('StatusUpdate', { 
+            message: `Hello ${socket.id} from the server! Your IP is ${clientIpAddress}` 
+        });
     }, 1000);
 
+    // Handle the 'GetName' event from the client
+    socket.on('GetName', () => {
+        console.log('Received GetName');
 
-    // Listen for the 'testEvent' event
-    socket.on('GetStatus', (data) => {
-        console.log('Received GetStatus with data:', data);
-
-        // Emit a response event back to the client
         socket.emit('GetStatusResponse', { message: 'Hello from the server!' });
     });
 
-
-    // Clear the interval when the user disconnects
+    // Handle client disconnection and clean up resources
     socket.on('disconnect', () => {
         console.log('A user disconnected');
-        clearInterval(interval);
+        clearInterval(interval); // Stop the status update interval
     });
 });
