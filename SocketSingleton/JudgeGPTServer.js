@@ -185,9 +185,9 @@ class JudgeGPTServer {
         playerlist.inGame = this.players;
         playerlist.judge = this.judge;
 
-        this.CleanAudience(this.audience);
-        playerlist.audience = this.audience;
-        playerList.length = this.players.length;
+        //this.CleanAudience(this.audience);
+        //playerlist.audience = this.audience;
+        //playerlist.length = this.players.length;
 
         return playerlist;
     }

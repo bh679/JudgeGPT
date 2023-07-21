@@ -205,7 +205,7 @@
             
             socket.on('GameUpdate', (data) => {
                 console.log('Received ChatUpdate:', data.message);
-                client.UpdateState(data.messages);
+                client.UpdateState(data.messages.messages);
             });
 
 
