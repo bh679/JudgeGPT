@@ -1,7 +1,10 @@
 class JudgeGPTUI
 {
-    constructor(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, audienceDiv, playerListDiv, typingDiv, client) {
+    constructor(hero, chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, audienceDiv, playerListDiv, typingDiv, client) {
+        
+
         // Define global variables
+        this.heroDiv = hero;
         this.chatDiv = chatDiv;
         this.winnerDiv = winnerDiv;
         this.subheading = subheading;
@@ -25,6 +28,8 @@ class JudgeGPTUI
 
         this.client = client;// = new JudgeGPT();
         this.client.onStateChange.AddListener(this.messageUI.UpdateChat);
+        this.UpdateChat = this.UpdateChat.bind(this);
+        this.client.onStateChange.AddListener(this.UpdateChat);
 
         this.OnMyTurn = this.OnMyTurn.bind(this);
         this.client.onMyTurn.AddListener(this.OnMyTurn);
@@ -175,9 +180,12 @@ class JudgeGPTUI
         this.playerListUI.CreatePlayerList(playerList)
     }
 
-    UpdateChat()
+    UpdateChat(messages)
     {
+        var percent = 20-messages.length*2;
+        if(percent < 5) percent = 5;
 
+        this.heroDiv.style="padding-top: "+percent + "%;"
     }
 }
 
@@ -192,7 +200,7 @@ class PlayerList
     CreateAudience(playerList)
     {
         //console.log(audienceList);
-        this.audienceDiv.innerText = playerList.length;
+        this.audienceDiv.innerText = "Audience: " + playerList.length;
 
     }
         /*this.audienceDiv.innerHTML = "";

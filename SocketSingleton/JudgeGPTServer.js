@@ -18,8 +18,8 @@ class JudgeGPTServer {
         this.narrator = new Player("","", "system");
 
         this.keyRoles = [ //Key roles that need to be filled
-            "Plaintiff",
-            "Defendant"
+            "Defendant",
+            "Plaintiff"
             ];
 
         this.activeRoles = []; //players and humans in hearing
