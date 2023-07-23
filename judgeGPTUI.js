@@ -336,6 +336,7 @@ class PlayerList
         groupDiv.classList.add("col-4");
         groupDiv.classList.add("col-s-4");
         groupDiv.classList.add("col-xs-3");
+        groupDiv.classList.add("col-xxs-2");
         groupDiv.style = "padding:0";
         groupDiv.appendChild(card);
 
@@ -475,7 +476,7 @@ class ChatLineUI
         //    this.groupDiv.classList.add("alt");
 
         this.messageContentsDiv = document.createElement('div');
-        this.messageContentsDiv.classList.add("col-8");
+        this.messageContentsDiv.classList.add("col");
         //this.messageContentsDiv.classList.add("card");
         this.messageContentsDiv.classList.add("messageContents");
         this.messageContentsDiv.classList.add("rounded-3");
@@ -487,6 +488,8 @@ class ChatLineUI
 
         this.senderDiv = document.createElement('div');
         this.senderDiv.classList.add("col-4");
+        this.senderDiv.classList.add("col-s-3");
+        this.senderDiv.classList.add("col-xxs-2");
         this.senderDiv.classList.add("sender");
         if(!consecutive)
         {

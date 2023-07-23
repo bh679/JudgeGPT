@@ -215,7 +215,7 @@ Identity
     .col-xs-3 {
         width: 25%;
     }
-    
+
     .col-xxs-12 {
         width: 100%;
     }
@@ -227,6 +227,9 @@ Identity
     }
     .col-xxs-3 {
         width: 25%;
+    }
+    .col-xxs-2 {
+        width: 16.66666%;
     }
     /* ... continue for other grid fractions ... */
 }
