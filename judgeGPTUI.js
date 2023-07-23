@@ -48,6 +48,10 @@ class JudgeGPTUI
 
         this.GetNameFromUI = this.GetNameFromUI.bind(this);
         this.courtRoomIdentity.onSetupComplete.AddListener(this.GetNameFromUI);
+
+
+        this.winner = "";
+        this.aiRespondingInterval;
     }
 
     GetNameFromUI()
@@ -59,6 +63,8 @@ class JudgeGPTUI
 
     async Start()
     {
+
+        this.winner = "";
         this.gameOverUI.group.hidden = true;
         this.userInput.group.hidden = true;
         this.analysis.group.hidden = true;
@@ -79,7 +85,6 @@ class JudgeGPTUI
 
     OnMyTurn(player)
     {
-        console.log("OnMyTurn" + player);
         this.userInput.group.hidden = false;
         //this.userInput.inputFeild.value = "";
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
@@ -130,14 +135,36 @@ class JudgeGPTUI
         this.userInput.inputFeild.value = "";
     }
 
-    async AiRespond()
+
+    AiResponding()
     {
         this.userInput.aiRespondButton.disabled = true;
-        
-        testimonial = await this.judegGPT.AiRespond();
+        this.userInput.inputFeild.disabled = true;
+        this.userInput.submitButton.disabled = true;
 
-        this.userInput.inputFeild.value = testimonial;
+        this.aiRespondingInterval = setInterval(() => {
+            this.userInput.inputFeild.value += ".";
+
+            if(this.userInput.inputFeild.value.length > 4)
+                this.userInput.inputFeild.value = "";
+
+        }, 500); // 500 milliseconds (0.5 seconds) 
+        
+        //testimonial = await this.judegGPT.AiRespond();
+
+        //this.userInput.inputFeild.value = testimonial;
+        //this.userInput.aiRespondButton.disabled = false;
+    }
+
+    AiResponded(response)
+    {
+        this.userInput.inputFeild.value = response;
         this.userInput.aiRespondButton.disabled = false;
+        this.userInput.inputFeild.disabled = false;
+        this.userInput.submitButton.disabled = false;
+
+        clearInterval(this.aiRespondingInterval);
+
     }
 
     async Analysis()
@@ -153,7 +180,7 @@ class JudgeGPTUI
 
     }
 
-    async DrawConclusion()
+    /*async DrawConclusion()
     {
         // Disable the submit button
         this.userInput.submitButton.disabled = true;
@@ -165,12 +192,12 @@ class JudgeGPTUI
 
         var winner = this.server.DeclareWinner();
 
-        this.winnerDiv.innerText = "Winner: " + winner.role;
-        this.winnerDiv.classList.add(winner.class);
+        //this.winnerDiv.innerText = "Winner: " + winner.role;
+        //this.winnerDiv.classList.add(winner.class);
 
         this.analysis.group.hidden = false;
         this.gameOverUI.group.hidden = false;
-    }
+    }*/
 
     UpdatePlayerList(playerList)
     {
@@ -182,11 +209,30 @@ class JudgeGPTUI
 
     UpdateChat(messages)
     {
-        var percent = 20-messages.length*2;
+        var percent = 20-messages.length;
         if(percent < 5) percent = 5;
 
         this.heroDiv.style="padding-top: "+percent + "%;"
     }
+
+
+     SetWinner(winner)
+     {
+        if (this.winner != "")
+            return;
+
+        console.log("winner is " + winner);
+
+        this.winner = winner;
+
+        if(this.winner.toLowerCase() == "plaintiff")
+            this.winnerDiv.src="./images/guilty.png";
+        else
+            this.winnerDiv.src="./images/notguilty.png";
+
+        console.log(this.winnerDiv.src);
+        console.log("winner still is " + winner);
+     }
 }
 
 class PlayerList
@@ -200,7 +246,7 @@ class PlayerList
     CreateAudience(playerList)
     {
         //console.log(audienceList);
-        this.audienceDiv.innerText = "Audience: " + playerList.length;
+        this.audienceDiv.innerText = "Audience: " + (playerList.length-1);
 
     }
         /*this.audienceDiv.innerHTML = "";
@@ -292,6 +338,8 @@ class PlayerList
 
         var groupDiv = document.createElement('div');
         groupDiv.classList.add("col-4");
+        groupDiv.classList.add("col-s-4");
+        groupDiv.classList.add("col-xs-3");
         groupDiv.style = "padding:0";
         groupDiv.appendChild(card);
 

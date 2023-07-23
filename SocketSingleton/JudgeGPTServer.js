@@ -29,6 +29,7 @@ class JudgeGPTServer {
         this.gameCase = "undefined";
         this.ruling = "";
         this.punishment = "";
+        this.winner = "";
 
         this.messagesChat = new MessageBackEnd();
         this.prompts = new Prompts();
@@ -231,10 +232,13 @@ class JudgeGPTServer {
         }else
         {
             await this.CreateRuling();
-            await this.CreatePunsihment();
             await this.DeclareWinner();
+            await this.CreatePunsihment();
             for(var i = 0 ; i < this.activeRoles.length; i++)
                 await this.Analysis(i);
+        
+            await new Promise(resolve => setTimeout(resolve, 20000));
+        
             await this.RestartGame();
 
         }
@@ -372,6 +376,15 @@ class JudgeGPTServer {
         
     }
 
+
+    async AiAutoComplete(clientID)
+    {
+        var prompt =  "You are " + this.players[clientID].role + this.players[clientID].name + " in court case " + this.gameCase + ". Make a very breif testimonal, of one or two sentences and include some suprising, abusrd and/or funny new information.";//prompts.punishment.replace("$", ruling);
+        var testimonial = await AskGPT(prompt);
+        return testimonial;
+        
+    }
+
     async CreateRuling() 
     {
         var prompt = this.prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.activeRoles[0].role+"'s' testimony is: {" + this.activeRoles[0].testimony + "} The "+this.activeRoles[1].role+"'s' defence testimony is: {" + this.activeRoles[1].testimony + "}";
@@ -393,9 +406,11 @@ class JudgeGPTServer {
     {
         //LogDiscordMessages(this.messagesChat);  
         var prompt = this.prompts.winner.replace("$", this.ruling);
-        var winner = await AskGPT(prompt);
+        this.winner = await AskGPT(prompt);
         
-        if(winner.toLowerCase().includes(this.activeRoles[1].role.toLowerCase()))
+        console.log(this.winner);
+        
+        if(this.winner.toLowerCase().includes(this.activeRoles[1].role.toLowerCase()))
         {
             return this.activeRoles[1];
         }

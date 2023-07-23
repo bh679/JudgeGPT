@@ -116,7 +116,8 @@ io.on('connection', (socket) => {
         socket.emit('GameUpdate', { 
             messages: judgeGPTServer.messagesChat.messages,
             playerTurn: judgeGPTServer.GetPlayersTurn(),
-            playerList: judgeGPTServer.GetPlayers()
+            playerList: judgeGPTServer.GetPlayers(),
+            winner: judgeGPTServer.winner
         });
         //console.log(judgeGPTServer.messagesChat.messages);
     }, 1000);
@@ -141,6 +142,14 @@ io.on('connection', (socket) => {
         judgeGPTServer.UserTyping(data.typing, clientIpAddress);
         
     });
+
+    //
+   socket.on('AiRespond', async () => {
+        socket.emit('AiResponse', { 
+            response: await judgeGPTServer.AiAutoComplete(clientIpAddress)
+        });
+    });
+
 
     /*/
     socket.on('heartbeat', () => {

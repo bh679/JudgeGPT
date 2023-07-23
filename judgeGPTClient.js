@@ -44,8 +44,7 @@ class JudgeGPTClient
             this.playerList[i].isMe = (this.playerList[i].clientID == this.player.clientID)
         }
 
-        this.onUpdatePlayerList.Invoke(playerList);
-        
+        this.onUpdatePlayerList.Invoke(playerList);   
     }
 
     UpdateState(newState)

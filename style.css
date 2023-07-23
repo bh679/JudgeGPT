@@ -134,16 +134,88 @@ Identity
 }
 
 /* Large desktop * /
-@media (min-width: 1200px) { ... }
+@media (min-width: 1200px) { ... }*/
  
-/* Portrait tablet to landscape and desktop * /
-@media (min-width: 768px) and (max-width: 979px) { ... }
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { 
+
+    .col-s-12 {
+        width: 100%;
+    }
+    .col-s-6 {
+        width: 50%;
+    }
+    .col-s-4 {
+        width: 33.33333%;
+    }
+    .col-s-3 {
+        width: 25%;
+    }
+
+ }
  
-/* Landscape phone to portrait tablet * /
-@media (max-width: 767px) { ... }
- 
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { 
+
+    .col-s-12 {
+        width: 100%;
+    }
+    .col-s-6 {
+        width: 50%;
+    }
+    .col-s-4 {
+        width: 33.33333%;
+    }
+    .col-s-3 {
+        width: 25%;
+    }
+
+    .col-xs-12 {
+        width: 100%;
+    }
+    .col-xs-6 {
+        width: 50%;
+    }
+    .col-xs-4 {
+        width: 33.33333%;
+    }
+    .col-xs-3 {
+        width: 25%;
+    }
+
+ }
 /* Landscape phones and down */
 @media (max-width: 480px) { 
+
+
+
+
+    .col-s-12 {
+        width: 100%;
+    }
+    .col-s-6 {
+        width: 50%;
+    }
+    .col-s-4 {
+        width: 33.33333%;
+    }
+    .col-s-3 {
+        width: 25%;
+    }
+
+    .col-xs-12 {
+        width: 100%;
+    }
+    .col-xs-6 {
+        width: 50%;
+    }
+    .col-xs-4 {
+        width: 33.33333%;
+    }
+    .col-xs-3 {
+        width: 25%;
+    }
+    
     .col-xxs-12 {
         width: 100%;
     }

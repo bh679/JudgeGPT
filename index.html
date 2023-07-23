@@ -46,7 +46,6 @@
             <!-- This div will serve as your background. -->
         </div>
 
-
         <!-- heading -->
         <div class="container" id="hero">
             <center>
@@ -61,7 +60,7 @@
             <div class="row">
 
                 <!-- Courtroom -->
-                <div id="courtRoom" class="col-9 col-xxs-12">
+                <div id="courtRoom" class="col-9 col-xs-12">
 
                     <!-- Hearing -->
                     <div id="chat"></div>
@@ -94,10 +93,10 @@
                         <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-6 rounded-3" oninput="TypeInput()"/>
                         <div class="col-2">
                             <div class="row">
-                                <button id="submitButton" class="button w-button col-7 rounded-3" onclick="SubmitTestimony()">
+                                <button id="submitButton" class="button w-button col-7 col-s-12 rounded-3" onclick="SubmitTestimony()">
                                     Submit
                                 </button>
-                                <button id="aiRespondButton" class="button w-button col-4 rounded-3" onclick="UI.AiRespond()">
+                                <button id="aiRespondButton" class="button w-button col-4 col-s-12 rounded-3" onclick="AIRepsonse()">
                                     AI
                                 </button>
                             </div>
@@ -125,7 +124,7 @@
                         <h3>In Court</h3>
                     </div>
                     <div id="playerList" class="row">
-                        <div class="card col-4" style="margin:5px">
+                        <div class="card col-4" style="margin:5px" hidden>
                             <center style="margin:5px;">
                                     <img src="https://brennan.games/JudgeGPT/images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
                                     <div>Name</div>
@@ -137,6 +136,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <!-- Winner -->
+        <div class="container fixed-top">
+            <img id="winner" src="" style="opacity: 0.5;"/>
+            <img src="./images/guilty.png" hidden/>
+            <img src="./images/notguilty.png" hidden/> <!-- find a better way to preload these -->
         </div>
 
 
@@ -234,6 +241,12 @@
             client.UpdateState(data.messages);
             client.SetPlayersTurn(data.playerTurn);
             client.UpdatePlayerList(data.playerList);
+            if (data.winner != "")
+                UI.SetWinner(data.winner);
+        });
+        
+        socket.on('AiResponse', (data) => {
+            UI.AiResponded(data.response);
         });
 
         /*setInterval(() => {
@@ -253,7 +266,12 @@
             UI.TypeIntoInput();
             testimony = userInput.inputFeild.value;
             socket.emit('Typing', { typing: testimony });
+        }
 
+        function AIRepsonse()
+        {
+            UI.AiResponding();
+            socket.emit('AiRespond');
         }
 
 
