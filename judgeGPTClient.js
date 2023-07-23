@@ -8,14 +8,13 @@ class JudgeGPTClient
         //this.uniqueID = this.GenerateID();
 
         this.onMyTurn = new CallBack();
+        this.onNotMyTurn = new CallBack();
         this.onStateChange = new CallBack();
         this.onJoinHearing = new CallBack();
         this.onNewHearing = new CallBack();
         this.onUpdatePlayerList = new CallBack();
 
-        this.player = {}
-        //this.player.clientID = this.GenerateID();
-        //this.playerList = {};
+        this.player = {};
     }
 
     GenerateID() {
@@ -24,19 +23,21 @@ class JudgeGPTClient
 
     SetPlayersTurn(playerTurn)
     {
-        if(playerTurn.ClientID == this.player.ClientID)
+        if(playerTurn.clientID == this.player.clientID)
         {
             this.myTurn = true;
             this.onMyTurn.Invoke(playerTurn);
-        }
+        }else
+        {
+            this.myTurn = false;
+            this.onNotMyTurn.Invoke(playerTurn);
+            }
     }
 
 
     UpdatePlayerList(playerList)
     {
         this.playerList = playerList;
-
-        console.log(this.playerList);
 
         for(var i = 0; i < this.playerList.length; i++)
         {
@@ -96,14 +97,6 @@ class JudgeGPTClient
 
         this.onJoinHearing.Invoke(this.player);
     }*/
-
-
-    async SubmitTestimony(testimony)
-    {
-        // The event name is 'sendMessage' and we're sending a message object
-        //socket.emit('SubmitTestimony', { testimony: testimony });
-
-    }
 }
 
 

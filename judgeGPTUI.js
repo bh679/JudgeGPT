@@ -1,6 +1,6 @@
 class JudgeGPTUI
 {
-    constructor(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, audienceDiv, playerListDiv, client) {
+    constructor(chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, audienceDiv, playerListDiv, typingDiv, client) {
         // Define global variables
         this.chatDiv = chatDiv;
         this.winnerDiv = winnerDiv;
@@ -10,7 +10,7 @@ class JudgeGPTUI
         this.analysis = analysis;
         this.userInput = userInput;
 
-        //this.typingDiv = typingDiv;
+        this.typingDiv = typingDiv;
 
         this.messageUI = new MessageUI(chatDiv);
         this.courtRoomIdentity = new CourtRoomIdentity(courtRoomIdentityGroup, joinHearingButton);
@@ -18,12 +18,19 @@ class JudgeGPTUI
 
         this.playerListUI = new PlayerList(audienceDiv, playerListDiv);
 
+        this.joinNextHearing = false;
+
+        this.judgeImageURL = GetRandomJudgeProfileImage();
+
 
         this.client = client;// = new JudgeGPT();
         this.client.onStateChange.AddListener(this.messageUI.UpdateChat);
 
         this.OnMyTurn = this.OnMyTurn.bind(this);
         this.client.onMyTurn.AddListener(this.OnMyTurn);
+
+        this.OnNotMyTurn = this.OnNotMyTurn.bind(this);
+        this.client.onNotMyTurn.AddListener(this.OnNotMyTurn);
 
         this.OnJoinHearing = this.OnJoinHearing.bind(this);
         this.client.onJoinHearing.AddListener(this.OnJoinHearing);
@@ -36,10 +43,6 @@ class JudgeGPTUI
 
         this.GetNameFromUI = this.GetNameFromUI.bind(this);
         this.courtRoomIdentity.onSetupComplete.AddListener(this.GetNameFromUI);
-
-        this.joinNextHearing = false;
-
-        this.judgeImageURL = GetRandomJudgeProfileImage();
     }
 
     GetNameFromUI()
@@ -71,10 +74,17 @@ class JudgeGPTUI
 
     OnMyTurn(player)
     {
+        console.log("OnMyTurn" + player);
         this.userInput.group.hidden = false;
         //this.userInput.inputFeild.value = "";
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
 
+    }
+
+    OnNotMyTurn(player)
+    {
+        this.userInput.group.hidden = true;
+        typingDiv.innerText = player.testimony;
     }
 
     TryJoinHearing()
@@ -109,7 +119,7 @@ class JudgeGPTUI
         this.userInput.submitButton.disabled = true;
         this.userInput.group.hidden = true;
 
-        this.client.SubmitTestimony(userInput.inputFeild.value);
+        //this.client.SubmitTestimony(userInput.inputFeild.value);
 
         this.userInput.aiRespondButton.disabled = false;
     }
@@ -160,14 +170,8 @@ class JudgeGPTUI
     {
         this.playerListUI.CreateAudience(playerList);
 
-        console.log(playerList);
-
-        //var hearingParticipants = playerList;
-        //hearingParticipants.unshift(playerList.judge);
-        //hearingParticipants[0] = playerList.judge;
-        playerList[0].profileUrl = this.judgeImageURL;//GetRandomJudgeProfileImage();
-        this.playerListUI.CreatePlayerList(playerList);
-        //do same for playerlist
+        playerList[0].profileUrl = this.judgeImageURL;
+        this.playerListUI.CreatePlayerList(playerList)
     }
 
     UpdateChat()
@@ -232,11 +236,11 @@ class PlayerList
 
     CreatePlayerList(playerList)
     {
-        console.log(playerList);
+        
         this.playerListDiv.innerHTML = "";
 
         for (var key in playerList) {
-            console.log(key);
+
             if (playerList.hasOwnProperty(key) && playerList[key].clientID != "") {
                 this.playerListDiv.appendChild(this.CreatePlayerListMember(playerList[key]));
             }
@@ -246,8 +250,6 @@ class PlayerList
 
     CreatePlayerListMember(playerMember)
     {
-        console.log(playerMember);
-
         var profileImg = document.createElement('img');
         profileImg.classList.add("rounded-circle");
         profileImg.style = "width:80%; margin:0%";

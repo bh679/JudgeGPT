@@ -127,14 +127,22 @@ io.on('connection', (socket) => {
         });
 
 
-    // Handle client disconnection and clean up resources
+    // 
     socket.on('SubmitTestimony', (data) => {
         console.log('A user submitted a testimony ' + data.testimony);
         judgeGPTServer.SubmitTestimony(data.testimony, clientIpAddress);
         
     });
 
-    // Handle client disconnection and clean up resources
+
+    // 
+    socket.on('Typing', (data) => {
+        console.log('A user is typing ' + data.typing);
+        judgeGPTServer.UserTyping(data.typing, clientIpAddress);
+        
+    });
+
+    // 
     socket.on('disconnect', () => {
         console.log('A user disconnected');
         clearInterval(interval); // Stop the status update interval

@@ -43,6 +43,8 @@ class JudgeGPTServer {
         this.running = true;
         this.aiTurn = true;
 
+        this.courtEmpty = (Object.keys(this.players).length > 0);
+
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
         this.messagesChat.AddToChat(this.judge, this.gameCase);
         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -59,12 +61,12 @@ class JudgeGPTServer {
 
     }
 
-    OnPlayerConnected(ClientID)
+    OnPlayerConnected(clientID)
     {
-        if(this.players.hasOwnProperty(ClientID))
-            return this.players[ClientID];
+        if(this.players.hasOwnProperty(clientID))
+            return this.players[clientID];
 
-        var newPlayer = this.AddNewPlayerToAudience(ClientID);//.socket = socket;
+        var newPlayer = this.AddNewPlayerToAudience(clientID);//.socket = socket;
 
         console.log(this.activeRoles.length);
 
@@ -85,21 +87,29 @@ class JudgeGPTServer {
             this.activeRoles[this.activeRoles.length] = playerJoining;
     }
 
-    OnPlayerDisconnected(ClientID)
+    OnPlayerDisconnected(clientID)
     {
-        if(this.players.hasOwnProperty(ClientID)) //Consider a delay or something
-            delete this.players[ClientID];
+        if(this.players.hasOwnProperty(clientID)) //Consider a delay or something
+            delete this.players[clientID];
+
+        //check if room is empty
+        //check if player should be replaced by AI
+
+        /*if(Object.keys(this.players).length > 0)
+        {
+            this.courtEmpty = true;
+        }*/
         
     }
 
-    AddNewPlayerToAudience(ClientID)
+    AddNewPlayerToAudience(clientID)
     {
-            var newPlayer = new Player(RandomLines.GetRandomName(), "Audience", ClientID);
+            var newPlayer = new Player(RandomLines.GetRandomName(), "Audience", clientID);
 
             //Genearte ProfileURL
             newPlayer.profileUrl = GetRandomProfileImage();
 
-            this.players[ClientID] = newPlayer;
+            this.players[clientID] = newPlayer;
             
             return newPlayer;
     }
@@ -164,7 +174,10 @@ class JudgeGPTServer {
             return newNPC;
     }
 
-
+    async UserTyping(typing, clientID)
+    {
+        this.players[clientID].testimony = typing;
+    }
 
 
     // Define asynchronous function to send data
