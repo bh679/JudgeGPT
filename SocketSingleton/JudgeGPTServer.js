@@ -66,7 +66,7 @@ class JudgeGPTServer {
         for (const id of playerIDs) {
             const player = this.players[id];
             if (this.activeRoles.length < this.keyRoles.length) {
-                player.role = this.keyRoles[this.activeRoles.length];
+                player.SetRole(this.keyRoles[this.activeRoles.length]);
                 this.activeRoles.push(player);
             } else {
                 break;
@@ -122,7 +122,7 @@ class JudgeGPTServer {
     JoinHearing(playerJoining)
     {
             this.courtEmpty = false;
-            playerJoining.role = this.keyRoles[this.activeRoles.length];
+            playerJoining.SetRole(this.keyRoles[this.activeRoles.length]);
             this.activeRoles[this.activeRoles.length] = playerJoining;
     }
 
@@ -462,6 +462,12 @@ class Player {
         this.clientID = clientID;
         this.profileUrl = "";
         this.lastHeard = Date.now();
+    }
+
+    SetRole(role)
+    {
+        this.role = role;
+        this.class = role.toLowerCase();
     }
 }
 

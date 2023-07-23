@@ -45,16 +45,22 @@
             <!-- This div will serve as your background. -->
         </div>
 
-        <div id="page">
-  
-            <h1 >Judge GPT</h1>
 
-            <h5 id="subheading"></h5>
+        <!-- heading -->
+        <div class="container" id="hero">
+            <center>
+                <h1 >Judge GPT</h1>
 
+                <h5 id="subheading"></h5>
+            </center>
+        </div>
+
+        <!-- chat -->
+        <div class="container">
             <div class="row">
 
                 <!-- Courtroom -->
-                <div id="courtRoom" class="col-9">
+                <div id="courtRoom" class="col-9 col-xxs-12">
 
                     <!-- Hearing -->
                     <div id="chat"></div>
@@ -83,18 +89,23 @@
 
 
                     <div id="inputGroup" class="row">
-                        <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="TypeInput()"/>
-                        <button id="submitButton" class="button w-button col-2" onclick="SubmitTestimony()">
-                            Submit
-                        </button>
-                        <button id="aiRespondButton" class="button w-button col-2" onclick="UI.AiRespond()">
-                            AI Response
-                        </button>
+                        <div class="col-4 sender">You:</div>
+                        <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-6 rounded-3" oninput="TypeInput()"/>
+                        <div class="col-2">
+                            <div class="row">
+                                <button id="submitButton" class="button w-button col-7 rounded-3" onclick="SubmitTestimony()">
+                                    Submit
+                                </button>
+                                <button id="aiRespondButton" class="button w-button col-4 rounded-3" onclick="UI.AiRespond()">
+                                    AI
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Audience / Gallery -->
-                <div class="col-2">
+                <div class="col-2 col-xxs-12">
 
                     <!-- User Profile / Identity -->
                     <div class="row" hidden>
@@ -231,6 +242,35 @@
 
         }
 
+
+        /*function makeRequest() {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('GET', 'https://brennan.games:3000/socket.io/?EIO=4&transport=polling&t=Oc3kMAX', true);
+
+            xhr.onload = function() {
+                if (this.status >= 200 && this.status < 400) {
+                    // Success!
+                    console.log(this.response);
+                } else {
+                    // We reached our target server, but it returned an error
+                    handleError();
+                }
+            };
+
+            xhr.onerror = function() {
+                // There was a connection error of some sort
+                handleError();
+            };
+
+            xhr.send();
+        }
+
+        function handleError() {
+            console.error("There was an error with the request, possibly a CORS issue.");
+            // Handle the error here, e.g., show a message to the user, retry the request, etc.
+            client.OnJoinGame({});
+        }*/
 
 
 

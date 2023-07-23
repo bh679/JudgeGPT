@@ -1,20 +1,40 @@
+#hero
+{
+    padding-top: 20%;
+    $box-shadow:   0 .75rem 1rem rgba(0,0,0, .25);
+}
+
+/*
+
+Chat
+
+*/
+
+#chat
+{
+    /*padding-right: calc(var(--bs-gutter-x) * 1);
+    padding-left: calc(var(--bs-gutter-x) * 1);*/
+}
+
 .message 
 {
-    background-color: rgba(245, 246, 247, 0.75);
+    padding:3px;
 }
-
-.message.alt
-{
-    background-color: rgba(210, 210, 210, 0.75);
-}
-
 
 .messageContents 
 {
 
+    background-color: rgba(245, 246, 247, 0.75);
 }
+
+.messageContents.alt
+{
+    background-color: rgba(210, 210, 210, 0.75);
+}
+
 .sender 
 {
+    text-align:right;
 }
 
 .judge > .sender
@@ -34,12 +54,27 @@
     color: green;
 }
 
+/*
+User Input
+*/
+
+#inputGroup
+{
+    padding-top: 25px;
+}
+
 body, html {
     height: 100%;
     margin: 0;
     position: relative;
     overflow: auto;
 }
+
+/*
+
+Background
+
+*/
 
 #background {
     content: "";
@@ -65,14 +100,10 @@ body, html {
     padding: 20px;
 }
 
-#chat
+#courtRoom
 {
     padding-right: calc(var(--bs-gutter-x) * 1);
     padding-left: calc(var(--bs-gutter-x) * 1);
-}
-
-#courtRoom
-{
 }
 
 .Analysis
@@ -100,4 +131,30 @@ Identity
 {
     width:60%;
     margin:20px
+}
+
+/* Large desktop * /
+@media (min-width: 1200px) { ... }
+ 
+/* Portrait tablet to landscape and desktop * /
+@media (min-width: 768px) and (max-width: 979px) { ... }
+ 
+/* Landscape phone to portrait tablet * /
+@media (max-width: 767px) { ... }
+ 
+/* Landscape phones and down */
+@media (max-width: 480px) { 
+    .col-xxs-12 {
+        width: 100%;
+    }
+    .col-xxs-6 {
+        width: 50%;
+    }
+    .col-xxs-4 {
+        width: 33.33333%;
+    }
+    .col-xxs-3 {
+        width: 25%;
+    }
+    /* ... continue for other grid fractions ... */
 }
