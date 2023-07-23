@@ -39,6 +39,11 @@ app.use(function(req, res, next) {
     next();  // Pass control to the next middleware function
 });
 
+// Restart the server
+app.get('/Restart', function (req, res) {
+    judgeGPTServer.RestartGame();
+});
+
 // Call to GPT for older version of JudgeGPT
 app.post('/AskGPT', function (req, res) {
     // Log the body of the request
@@ -125,6 +130,7 @@ io.on('connection', (socket) => {
     // Handle client disconnection and clean up resources
     socket.on('SubmitTestimony', (data) => {
         console.log('A user submitted a testimony ' + data.testimony);
+        judgeGPTServer.SubmitTestimony(data.testimony, clientIpAddress);
         
     });
 

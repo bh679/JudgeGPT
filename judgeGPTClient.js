@@ -32,20 +32,20 @@ class JudgeGPTClient
     }
 
 
-    /*UpdatePlayerList(playerList)
+    UpdatePlayerList(playerList)
     {
         this.playerList = playerList;
 
         console.log(this.playerList);
 
-        for(var i = 0; i < this.playerList.players.length; i++)
+        for(var i = 0; i < this.playerList.length; i++)
         {
-            this.playerList.players[i].isMe = (this.playerList.players[i].clientID == this.player.clientID)
+            this.playerList[i].isMe = (this.playerList[i].clientID == this.player.clientID)
         }
 
         this.onUpdatePlayerList.Invoke(playerList);
         
-    }*/
+    }
 
     UpdateState(newState)
     {
@@ -100,16 +100,9 @@ class JudgeGPTClient
 
     async SubmitTestimony(testimony)
     {
-        // Make POST request to JudgeGPTServer
-        var response = await fetch('https://brennan.games:3000/SubmitTestimony', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ testimony: testimony }),
-        });
-        
-        this.GetGameState();
+        // The event name is 'sendMessage' and we're sending a message object
+        //socket.emit('SubmitTestimony', { testimony: testimony });
+
     }
 }
 

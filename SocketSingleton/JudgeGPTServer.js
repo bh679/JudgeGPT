@@ -14,14 +14,14 @@ class JudgeGPTServer {
         this.judge = new Player("GPT", "Judge", "ai");
         this.narrator = new Player("","", "system");
 
-        this.players = {};
+        this.players = {}; //all human players, and audience
 
-        this.roles = [
+        this.keyRoles = [ //Key roles that need to be filled
             "Plaintiff",
             "Defendant"
             ];
 
-        this.activeRoles = {}
+        this.activeRoles = []; //players and humans in hearing
 
         this.turn = 0;
 
@@ -64,7 +64,25 @@ class JudgeGPTServer {
         if(this.players.hasOwnProperty(ClientID))
             return this.players[ClientID];
 
-        return this.AddNewPlayerToAudience(ClientID);//.socket = socket;
+        var newPlayer = this.AddNewPlayerToAudience(ClientID);//.socket = socket;
+
+        console.log(this.activeRoles.length);
+
+        if(this.activeRoles.length < 2)
+        {
+            this.JoinHearing(newPlayer);
+        }
+
+        console.log(newPlayer);
+
+        return newPlayer;
+    }
+
+    JoinHearing(playerJoining)
+    {
+            this.courtEmpty = false;
+            playerJoining.role = this.keyRoles[this.activeRoles.length];
+            this.activeRoles[this.activeRoles.length] = playerJoining;
     }
 
     OnPlayerDisconnected(ClientID)
@@ -95,17 +113,22 @@ class JudgeGPTServer {
         await new Promise(resolve => setTimeout(resolve, 1000));
         this.messagesChat.AddToChat(this.judge, this.PlayerIntroduction(this.activeRoles[this.turn]));
 
+        //if there is no more players to go - I think this should never happen - maybe remove
+        /*if(this.turn >= this.keyRoles.length)
+        {
+            //exit
+            return;
+        }*/
+
+
+        //console.log(this.activeRoles[this.turn].clientID);
+        //if(this.activeRoles[this.turn].clientID == "" || this.activeRoles[this.turn].clientID == null)
+       // if(this.turn > 1 && this.activeRoles.length < this.keyRoles.length)
         if(this.turn >= this.activeRoles.length)
         {
-            return;
-        }
+            this.activeRoles[this.turn] = this.AddAIToHearing(this.keyRoles[this.turn]);
 
-        console.log(this.activeRoles[this.turn].clientID);
-        if(this.activeRoles[this.turn].clientID == "" || this.activeRoles[this.turn].clientID == null)
-        {
-            this.activeRoles[this.turn].clientID = "AI";  
-            this.activeRoles[this.turn].name = RandomLines.GetRandomName() + " ai"; 
-            this.messagesChat.AddToChat(this.narrator, "The " + this.activeRoles[this.turn].role + " " + this.activeRoles[this.turn].name + " entered the courtroom.");
+            //this.messagesChat.AddToChat(this.narrator, "The " + this.activeRoles[this.turn].role + " " + this.activeRoles[this.turn].name + " entered the courtroom.");
             await this.SubmitTestimony(await this.AiRespond());
             return;
         }
@@ -115,7 +138,7 @@ class JudgeGPTServer {
 
 
         //if there are multiple players, they have a time limit to respond.
-        if(this.PlayersInGame() > 1)
+        if(this.HumansInGame() > 1)
         {
             await new Promise(resolve => setTimeout(resolve, 60000));
 
@@ -127,6 +150,18 @@ class JudgeGPTServer {
             }
         }
 
+    }
+
+    AddAIToHearing(role)
+    {
+            var newNPC = new Player(RandomLines.GetRandomName(), role, "AI");
+
+            //Genearte ProfileURL
+            newNPC.profileUrl = GetRandomProfileImage();
+
+            this.activeRoles[this.turn] = newNPC;
+            
+            return newNPC;
     }
 
 
@@ -141,14 +176,14 @@ class JudgeGPTServer {
 
         this.aiTurn = true;
 
-        this.player[this.turn].testimony = testimony;//this.UI.userInput.inputFeild.value;
+        this.activeRoles[this.turn].testimony = testimony;//this.UI.userInput.inputFeild.value;
 
-        this.messagesChat.AddToChat(this.player[this.turn], this.player[this.turn].testimony);
+        this.messagesChat.AddToChat(this.activeRoles[this.turn], this.activeRoles[this.turn].testimony);
 
-        if(this.turn < this.player.length-1)
+        if(this.turn < this.keyRoles.length-1)
         {
             this.turn++;
-            this.NextPlayer();
+            this.NextPlayerTurn();
 
             //LogDiscordMessages(this.messagesChat);
         }else
@@ -156,7 +191,7 @@ class JudgeGPTServer {
             await this.CreateRuling();
             await this.CreatePunsihment();
             await this.DeclareWinner();
-            for(var i = 0 ; i < this.player.length; i++)
+            for(var i = 0 ; i < this.activeRoles.length; i++)
                 await this.Analysis(i);
             await this.RestartGame();
 
@@ -187,24 +222,23 @@ class JudgeGPTServer {
 
     GetPlayers()
     {
-        var playerlist = {};
-        playerlist.inGame = this.players;
-        playerlist.judge = this.judge;
+        var playerlist = [];
+        playerlist = Object.values(this.players);
 
-        //this.CleanAudience(this.audience);
-        //playerlist.audience = this.audience;
-        //playerlist.length = this.players.length;
+        // Add the judge to the beginning of the playerlist array
+        playerlist.unshift(this.judge);
 
         return playerlist;
     }
 
-    PlayersInGame()
+
+    HumansInGame()
     {
         var count = 0;
 
-        for(var i = 0; i < this.player.length; i++)
+        for(var i = 0; i < this.activeRoles.length; i++)
         {
-            if(this.player[i].clientID != "")
+            if(this.activeRoles[i].clientID != "")
                 count++;
         }
 
@@ -229,7 +263,7 @@ class JudgeGPTServer {
 
     
 
-    JoinHearing(playerData)
+    /*JoinHearing(playerData)
     {
 
         console.log("playerData.clientID: " + playerData.clientID);
@@ -255,14 +289,14 @@ class JudgeGPTServer {
         {
             return AddPlayer();
         }*/
-
+/*
         console.log("is not joining");
         return null;
-    }
+    }*/
    
     PlayerIntroduction()
     {
-        switch(this.player[this.turn].role)
+        switch(this.keyRoles[this.turn].role)
         {
             case "Plaintiff":
                 return "Plaintiff, do you have anything to add?";
@@ -277,7 +311,7 @@ class JudgeGPTServer {
 
     async AiRespond()
     {
-        var prompt =  "You are " + this.player[this.turn].role + this.player[this.turn].name + " in court case " + this.gameCase + ". Make a very breif testimonal, of one or two sentences and include some suprising, abusrd and/or funny new information.";//prompts.punishment.replace("$", ruling);
+        var prompt =  "You are " + this.activeRoles[this.turn].role + this.activeRoles[this.turn].name + " in court case " + this.gameCase + ". Make a very breif testimonal, of one or two sentences and include some suprising, abusrd and/or funny new information.";//prompts.punishment.replace("$", ruling);
         var testimonial = await AskGPT(prompt);
         return testimonial;
         
@@ -285,7 +319,7 @@ class JudgeGPTServer {
 
     async CreateRuling() 
     {
-        var prompt = this.prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.player[0].role+"'s' testimony is: {" + this.player[0].testimony + "} The "+this.player[1].role+"'s' defence testimony is: {" + this.player[1].testimony + "}";
+        var prompt = this.prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.activeRoles[0].role+"'s' testimony is: {" + this.activeRoles[0].testimony + "} The "+this.activeRoles[1].role+"'s' defence testimony is: {" + this.activeRoles[1].testimony + "}";
         this.ruling = await AskGPT(prompt);
         this.messagesChat.AddToChat(this.judge, this.ruling);
         await new Promise(resolve => setTimeout(resolve, 5000));
@@ -306,9 +340,9 @@ class JudgeGPTServer {
         var prompt = this.prompts.winner.replace("$", this.ruling);
         var winner = await AskGPT(prompt);
         
-        if(winner.toLowerCase().includes(this.player[1].role.toLowerCase()))
+        if(winner.toLowerCase().includes(this.activeRoles[1].role.toLowerCase()))
         {
-            return this.player[1];
+            return this.activeRoles[1];
         }
 
         this.running = false;
@@ -316,11 +350,11 @@ class JudgeGPTServer {
 
     async Analysis(playerid)
     {
-        var prompt =  this.prompts.scoring.replace("$", this.player[playerid].testimony).replace("%", this.player[playerid].role);
+        var prompt =  this.prompts.scoring.replace("$", this.activeRoles[playerid].testimony).replace("%", this.activeRoles[playerid].role);
         console.log(prompt);
-        this.player[playerid].score = await AskGPT(prompt);
+        this.activeRoles[playerid].score = await AskGPT(prompt);
 
-        return this.player[playerid];
+        return this.activeRoles[playerid];
     }
 
     async RestartGame()
@@ -336,7 +370,10 @@ class JudgeGPTServer {
         if(this.aiTurn)
             return this.judge;
 
-        return this.player[this.turn];
+        if(this.activeRoles.length > this.turn)
+            return this.activeRoles[this.turn];
+
+        return this.judge;
     }
 
 }

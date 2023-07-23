@@ -84,7 +84,7 @@
 
                     <div id="inputGroup" class="row">
                         <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col-7" oninput="UI.TypeIntoInput()"/>
-                        <button id="submitButton" class="button w-button col-2" onclick="UI.SubmitTestimony()">
+                        <button id="submitButton" class="button w-button col-2" onclick="SubmitTestimony()">
                             Submit
                         </button>
                         <button id="aiRespondButton" class="button w-button col-2" onclick="UI.AiRespond()">
@@ -204,11 +204,21 @@
 
             
             socket.on('GameUpdate', (data) => {
-                console.log('Received ChatUpdate:', data);
-                console.log('Received ChatUpdate:', data.messages);
+                //console.log('Received ChatUpdate:', data);
+                //console.log('Received ChatUpdate:', data.messages);
                 client.UpdateState(data.messages);
                 client.SetPlayersTurn(data.playerTurn);
+                client.UpdatePlayerList(data.playerList);
             });
+
+        function SubmitTestimony()
+        {
+            testimony = userInput.inputFeild.value;
+            console.log(testimony);
+            socket.emit('SubmitTestimony', { testimony: testimony });
+            UI.SubmitTestimony(testimony);
+        }
+
 
 
     </script>

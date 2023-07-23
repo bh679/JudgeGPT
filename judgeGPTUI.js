@@ -72,7 +72,7 @@ class JudgeGPTUI
     OnMyTurn(player)
     {
         this.userInput.group.hidden = false;
-        this.userInput.inputFeild.value = "";
+        //this.userInput.inputFeild.value = "";
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
 
     }
@@ -100,7 +100,7 @@ class JudgeGPTUI
 
     TypeIntoInput()
     {
-        this.userInput.aiRespondButton.disabled = this.userInput.inputFeild.value.length > 0;
+        this.userInput.aiRespondButton.disabled = (this.userInput.inputFeild.value.length > 0);
     }
 
     SubmitTestimony()
@@ -158,13 +158,15 @@ class JudgeGPTUI
 
     UpdatePlayerList(playerList)
     {
-        this.playerListUI.CreateAudience(playerList.audience);
+        this.playerListUI.CreateAudience(playerList);
 
-        var hearingParticipants = playerList.players;
-        hearingParticipants.unshift(playerList.judge);
+        console.log(playerList);
+
+        //var hearingParticipants = playerList;
+        //hearingParticipants.unshift(playerList.judge);
         //hearingParticipants[0] = playerList.judge;
-        hearingParticipants[0].profileUrl = this.judgeImageURL;//GetRandomJudgeProfileImage();
-        this.playerListUI.CreatePlayerList(hearingParticipants);
+        playerList[0].profileUrl = this.judgeImageURL;//GetRandomJudgeProfileImage();
+        this.playerListUI.CreatePlayerList(playerList);
         //do same for playerlist
     }
 
@@ -182,10 +184,10 @@ class PlayerList
         this.playerListDiv = playerListDiv;
     }
 
-    CreateAudience(audienceList)
+    CreateAudience(playerList)
     {
         //console.log(audienceList);
-        this.audienceDiv.innerText = Object.keys(audienceList).length;
+        this.audienceDiv.innerText = playerList.length;
 
     }
         /*this.audienceDiv.innerHTML = "";
@@ -408,7 +410,7 @@ class ChatLineUI
         this.groupDiv = document.createElement('div');
         this.groupDiv.classList.add("row");
         this.groupDiv.classList.add("message");
-        console.log(this.message.sender.class);
+        //console.log(this.message.sender.class);
         if(this.message.sender.class != null && this.message.sender.class != "")
             this.groupDiv.classList.add(this.message.sender.class);
         if(alt)
