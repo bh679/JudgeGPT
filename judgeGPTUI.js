@@ -122,6 +122,7 @@ class JudgeGPTUI
         //this.client.SubmitTestimony(userInput.inputFeild.value);
 
         this.userInput.aiRespondButton.disabled = false;
+        this.userInput.inputFeild.value = "";
     }
 
     async AiRespond()

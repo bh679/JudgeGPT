@@ -23,7 +23,7 @@ let promptResponse = {};
 //Judge GPT
 const RandomLines = require('./RandomLines');
 const JudgeGPTServer = require('./JudgeGPTServer');
-const judgeGPTServer = new JudgeGPTServer();
+var judgeGPTServer = new JudgeGPTServer();
 judgeGPTServer.Start();
 
 
@@ -141,6 +141,12 @@ io.on('connection', (socket) => {
         judgeGPTServer.UserTyping(data.typing, clientIpAddress);
         
     });
+
+    /*/
+    socket.on('heartbeat', () => {
+        PlayerHeartBeat(clientIpAddress);
+    });*/
+
 
     // 
     socket.on('disconnect', () => {

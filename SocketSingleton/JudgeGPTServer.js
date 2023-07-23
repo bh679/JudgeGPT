@@ -6,6 +6,9 @@ const RandomLines = require('./RandomLines');
 class JudgeGPTServer {
 
     constructor() {
+
+        this.players = {}; //all human players, and audience
+
         this.init();
     }
 
@@ -13,8 +16,6 @@ class JudgeGPTServer {
     {
         this.judge = new Player("GPT", "Judge", "ai");
         this.narrator = new Player("","", "system");
-
-        this.players = {}; //all human players, and audience
 
         this.keyRoles = [ //Key roles that need to be filled
             "Plaintiff",
@@ -34,8 +35,45 @@ class JudgeGPTServer {
 
         this.running = false;
         this.aiTurn = true;
-        this.courtEmpty = true;
+        this.courtEmpty = !(Object.keys(this.players).length > 0);
+
+        //remove ai from players
+        this.RemoveAIfromPlayers(); 
+        //reset roles
+        this.SetActiveRolesFromPlayers();
+
+        console.log(this.players);
+        console.log("this.activeRoles");
+        console.log(this.activeRoles);
     }
+
+    RemoveAIfromPlayers() 
+    {
+        for(let clientID in this.players) 
+        {
+            if(this.players[clientID].clientID.toLowerCase() === "ai") {
+                delete this.players[clientID];
+        }
+        }
+    }
+
+    SetActiveRolesFromPlayers() {
+        // Reset activeRoles
+        this.activeRoles = [];
+
+        // Get the first two players from the players object
+        const playerIDs = Object.keys(this.players);
+        for (const id of playerIDs) {
+            const player = this.players[id];
+            if (this.activeRoles.length < this.keyRoles.length) {
+                player.role = this.keyRoles[this.activeRoles.length];
+                this.activeRoles.push(player);
+            } else {
+                break;
+            }
+        }
+    }
+
 
     // Start the game
     async Start() {
@@ -43,8 +81,7 @@ class JudgeGPTServer {
         this.running = true;
         this.aiTurn = true;
 
-        this.courtEmpty = (Object.keys(this.players).length > 0);
-
+        
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
         this.messagesChat.AddToChat(this.judge, this.gameCase);
         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -60,6 +97,8 @@ class JudgeGPTServer {
         this.NextPlayerTurn();
 
     }
+
+
 
     OnPlayerConnected(clientID)
     {
@@ -123,17 +162,7 @@ class JudgeGPTServer {
         await new Promise(resolve => setTimeout(resolve, 1000));
         this.messagesChat.AddToChat(this.judge, this.PlayerIntroduction(this.activeRoles[this.turn]));
 
-        //if there is no more players to go - I think this should never happen - maybe remove
-        /*if(this.turn >= this.keyRoles.length)
-        {
-            //exit
-            return;
-        }*/
 
-
-        //console.log(this.activeRoles[this.turn].clientID);
-        //if(this.activeRoles[this.turn].clientID == "" || this.activeRoles[this.turn].clientID == null)
-       // if(this.turn > 1 && this.activeRoles.length < this.keyRoles.length)
         if(this.turn >= this.activeRoles.length)
         {
             this.activeRoles[this.turn] = this.AddAIToHearing(this.keyRoles[this.turn]);
@@ -212,6 +241,17 @@ class JudgeGPTServer {
 
     }
 
+    //not used right now
+    PlayerHeartBeat(clientID)
+    {
+        this.players[clientID].lastHeard = Date.now();
+    }
+
+    /*getTimeSinceLastResponse(clientID) {
+        const now = Date.now();
+        const lastTime = this.players[clientID].lastHeard || now;
+        return (now - lastTime) / 1000; // returns seconds
+    }*/
 
 
     InAudience(playerData)
@@ -309,15 +349,17 @@ class JudgeGPTServer {
    
     PlayerIntroduction()
     {
-        switch(this.keyRoles[this.turn].role)
-        {
-            case "Plaintiff":
-                return "Plaintiff, do you have anything to add?";
-            case "Defendant":
-                return "Defendant, what is your repsonse?";
-            default:
-                return "Does anyon else have anything to say?";
-        }
+        console.log("PlayerIntroduction()");
+        console.log(this.turn);
+        console.log(this.keyRoles[this.turn]);
+        console.log(this.keyRoles);
+        if(this.keyRoles[this.turn] == "Plaintiff")
+            return "Plaintiff, do you have anything to add?";
+        else if(this.keyRoles[this.turn] == "Defendant")
+            return "Defendant, what is your repsonse?";
+        else
+            return "Does anyone else have anything to say?";
+        
     }
 
     
@@ -419,6 +461,7 @@ class Player {
         this.score;
         this.clientID = clientID;
         this.profileUrl = "";
+        this.lastHeard = Date.now();
     }
 }
 

@@ -190,26 +190,30 @@
 
         const socket = io('https://brennan.games:3000');
 
-            // Emit the 'testEvent' after connecting
-            socket.on('connect', () => {
-                console.log('Connected to the server!');
-                //socket.emit('testEvent', { data: 'Hello from the client!' });
-            });
+        // Emit the 'testEvent' after connecting
+        socket.on('connect', () => {
+            console.log('Connected to the server!');
+            //socket.emit('testEvent', { data: 'Hello from the client!' });
+        });
 
-            
-            socket.on('OnJoinEvent', (data) => {
-                console.log('Received data.player:', data.player);
-                client.OnJoinGame(data.player);
-            });
+        
+        socket.on('OnJoinEvent', (data) => {
+            console.log('Received data.player:', data.player);
+            client.OnJoinGame(data.player);
+        });
 
-            
-            socket.on('GameUpdate', (data) => {
-                //console.log('Received ChatUpdate:', data);
-                //console.log('Received ChatUpdate:', data.messages);
-                client.UpdateState(data.messages);
-                client.SetPlayersTurn(data.playerTurn);
-                client.UpdatePlayerList(data.playerList);
-            });
+        
+        socket.on('GameUpdate', (data) => {
+            //console.log('Received ChatUpdate:', data);
+            //console.log('Received ChatUpdate:', data.messages);
+            client.UpdateState(data.messages);
+            client.SetPlayersTurn(data.playerTurn);
+            client.UpdatePlayerList(data.playerList);
+        });
+
+        /*setInterval(() => {
+            socket.emit('heartbeat', {});
+        }, 30000);  // Every 30 seconds*/
 
         function SubmitTestimony()
         {
@@ -226,6 +230,8 @@
             socket.emit('Typing', { typing: testimony });
 
         }
+
+
 
 
 
