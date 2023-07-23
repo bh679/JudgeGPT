@@ -1,4 +1,7 @@
 # JudgeGPT-Node
+Convince the ai judge you are innocent. You and another player fight it out in the court room to see who wins the case. The Judge decides your fate!
+
+Efficient and succinct justice with all the bias and inaccuracy of ai.
 
 ## Setup 
 Server Setup
