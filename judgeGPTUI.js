@@ -65,6 +65,7 @@ class JudgeGPTUI
     {
 
         this.winner = "";
+        this.winnerDiv.src="";
         this.gameOverUI.group.hidden = true;
         this.userInput.group.hidden = true;
         this.analysis.group.hidden = true;
@@ -221,17 +222,12 @@ class JudgeGPTUI
         if (this.winner != "")
             return;
 
-        console.log("winner is " + winner);
-
         this.winner = winner;
 
         if(this.winner.toLowerCase() == "plaintiff")
             this.winnerDiv.src="./images/guilty.png";
         else
             this.winnerDiv.src="./images/notguilty.png";
-
-        console.log(this.winnerDiv.src);
-        console.log("winner still is " + winner);
      }
 }
 
