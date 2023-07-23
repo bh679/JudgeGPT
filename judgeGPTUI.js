@@ -329,7 +329,7 @@ class PlayerList
            card.classList.add("text-white");
             card.classList.add("bg-primary");
         }
-        card.style = "margin:1px";
+        card.style = "margin:3px";
         card.appendChild(center);
 
         var groupDiv = document.createElement('div');
