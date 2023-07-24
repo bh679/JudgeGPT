@@ -100,23 +100,18 @@ class JudgeGPTUI
         console.log(player);
 
         var chatline;
+        this.typingContent += ".";
 
-        if(player.clientID.toLowerCase() == "ai")
-        {
-            this.typingContent += ".";
+        if(this.typingContent == "....")
+        this.typingContent = "";
 
-            if(this.typingContent == "....")
-                this.typingContent = "";
+        var message = "<i>Typing: " + player.testimony + this.typingContent + "</i>";
 
-            chatline = new ChatLineUI({message: this.typingContent, sender: player},(this.messageUI.messages.length % 2 == 0), false);
-        
-        }
-        else
-        {
-            chatline = new ChatLineUI({message: player.testimony, sender: player},(this.messageUI.messages.length % 2 == 0), false);
-        }
+        if(player.testimony == null)
+            message = "<i>Typing: " + this.typingContent + "</i>";
 
-        
+        chatline = new ChatLineUI({message: message, sender: player},(this.messageUI.messages.length % 2 == 0), false);
+
         console.log(chatline);
 
         typingDiv.innerHTML = "";
@@ -508,7 +503,7 @@ class ChatLineUI
         //this.messageContentsDiv.classList.add("card");
         this.messageContentsDiv.classList.add("messageContents");
         this.messageContentsDiv.classList.add("rounded-3");
-        this.messageContentsDiv.innerText = this.message.message;
+        this.messageContentsDiv.innerHTML = this.message.message;
 
         if(alt)
            this.messageContentsDiv.classList.add("alt");
