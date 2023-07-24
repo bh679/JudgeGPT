@@ -42,9 +42,13 @@ Latest version of JudgeGPT is looking great!
 Now runs as a single session, that is networked mutliplayer using sockets. So everyone will be connected to the same live-case, and be able to join and participate as it comes up with new cases.
 
 UI has been improved a lot, and has better mobile support.
+![image](https://github.com/bh679/JudgeGPT/assets/2542558/317e7c29-f3f6-4339-b542-5b95b8f44644)
+
 
 ### V1 — 07/17/2023 1:11 PM
 Its come a long way in the last day, now has random graphics, improved UI for each game, and an analysis mode!
+![image](https://github.com/bh679/JudgeGPT/assets/2542558/306a5d75-6059-4788-9964-9d73a1944dee)
+
 
 ### V0  — 07/16/2023 1:43 PM
 So I am working on this game called JudgeGPT. 
@@ -59,3 +63,5 @@ https://brennan.games/JudgeGPT/
 
 Notes
 So far its only 2 player 
+![image](https://github.com/bh679/JudgeGPT/assets/2542558/c8b25c85-067a-48c1-86b8-ad05154fe6ca)
+
