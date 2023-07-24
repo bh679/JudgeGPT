@@ -43,9 +43,7 @@ class JudgeGPTServer {
         //reset roles
         this.SetActiveRolesFromPlayers();
 
-        console.log(this.players);
-        console.log("this.activeRoles");
-        console.log(this.activeRoles);
+        this.RestPlayers();
     }
 
     RemoveAIfromPlayers() 
@@ -54,7 +52,7 @@ class JudgeGPTServer {
         {
             if(this.players[clientID].clientID.toLowerCase() === "ai") {
                 delete this.players[clientID];
-        }
+            }
         }
     }
 
@@ -72,6 +70,14 @@ class JudgeGPTServer {
             } else {
                 break;
             }
+        }
+    }
+
+    RestPlayers() 
+    {
+        for(let clientID in this.players) 
+        {
+            this.players[clientID].Reset();
         }
     }
 
@@ -409,7 +415,7 @@ class JudgeGPTServer {
         this.winner = await AskGPT(prompt);
         
         console.log(this.winner);
-        
+
         if(this.winner.toLowerCase().includes(this.activeRoles[1].role.toLowerCase()))
         {
             return this.activeRoles[1];
@@ -477,6 +483,12 @@ class Player {
         this.clientID = clientID;
         this.profileUrl = "";
         this.lastHeard = Date.now();
+    }
+
+    Reset()
+    {
+        this.testimony = null;
+        this.score = null;
     }
 
     SetRole(role)

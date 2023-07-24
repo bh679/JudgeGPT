@@ -46,102 +46,108 @@
             <!-- This div will serve as your background. -->
         </div>
 
-        <!-- heading -->
-        <div class="container" id="hero">
-            <center>
-                <h1 >Judge GPT</h1>
+        <!-- The Game -->
+        <div>
 
-                <h5 id="subheading"></h5>
-            </center>
-        </div>
+            <!-- heading -->
+            <div class="container" id="hero">
+                <center>
+                    <h1 >Judge GPT</h1>
 
-        <!-- chat -->
-        <div class="container">
-            <div class="row">
+                    <h5 id="subheading"></h5>
+                </center>
+            </div>
 
-                <!-- Courtroom -->
-                <div id="courtRoom" class="col-9 col-xs-12">
+            <!-- chat -->
+            <div class="container">
+                <div class="row">
 
-                    <!-- Hearing -->
-                    <div id="chat"></div>
-                    <div id="typing"></div>
+                    <!-- Courtroom -->
+                    <div id="courtRoom" class="col-9 col-xs-12">
 
-                    <center hidden>
-                        <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()" style="margin: 10%;">Join</button>
-                    </center>
-                    <div id="endButtons">
-                        <div id="analysisGroup" class="row">
-                            <div id="analysis0" class="Analysis col-6"></div>
-                            <div id="analysis1" class="Analysis col-6"></div>
-                        </div>
-                        <div class="row">
-                            <button id="restartButton" class="button w-button col" onclick="location.reload()">
-                                Restart
-                            </button>
-                            <button id="analysisButton" class="button w-button col" onclick="UI.Analysis()">
-                                Analyze Responses
-                            </button>
-                        </div>
-                    </div>
+                        <!-- Hearing -->
+                        <div id="chat"></div>
+                        <div id="typing"></div>
 
-
-                    <div id="inputGroup" class="row">
-                        <div class="col-4 col-s-3 col-xxs-2 sender">You:</div>
-                        <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col rounded-3" oninput="TypeInput()"/>
-                        <div class="col-2 col-s-3 col-xx-12">
+                        <center hidden>
+                            <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()" style="margin: 10%;">Join</button>
+                        </center>
+                        <div id="endButtons">
+                            <div id="analysisGroup" class="row">
+                                <div id="analysis0" class="Analysis col-6"></div>
+                                <div id="analysis1" class="Analysis col-6"></div>
+                            </div>
                             <div class="row">
-                                <button id="submitButton" class="button w-button rounded-3 col" onclick="SubmitTestimony()">
-                                    Submit
+                                <button id="restartButton" class="button w-button col" onclick="location.reload()">
+                                    Restart
                                 </button>
-                                <button id="aiRespondButton" class="button w-button col-4 col-s-12 col-ss-4 rounded-3" onclick="AIRepsonse()">
-                                    AI
+                                <button id="analysisButton" class="button w-button col" onclick="UI.Analysis()">
+                                    Analyze Responses
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Audience / Gallery -->
-                <div class="col">
 
-                    <!-- User Profile / Identity -->
-                    <div class="row" hidden>
-                        <div class="card" style="margin:5px">
-                            <center style="margin:20px">
-                                <div id="courtRoomIdentity">
+                        <div id="inputGroup" class="row">
+                            <div class="col-4 col-s-3 col-xxs-2 sender">You:</div>
+                            <input  id="userInput" type="text" placeholder="Plaintiff" value="" class="col rounded-3" oninput="TypeInput()"/>
+                            <div class="col-2 col-s-3 col-xx-12">
+                                <div class="row">
+                                    <button id="submitButton" class="button w-button rounded-3 col" onclick="SubmitTestimony()">
+                                        Submit
+                                    </button>
+                                    <button id="aiRespondButton" class="button w-button col-4 col-s-12 col-ss-4 rounded-3" onclick="AIRepsonse()">
+                                        AI
+                                    </button>
                                 </div>
-                                <!--button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button-->
-                            </center>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Audience / Gallery -->
+                    <div class="col">
 
-                    <!-- Hearing Participants -->
-                    <div class="row">
-                        <h3>In Court</h3>
-                    </div>
-                    <div id="playerList" class="row">
-                        <div class="card col-4" style="margin:5px" hidden>
-                            <center style="margin:5px;">
-                                    <img src="https://brennan.games/JudgeGPT/images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
-                                    <div>Name</div>
-                            </center>
+                        <!-- User Profile / Identity -->
+                        <div class="row" hidden>
+                            <div class="card" style="margin:5px">
+                                <center style="margin:20px">
+                                    <div id="courtRoomIdentity">
+                                    </div>
+                                    <!--button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button-->
+                                </center>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" >
-                        <h5 id="audience"></h5>
+
+
+                        <!-- Hearing Participants -->
+                        <div class="row">
+                            <h3>In Court</h3>
+                        </div>
+                        <div id="playerList" class="row">
+                            <div class="card col-4" style="margin:5px" hidden>
+                                <center style="margin:5px;">
+                                        <img src="https://brennan.games/JudgeGPT/images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
+                                        <div>Name</div>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="row" >
+                            <h5 id="audience"></h5>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
 
-        <!-- Winner -->
-        <div class="container fixed-top">
-            <img id="winner" src="" style="opacity: 0.45;"/>
-            <img src="./images/guilty.png" hidden/>
-            <img src="./images/notguilty.png" hidden/> <!-- find a better way to preload these -->
-        </div>
+            <!-- Winner -->
+            <div class="container fixed-top" style="z-index: -1;   ">
+                <img id="winner" src="" style="opacity: 0.45;"/>
+                <img src="./images/guilty.png" hidden/>
+                <img src="./images/notguilty.png" hidden/> <!-- find a better way to preload these -->
+            </div>
+
+        </div>    
+        <!-- End of game-->
 
 
         <!-- Footer -->

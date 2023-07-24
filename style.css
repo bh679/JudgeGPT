@@ -87,7 +87,7 @@ Background
     bottom: 0;
     right: 0;
     position: fixed;  /* This will make the div stick to the screen. */
-    z-index: -1;   
+    z-index: -2;   
     width: 100%;
     height: 100%;
 }

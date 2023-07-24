@@ -52,6 +52,7 @@ class JudgeGPTUI
 
         this.winner = "";
         this.aiRespondingInterval;
+        this.typingContent = "";
     }
 
     GetNameFromUI()
@@ -89,13 +90,37 @@ class JudgeGPTUI
         this.userInput.group.hidden = false;
         //this.userInput.inputFeild.value = "";
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
+        typingDiv.innerText = "";
 
     }
 
     OnNotMyTurn(player)
     {
         this.userInput.group.hidden = true;
-        typingDiv.innerText = player.testimony;
+        console.log(player);
+
+        var chatline;
+
+        if(player.clientID.toLowerCase() == "ai")
+        {
+            this.typingContent += ".";
+
+            if(this.typingContent == "....")
+                this.typingContent = "";
+
+            chatline = new ChatLineUI({message: this.typingContent, sender: player},(this.messageUI.messages.length % 2 == 0), false);
+        
+        }
+        else
+        {
+            chatline = new ChatLineUI({message: player.testimony, sender: player},(this.messageUI.messages.length % 2 == 0), false);
+        }
+
+        
+        console.log(chatline);
+
+        typingDiv.innerHTML = "";
+        typingDiv.appendChild(chatline.GetDiv());
     }
 
     TryJoinHearing()
@@ -437,12 +462,15 @@ class MessageUI
         this.chatDiv = chatDiv;
 
         this.messagesDivs = {};
+        this.messages = [];
 
         this.UpdateChat = this.UpdateChat.bind(this);
     }
 
     UpdateChat(messages)
     {
+        this.messages = messages;
+
         this.chatDiv.innerHTML = '';
 
         for(var i = 0; i < messages.length; i++)
@@ -502,7 +530,7 @@ class ChatLineUI
 
     GetDiv()
     {
-        return groupDiv;
+        return this.groupDiv;
     }
 }
 
