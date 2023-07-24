@@ -32,3 +32,30 @@ Public Client Setup
 ## Run
 Move into the server folder.
 Run ``pm2 start ecosystem.config.js``
+
+
+## Update
+
+### V2 July 24, 23
+Latest version of JudgeGPT is looking great!
+
+Now runs as a single session, that is networked mutliplayer using sockets. So everyone will be connected to the same live-case, and be able to join and participate as it comes up with new cases.
+
+UI has been improved a lot, and has better mobile support.
+
+### V1 — 07/17/2023 1:11 PM
+Its come a long way in the last day, now has random graphics, improved UI for each game, and an analysis mode!
+
+### V0  — 07/16/2023 1:43 PM
+So I am working on this game called JudgeGPT. 
+
+Its a game based in a futuristic small claims court room, where ai has replaced the lawyers & judges in the legal system. You and another player fight it out in the court room to see who wins the case.
+
+It is early stages, proof of concept prototype. What do you think?
+I am looking for feedback on what the UI could look like. I was originally thinking a simple chatbot, but I want to make it more legally / court-y. Any thoughts? What does a the future of virtual court rooms look like?
+
+~~http://3.24.141.2/JudgeGPT/~~
+https://brennan.games/JudgeGPT/
+
+Notes
+So far its only 2 player 
