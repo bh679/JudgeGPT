@@ -3,6 +3,8 @@ Convince the ai judge you are innocent. You and another player fight it out in t
 
 Efficient and succinct justice with all the bias and inaccuracy of ai.
 
+Who is better at convincing the Judge they are innocent?
+
 ## Setup 
 Server Setup
 
