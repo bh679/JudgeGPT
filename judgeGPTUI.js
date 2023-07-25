@@ -72,6 +72,8 @@ class JudgeGPTUI
         this.analysis.group.hidden = true;
         this.userInput.submitButton.disabled = false;
 
+        this.userInput.timer.setAttribute("data-value", 0);
+
         this.courtRoomIdentity.Reset();
 
         //if(this.joinNextHearing)
@@ -91,6 +93,17 @@ class JudgeGPTUI
         //this.userInput.inputFeild.value = "";
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
         typingDiv.innerText = "";
+
+        console.log(player.timeLeft);
+
+        this.userInput.timer.innerText = player.role + ": " + player.timeLeft + " sec";
+/*
+        this.userInput.timer.setAttribute("data-value", player.timeLeft);
+
+        const containers = document.getElementsByClassName("chart");
+        this.userInput.timer.innerHTML = "";
+        const dial = new Dial(containers[0]);
+        dial.animateStart();*/
 
     }
 

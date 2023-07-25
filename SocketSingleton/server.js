@@ -95,6 +95,8 @@ const io = socketIO(server, {
     transports: ['polling', 'websocket'] // Specify the transports for socket.io
 });
 
+var clientID;
+
 // Handle client connections using socket.io
 io.on('connection', (socket) => {
 
@@ -104,9 +106,11 @@ io.on('connection', (socket) => {
     //Log client joining
     console.log(`A user connected with ID: ${socket.id} from ${clientIpAddress}`);
 
+    clientID = socket.id;
+
     //Player has successful joined game, here is player details
     socket.emit('OnJoinEvent', { 
-            player: judgeGPTServer.OnPlayerConnected(clientIpAddress), 
+            player: judgeGPTServer.OnPlayerConnected(clientID), 
         });
 
     // Emit status updates to the client at regular intervals
@@ -131,7 +135,7 @@ io.on('connection', (socket) => {
     // 
     socket.on('SubmitTestimony', (data) => {
         console.log('A user submitted a testimony ' + data.testimony);
-        judgeGPTServer.SubmitTestimony(data.testimony, clientIpAddress);
+        judgeGPTServer.SubmitTestimony(data.testimony, clientID);
         
     });
 
@@ -139,14 +143,14 @@ io.on('connection', (socket) => {
     // 
     socket.on('Typing', (data) => {
         console.log('A user is typing ' + data.typing);
-        judgeGPTServer.UserTyping(data.typing, clientIpAddress);
+        judgeGPTServer.UserTyping(data.typing, clientID);
         
     });
 
     //
    socket.on('AiRespond', async () => {
         socket.emit('AiResponse', { 
-            response: await judgeGPTServer.AiAutoComplete(clientIpAddress)
+            response: await judgeGPTServer.AiAutoComplete(clientID)
         });
     });
 
@@ -159,6 +163,7 @@ io.on('connection', (socket) => {
 
     // 
     socket.on('disconnect', () => {
+        judgeGPTServer.OnPlayerDisconnected(clientID);
         console.log('A user disconnected');
         clearInterval(interval); // Stop the status update interval
     });
