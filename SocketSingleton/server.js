@@ -41,7 +41,9 @@ app.use(function(req, res, next) {
 
 // Restart the server
 app.get('/Restart', function (req, res) {
-    judgeGPTServer.RestartGame();
+    //judgeGPTServer.RestartGame();
+    judgeGPTServer = new JudgeGPTServer();
+    judgeGPTServer.Start();
 });
 
 // Call to GPT for older version of JudgeGPT
@@ -95,8 +97,6 @@ const io = socketIO(server, {
     transports: ['polling', 'websocket'] // Specify the transports for socket.io
 });
 
-var clientID;
-
 // Handle client connections using socket.io
 io.on('connection', (socket) => {
 
@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
     //Log client joining
     console.log(`A user connected with ID: ${socket.id} from ${clientIpAddress}`);
 
-    clientID = socket.id;
+    var clientID = socket.id;
 
     //Player has successful joined game, here is player details
     socket.emit('OnJoinEvent', { 

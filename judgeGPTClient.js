@@ -14,6 +14,11 @@ class JudgeGPTClient
         this.onNewHearing = new CallBack();
         this.onUpdatePlayerList = new CallBack();
 
+
+        this.playerList = [];
+        this.activeRoles = [];
+        this.audience = [];
+
         this.player = {};
     }
 
@@ -37,7 +42,9 @@ class JudgeGPTClient
 
     UpdatePlayerList(playerList)
     {
-        this.playerList = playerList;
+        this.playerList = playerList.players;
+        this.activeRoles = playerList.activeRoles;
+        this.audience = playerList.audience;
 
         for(var i = 0; i < this.playerList.length; i++)
         {

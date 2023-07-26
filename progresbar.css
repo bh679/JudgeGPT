@@ -29,9 +29,9 @@
 }
 
 .form-floating>label {
-  /*padding: 0.5rem 0.75rem;*/
-  font-size: 0.7em; 
-  padding: 0.5rem 0.75rem 0rem 0.75rem !important;
+  /*padding: 0.5rem 0.75rem;
+  font-size: 0.7em; */
+  padding: 0.15rem 0.75rem 0rem 0.75rem !important;
 }
 
 .form-floating:focus-within > label {

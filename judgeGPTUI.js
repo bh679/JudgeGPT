@@ -94,23 +94,15 @@ class JudgeGPTUI
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
         typingDiv.innerText = "";
 
-        console.log(player.timeLeft);
-
+        
         this.userInput.timer.innerText = player.role + ": " + player.timeLeft + " sec";
-/*
-        this.userInput.timer.setAttribute("data-value", player.timeLeft);
-
-        const containers = document.getElementsByClassName("chart");
-        this.userInput.timer.innerHTML = "";
-        const dial = new Dial(containers[0]);
-        dial.animateStart();*/
 
     }
 
     OnNotMyTurn(player)
     {
         this.userInput.group.hidden = true;
-        console.log(player);
+        //console.log(player);
 
         var chatline;
         this.typingContent += ".";
@@ -125,7 +117,7 @@ class JudgeGPTUI
 
         chatline = new ChatLineUI({message: message, sender: player},(this.messageUI.messages.length % 2 == 0), false);
 
-        console.log(chatline);
+        //console.log(chatline);
 
         typingDiv.innerHTML = "";
         typingDiv.appendChild(chatline.GetDiv());
@@ -235,10 +227,12 @@ class JudgeGPTUI
 
     UpdatePlayerList(playerList)
     {
-        this.playerListUI.CreateAudience(playerList);
+        this.playerListUI.CreateAudience(playerList.audience);
 
-        playerList[0].profileUrl = this.judgeImageURL;
-        this.playerListUI.CreatePlayerList(playerList)
+        playerList.activeRoles[0].profileUrl = this.judgeImageURL;
+        this.playerListUI.CreatePlayerList(playerList.activeRoles)
+
+        this.playerListUI.FullPlayerList(playerList.players);
     }
 
     UpdateChat(messages)
@@ -272,10 +266,38 @@ class PlayerList
         this.playerListDiv = playerListDiv;
     }
 
-    CreateAudience(playerList)
+    CreateAudience(audienceList)
     {
         //console.log(audienceList);
-        this.audienceDiv.innerText = "Audience: " + (playerList.length-1);
+        this.audienceDiv.innerText = "Audience: " + audienceList.length;
+
+    }
+
+    FullPlayerList(playerList)
+    {
+        console.log(playerList);
+
+
+
+        // Set tooltip the attributes
+        this.audienceDiv.setAttribute("data-toggle", "tooltip");
+        this.audienceDiv.setAttribute("data-html", "true");
+        this.audienceDiv.setAttribute("title", JSON.stringify(playerList, null, 2));
+
+        // If you are using Bootstrap 4 with jQuery:
+        //$(this.audienceDiv).tooltip();
+
+        // If you are using Bootstrap 5 without jQuery:
+        new bootstrap.Tooltip(this.audienceDiv);
+
+
+        //let parentDiv = this.audienceDiv.parentNode;
+
+        /*let newDiv = document.createElement("div");
+
+        let audienceCopy = {... this.audienceDiv}
+
+        newDiv.innerText = JSON.stringify(playerList, null, 2);*/
 
     }
         /*this.audienceDiv.innerHTML = "";
@@ -325,7 +347,7 @@ class PlayerList
 
         for (var key in playerList) {
 
-            if (playerList.hasOwnProperty(key) && playerList[key].clientID != "") {
+            if (playerList.hasOwnProperty(key)/* && playerList[key].clientID != ""*/) {
                 this.playerListDiv.appendChild(this.CreatePlayerListMember(playerList[key]));
             }
         }
@@ -338,8 +360,6 @@ class PlayerList
         profileImg.classList.add("rounded-circle");
         profileImg.style = "width:80%; margin:0%";
         profileImg.src = playerMember.profileUrl;
-
-
 
         var roleDiv = document.createElement('div');
         roleDiv.style = "font-size:10px"
@@ -357,6 +377,15 @@ class PlayerList
 
         var card = document.createElement('div');
         card.classList.add("card");
+
+        // Set tooltip the attributes
+        card.setAttribute("data-toggle", "tooltip");
+        card.setAttribute("data-html", "true");
+        card.setAttribute("title", playerMember.clientID);
+
+        // If you are using Bootstrap 5 without jQuery:
+        new bootstrap.Tooltip(card);
+
         if(playerMember.isMe)
         {
            card.classList.add("text-white");

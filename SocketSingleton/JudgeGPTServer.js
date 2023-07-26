@@ -2,6 +2,7 @@
 const PromptGPT = require('./PromptGPT');
 const RandomLines = require('./RandomLines');
 
+const aiID = "ai";
 
 class JudgeGPTServer {
 
@@ -14,7 +15,7 @@ class JudgeGPTServer {
 
     init()
     {
-        this.judge = new Player("GPT", "Judge", "ai");
+        this.judge = new Player("GPT", "Judge", aiID);
         this.narrator = new Player("","", "system");
 
         this.keyRoles = [ //Key roles that need to be filled
@@ -38,7 +39,7 @@ class JudgeGPTServer {
         this.aiTurn = true;
         this.courtEmpty = !(Object.keys(this.players).length > 0);
 
-        //remove ai from players
+        //remove ai from players (and disconnected)
         this.RemoveAIfromPlayers(); 
         //reset roles
         this.SetActiveRolesFromPlayers();
@@ -46,11 +47,13 @@ class JudgeGPTServer {
         this.RestPlayers();
     }
 
+    //also removes disconnected players
     RemoveAIfromPlayers() 
     {
         for(let clientID in this.players) 
         {
-            if(this.players[clientID].clientID.toLowerCase() === "ai") {
+            while(clientID < this.players.length && 
+                (this.players[clientID].clientID.toLowerCase() === aiID || this.players[clientID].connected == false)) {
                 delete this.players[clientID];
             }
         }
@@ -133,50 +136,78 @@ class JudgeGPTServer {
             this.activeRoles[this.activeRoles.length] = playerJoining;
     }
 
-    OnPlayerDisconnected(clientID)
+    async OnPlayerDisconnected(clientID)
     {
         console.log(clientID + " is disconnected.");
 
-        var playerIsNowABot =  false;
         //if player is part of the game
         if(this.players.hasOwnProperty(clientID))
         {
 
             console.log(this.players[clientID].role);
+
             //if player is not just an audience member
             if(this.players[clientID].role != "Audience")
             {
-                //Get the next audence member 
-                var nextAudience = this.GetNextAudience();
-                //console.log(nextAudience.clientID);
 
-                //if there is a next audience member
-                if(nextAudience != null)
+                //have they already played?
+                if(this.players[clientID].testimony == null)
                 {
-                    console.log("Setting role of next audience : " + nextAudience.clientID);
-                    nextAudience.SetRole(this.players[clientID].role)
-                }
-                else
-                {
-                    console.log("whos turn? " + this.activeRoles[this.turn].clientID);
 
-                    //if its players turn
-                    if(this.activeRoles[this.turn].clientID == clientID)
+                    //Get the next audence member 
+                    var nextAudience = this.GetNextAudience();
+                    //console.log(nextAudience.clientID);
+
+                    //if there is a next audience member
+                    if(nextAudience != null)
                     {
-                        console.log("It is disconnecting players turn");
-                        //replace disconnecting player with an ai
-                        this.activeRoles[this.turn].name = RandomLines.GetRandomName() + " ai"; 
-                        this.activeRoles[this.turn].clientID = "ai"; 
+                        console.log("Setting role of next audience : " + nextAudience.clientID);
+                        nextAudience.SetRole(this.players[clientID].role)
+                    }
+                    else //there is not next player, and this player is yet to play.
+                    {
+                        console.log("whos turn? " + this.activeRoles[this.turn].clientID);
 
-                        playerIsNowABot = true;
+                        //if its players turn
+                        if(this.activeRoles[this.turn].clientID == clientID)
+                        {
+
+                            console.log("It is disconnecting players turn");
+                            //if there are are other players waiting
+                            if(this.activeRoles.length > this.turn+1)
+                            {
+                                console.log("There are other players waiting");
+                                //get role
+                                var role = this.players[clientID].role;
+
+                                console.log(role);
+
+                                //create ai character and assign in roles
+                                this.activeRoles[this.turn] = this.AddAIToHearing(role);
+                    
+                                //disconnect plauer
+                                this.DisconnectPlayer(clientID);
+
+                                //set AI turn while its is generating repsonse
+                                this.aiTurn = true;
+                                
+                                //generate and submit repsonse
+                                this.SubmitTestimony(await this.AiRespond());
+
+                                return;
+                            }else
+                            {
+                                console.log("no one else is here");
+                                this.RestartGame();//---------------------------------- Find a better thing to do here
+                            }
+                        }//its not their turn, no worries just delete them and remove the role
                     }
                 }
             }else
                 console.log(this.players);
 
             
-            if(!playerIsNowABot)
-                delete this.players[clientID];
+            this.DisconnectPlayer(clientID);
         }
         //Move an audience memeber to the hearing
 
@@ -188,6 +219,34 @@ class JudgeGPTServer {
             this.courtEmpty = true;
         }*/
         
+    }
+
+    DisconnectPlayer(clientID)
+    {
+
+        if(this.players.hasOwnProperty(clientID))
+        {
+            this.players[clientID].connected = false;
+            this.players[clientID].role = "disconnected";
+            
+            for(var i = 0; i < this.activeRoles.length; i++)
+            {
+                if(this.activeRoles[i].clientID == clientID)
+                    this.activeRoles.splice(i, 1);
+
+
+            }
+        }
+
+        /*if(this.players.hasOwnProperty(clientID))
+            delete this.players[clientID];
+
+        for(var i = 0; i < this.activeRoles.length; i++)
+        {
+            if(this.activeRoles[i] != null && this.activeRoles[i].clientID == clientID)
+                delete this.activeRoles[i];
+
+        }*/
     }
 
     GetNextAudience()
@@ -240,20 +299,61 @@ class JudgeGPTServer {
 
         // Initialize externally accessible variable
         //this.activeRoles[this.turn].timeLeft = 60;
+        var waitForReconnect = 0;
 
-
+        //time run every second while they type
         await new Promise((resolve) => {
             let intervalId = setInterval(() => {
 
-                    if (turnBeforeWait != this.turn ||
-                        this.HumansInGame() == 0 ||
-                        (this.activeRoles[this.turn].timeLeft <= 0 && this.HumansInGame() > 1)) 
+                    //if the turn has progressed (through a submission, or its now the ai's turn (thorugh a submission))
+                    if (turnBeforeWait != this.turn || this.aiTurn) 
                     {
+                        //stop waiting for a repsonse
                         clearInterval(intervalId);
                         resolve();
                     }
+                    //if the human has disconnected
+                    else if (this.HumansInGame() == 0)
+                    {
+
+                        //wait 5 seconds
+                        if(waitForReconnect >= 5)
+                        {
+                            //increase time waited
+                            waitForReconnect++;
+
+                            //decrease time
+                            this.activeRoles[this.turn].timeLeft--;
+                        }
+                        //if they have not come back
+                        else if(this.HumansInGame() == 0)
+                        {
+                            //stop waiting for a repsonse
+                            clearInterval(intervalId);
+                            resolve();
+                        }
+                    }
+                    //if they ran out of time, and there are other humans waiting
+                    else if((this.activeRoles[this.turn].timeLeft <= 0 && this.HumansInGame() > 1))
+                    {
+                        //if they typed something
+                        if(this.activeRoles[this.turn].typing != null && this.activeRoles[this.turn].typing != "")
+                            //submit it
+                            this.SubmitTestimony(this.activeRoles[this.turn].typing);
+
+                        //stop waiting
+                        clearInterval(intervalId);
+                        resolve();
+                    }
+                    //they are still connected and have time left
                     else if(this.activeRoles[this.turn].timeLeft > 0)
+                    {
+                        //decrease time
                         this.activeRoles[this.turn].timeLeft--;
+
+                        //reset reconnection time
+                        waitForReconnect = 0;
+                    }
 
                 
             }, 1000);
@@ -266,28 +366,27 @@ class JudgeGPTServer {
         {
             //this.player[this.turn].clientID = "AI";  
             this.activeRoles[this.turn].name = RandomLines.GetRandomName() + " ai"; 
-            this.activeRoles[this.turn].clientID = "ai"; 
+            this.activeRoles[this.turn].clientID = aiID; 
             await this.SubmitTestimony(await this.AiRespond());
         }
         
 
     }
 
+    //Creates and AI and adds it to the hearing
     AddAIToHearing(role)
     {
-            var newNPC = new Player(RandomLines.GetRandomName(), role, "AI");
+            var newNPC = new Player(RandomLines.GetRandomName(), role, aiID);
 
             //Genearte ProfileURL
             newNPC.profileUrl = GetRandomProfileImage();
-
-            this.activeRoles[this.turn] = newNPC;
             
             return newNPC;
     }
 
     async UserTyping(typing, clientID)
     {
-        this.players[clientID].testimony = typing;
+        this.players[clientID].typing = typing;
     }
 
 
@@ -312,6 +411,7 @@ class JudgeGPTServer {
             //LogDiscordMessages(this.messagesChat);
         }else
         {
+            this.turn++;
             await this.CreateRuling();
             await this.DeclareWinner();
             await this.CreatePunsihment();
@@ -347,11 +447,13 @@ class JudgeGPTServer {
             this.audience[playerData.clientID] = playerData;
     }
 
+    //I dont think this is used
     CheckPlayerInGame(clientID)
     {
-        for(var i = 0; i < this.player.length; i++)
+        console.log("###############\nDELTE THE COMMENT ABOVE THIS FUNCTION\n################");
+        for(var i = 0; i < this.players.length; i++)
         {
-            if(this.player[i].clientID != clientID)
+            if(this.players[i].clientID != clientID)
                 return true;
         }
 
@@ -360,13 +462,21 @@ class JudgeGPTServer {
 
     GetPlayers()
     {
-        var playerlist = [];
-        playerlist = Object.values(this.players);
+        var audienceList = [];
+        for(var i = 0; i < this.players.length; i++)
+        {
+            if(this.players[i].role == "Audience")
+                audienceList.unshift(this.players[i]);
+        }
+        //audienceList = Object.values(this.players);
 
-        // Add the judge to the beginning of the playerlist array
-        playerlist.unshift(this.judge);
+        var activeRoles = [];
+        activeRoles = Object.values(this.activeRoles);
 
-        return playerlist;
+        // Add the judge to the beginning of the array
+        activeRoles.unshift(this.judge);
+
+        return {players: this.players, activeRoles: activeRoles, audience: audienceList}; //make sure this is handlede correctly in client side
     }
 
 
@@ -376,7 +486,7 @@ class JudgeGPTServer {
 
         for(var i = 0; i < this.activeRoles.length; i++)
         {
-            if(this.activeRoles[i].clientID != "")
+            if(this.activeRoles[i] && this.activeRoles[i].clientID != "" && this.activeRoles[i].clientID != aiID)
                 count++;
         }
 
@@ -553,17 +663,20 @@ class Player {
         this.name = name;
         this.role = role;
         this.testimony = null;
+        this.typing="";
         this.class = role.toLowerCase();
         this.score;
         this.clientID = clientID;
         this.profileUrl = "";
         this.lastHeard = Date.now();
         this.timeLeft = 60;
+        this.connected = true;
     }
 
     Reset()
     {
         this.testimony = null;
+        this.typing = null;
         this.score = null;
         this.timeLeft = 60;
     }
