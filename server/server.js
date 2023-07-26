@@ -1,18 +1,31 @@
-// Import required modules
-var express = require('express');
-var cors = require('cors');
-var https = require('https');
-var fs = require('fs');
-var app = express();
 
+// Required libraries
+const cors = require('cors');             // Middleware for enabling CORS (Cross-Origin Resource Sharing)
+const axios = require('axios');           // Promise based HTTP client for node.js
+const fs = require('fs');                 // Node.js File System module for reading/writing files
+const express = require('express');       // Express.js framework for building web applications
+const https = require('https');           // HTTPS module for creating HTTPS server
+const socketIO = require('socket.io');    // Socket.io library for real-time bidirectional event-based communication
+
+// Define HTTPS credentials using the File System (fs) to read the key and certificate files
+const options = {
+  key: fs.readFileSync('/opt/bitnami/apache/conf/brennan.games.key'),   // Path to private key
+  cert: fs.readFileSync('/opt/bitnami/apache/conf/brennan.games.crt')   // Path to certificate file
+};
+
+// Create an instance of an Express application
+const app = express();
+
+//For Older Version of JudgeGPT
 const PromptGPT = require('./PromptGPT');
 let promptResponse = {};
 
+//Judge GPT
 const RandomLines = require('./RandomLines');
-
 const JudgeGPTServer = require('./JudgeGPTServer');
-const judgeGPTServer = new JudgeGPTServer();
+var judgeGPTServer = new JudgeGPTServer();
 judgeGPTServer.Start();
+
 
 // Use cors middleware for handling Cross-Origin Resource Sharing
 app.use(cors());
@@ -22,75 +35,18 @@ app.use(express.json());
 
 // Log all incoming requests
 app.use(function(req, res, next) {
-    if(req.url != "/Update")
-        console.log(`${req.method} request for '${req.url}'`);
+    console.log(`${req.method} request for '${req.url}'`);
     next();  // Pass control to the next middleware function
 });
 
-// Define a GET route for '/getData'
-app.get('/RandomName', function (req, res) {
-    //console.log(judgeGPTServer.messagesChat.messages);
-    res.send({ 
-        name: RandomLines.GetRandomName()
-        });
-});
-
-// Define a GET route for '/getData'
+// Restart the server
 app.get('/Restart', function (req, res) {
-    judgeGPTServer.RestartGame();
+    //judgeGPTServer.RestartGame();
+    judgeGPTServer = new JudgeGPTServer();
+    judgeGPTServer.Start();
 });
 
-
-// Define a POST route for '/startUnFake'
-app.post('/Update', function (req, res) {
-    // Log the body of the request
-    //console.log(req.body);
-
-    // Extract youtubeId from the request body
-    const playerData = req.body.playerData;
-
-    judgeGPTServer.InAudience(playerData);
-
-    //console.log(judgeGPTServer.messagesChat.messages);
-    res.send({ 
-        messages: judgeGPTServer.messagesChat.messages,
-        playerTurn: judgeGPTServer.GetPlayersTurn(),
-        playerList: judgeGPTServer.GetPlayers()
-        });
-
-});
-
-// Define a POST route for '/startUnFake'
-app.post('/SubmitTestimony', function (req, res) {
-    // Log the body of the request
-    console.log(req.body);
-
-    // Extract youtubeId from the request body
-    const testimony = req.body.testimony;
-
-    judgeGPTServer.SubmitTestimony(testimony);
-
-    res.send("success");
-
-});
-
-// Define a POST route for '/startUnFake'
-app.post('/TryJoinHearing', function (req, res) {
-    // Log the body of the request
-    console.log(req.body);
-
-    // Extract youtubeId from the request body
-    const playerData = req.body.playerData;
-    var playerRef = judgeGPTServer.JoinHearing(playerData);
-    res.json({ //why not make res.json = data
-            playerRef: playerRef
-        });
-
-});
-
-app.post
-
-// Define a POST route for '/startUnFake'
+// Call to GPT for older version of JudgeGPT
 app.post('/AskGPT', function (req, res) {
     // Log the body of the request
     console.log(req.body);
@@ -121,74 +77,94 @@ app.post('/AskGPT', function (req, res) {
 
 });
 
-/*/ Define a POST route for '/startUnFake'
-app.post('/MJImage', function (req, res) {
-    // Log the body of the request
-    //console.log(req.body);
+// Serve static files related to socket.io from the node_modules directory
+app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io/client-dist'));
 
-    // Extract youtubeId from the request body
-    const prompt = req.body.prompt;
+// Define the port and HTTPS server options
+const port = 3000;  // Define server port. Note: HTTPS servers typically use port 443 by default.
 
-    // Log the prompt
-    console.log(prompt);
-
-    // Create a new OpenAI Reponse with prompt
-    TNLMJImages[prompt] = new TNLMJ(prompt);
-
-    // Get the response 
-    TNLMJImages[prompt].GetImage().then((data) => {
-        //console.log(data);
-        console.log(data.imageUrl);
-        res.json({ //why not make res.json = data
-            image: data.imageUrl,
-            inputPrompt: data.inputPrompt
-        });
-    })
-    .catch((error) => {
-        // If there is an error, log it and send a response
-        console.error(error);
-        res.json("error");
-    });
-
-});*/
-
-const axios = require('axios');
-
-/*
-// Define a POST route for '/DiscrdWebHook'
-app.post('/DiscrdWebHook', function (req, res) {
-    // Log the body of the request
-    console.log(req.body);
-
-    // Extract message from the request body
-    const message = req.body.message;
-
-    // Log the message
-    console.log(message);
-
-    // Send a POST request to the Discord webhook URL
-    axios.post("https://discord.com/api/webhooks/1130070499758723136/zYUTrekJr89xCLwci3H4EQqtQuqPQX_ib0QedAWdEaHJFmOSDrkbrLITeMd9BBiTxoUg", {
-        content: message
-    })
-    .then(function (response) {
-        //console.log('Message sent successfully');
-    })
-    .catch(function (error) {
-        console.error('Error sending discord message:', error);
-    });
-});*/
-
-
-// Define HTTPS credentials
-var options = {
-  key: fs.readFileSync('/opt/bitnami/apache/conf/brennan.games.key'),
-  cert: fs.readFileSync('/opt/bitnami/apache/conf/brennan.games.crt')
-};
-
-// Create HTTPS server
-https.createServer(options, app).listen(3000, function () {
-    console.log('HTTPS server listening on port 3000!');
+// Create and start the HTTPS server
+const server = https.createServer(options, app).listen(port, () => {
+    console.log(`Secure server is running on port ${port}`);
 });
 
+// Socket.io configuration
+const io = socketIO(server, {
+    cors: {
+        origin: "https://brennan.games", // Specify the origins allowed to connect
+        methods: ["GET", "POST"]         // Allowed HTTP methods
+    },
+    transports: ['polling', 'websocket'] // Specify the transports for socket.io
+});
+
+// Handle client connections using socket.io
+io.on('connection', (socket) => {
+
+    // Get client's IP address
+    const clientIpAddress = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
+    
+    //Log client joining
+    console.log(`A user connected with ID: ${socket.id} from ${clientIpAddress}`);
+
+    var clientID = socket.id;
+
+    //Player has successful joined game, here is player details
+    socket.emit('OnJoinEvent', { 
+            player: judgeGPTServer.OnPlayerConnected(clientID), 
+        });
+
+    // Emit status updates to the client at regular intervals
+    const interval = setInterval(() => {
+
+        //All details of game
+        socket.emit('GameUpdate', { 
+            messages: judgeGPTServer.messagesChat.messages,
+            playerTurn: judgeGPTServer.GetPlayersTurn(),
+            playerList: judgeGPTServer.GetPlayers(),
+            winner: judgeGPTServer.winner
+        });
+        //console.log(judgeGPTServer.messagesChat.messages);
+    }, 1000);
+
+    //Called when it is your turn
+    socket.emit('OnYourTurnEvent', { 
+            message: `Hello ${socket.id} from the server! Your IP is ${clientIpAddress}` 
+        });
 
 
+    // 
+    socket.on('SubmitTestimony', (data) => {
+        console.log('A user submitted a testimony ' + data.testimony);
+        judgeGPTServer.SubmitTestimony(data.testimony, clientID);
+        
+    });
+
+
+    // 
+    socket.on('Typing', (data) => {
+        console.log('A user is typing ' + data.typing);
+        judgeGPTServer.UserTyping(data.typing, clientID);
+        
+    });
+
+    //
+   socket.on('AiRespond', async () => {
+        socket.emit('AiResponse', { 
+            response: await judgeGPTServer.AiAutoComplete(clientID)
+        });
+    });
+
+
+    /*/
+    socket.on('heartbeat', () => {
+        PlayerHeartBeat(clientIpAddress);
+    });*/
+
+
+    // 
+    socket.on('disconnect', () => {
+        judgeGPTServer.OnPlayerDisconnected(clientID);
+        console.log('A user disconnected');
+        clearInterval(interval); // Stop the status update interval
+    });
+});
