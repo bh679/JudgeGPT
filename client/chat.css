@@ -1,0 +1,14 @@
+div.chatRoom ul {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margins */
+}
+
+
+/* Style for alternating li background colors */
+div.chatRoom ul li:nth-child(odd) {
+  background-color: rgba(242, 242, 242, 0.5); /* 50% opaque light gray */
+}
+div.chatRoom ul li:nth-child(even) {
+  background-color: rgba(230, 230, 230, 0.5); /* 50% opaque darker gray */
+}

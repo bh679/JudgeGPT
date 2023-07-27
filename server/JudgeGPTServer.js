@@ -336,16 +336,23 @@ class JudgeGPTServer {
                         }
                     }*/
                     //if they ran out of time, and there are other humans waiting
-                    else if((this.activeRoles[this.turn].timeLeft <= 0 && this.HumansConnected() > 1))
+                    else if(this.activeRoles[this.turn].timeLeft <= 0)
                     {
-                        //if they typed something
-                        if(this.activeRoles[this.turn].typing != null && this.activeRoles[this.turn].typing != "")
-                            //submit it
-                            this.SubmitTestimony(this.activeRoles[this.turn].typing);
+                        console.log("Out of time");
+                        console.log("this.HumansConnected():" + this.HumansConnected());
 
-                        //stop waiting
-                        clearInterval(intervalId);
-                        resolve();
+
+                        if(this.HumansConnected() > 1)
+                        {
+                            //if they typed something
+                            if(this.activeRoles[this.turn].typing != null && this.activeRoles[this.turn].typing != "")
+                                //submit it
+                                this.SubmitTestimony(this.activeRoles[this.turn].typing);
+
+                            //stop waiting
+                            clearInterval(intervalId);
+                            resolve();
+                        }
                     }
                     //they are still connected and have time left
                     else if(this.activeRoles[this.turn].timeLeft > 0)
