@@ -230,6 +230,7 @@ class JudgeGPTUI
         this.playerListUI.CreateAudience(playerList.audience);
 
         playerList.activeRoles[0].profileUrl = this.judgeImageURL;
+
         this.playerListUI.CreatePlayerList(playerList.activeRoles)
 
         this.playerListUI.FullPlayerList(playerList.players);
@@ -264,6 +265,11 @@ class PlayerList
     {
         this.audienceDiv = audienceDiv;
         this.playerListDiv = playerListDiv;
+
+        this.toolTips = {};//A dictionary for all tooltips, 
+        //this may need to be reset better in the future
+        //-- perhaps just keep a reference to the currently active tooltip, 
+        //only one should be active at anytime anyway
     }
 
     CreateAudience(audienceList)
@@ -273,6 +279,33 @@ class PlayerList
 
     }
 
+    RefreshToolTip(div, id)
+    {
+        var showing = false;
+
+        //check if this existed previously
+        if(this.toolTips[id] != null)
+        {
+            //check if this is showing
+            showing = this.toolTips[id]._active;
+
+            /*if(showing)
+                this.toolTips[id].hide();*/
+
+            //remove the old one
+            this.toolTips[id].dispose();
+        }
+
+        // If you are using Bootstrap 5 without jQuery:
+        this.toolTips[id] = new bootstrap.Tooltip(div);
+
+        //re-enable the tooltip if currently in use
+        if(showing)
+        {
+            this.toolTips[id].show();
+        }
+    }
+
     FullPlayerList(playerList)
     {
         console.log(playerList);
@@ -280,15 +313,22 @@ class PlayerList
 
 
         // Set tooltip the attributes
-        this.audienceDiv.setAttribute("data-toggle", "tooltip");
-        this.audienceDiv.setAttribute("data-html", "true");
-        this.audienceDiv.setAttribute("title", JSON.stringify(playerList, null, 2));
+        this.audienceDiv.dataset.toggle = "tooltip";
+        this.audienceDiv.dataset.html = "true";
 
-        // If you are using Bootstrap 4 with jQuery:
-        //$(this.audienceDiv).tooltip();
 
-        // If you are using Bootstrap 5 without jQuery:
-        new bootstrap.Tooltip(this.audienceDiv);
+        var output = "";
+        for(var i = 0; i < playerList.length; i++)
+        {
+            output += playerList[i].name + " " + playerList[i].clientID + "\n";
+        }
+
+        if(playerList != null)
+        this.audienceDiv.title = output;
+        //    this.audienceDiv.setAttribute("title", );//JSON.stringify(playerList, null, 2));
+
+        this.RefreshToolTip(this.audienceDiv, "audienceDiv");
+
 
 
         //let parentDiv = this.audienceDiv.parentNode;
@@ -379,12 +419,18 @@ class PlayerList
         card.classList.add("card");
 
         // Set tooltip the attributes
-        card.setAttribute("data-toggle", "tooltip");
-        card.setAttribute("data-html", "true");
-        card.setAttribute("title", playerMember.clientID);
+        card.dataset.toggle = "tooltip";
+        card.dataset.html = "true";
+        card.title = playerMember.clientID;
 
-        // If you are using Bootstrap 5 without jQuery:
-        new bootstrap.Tooltip(card);
+        var id = playerMember.clientID;
+
+        if(id == "ai")
+        {
+            id = "ai " + playerMember.name;
+        }
+
+        this.RefreshToolTip(card, id);
 
         if(playerMember.isMe)
         {

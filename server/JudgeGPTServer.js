@@ -26,7 +26,6 @@ class JudgeGPTServer {
         this.activeRoles = []; //players and humans in hearing
 
         this.turn = 0;
-
         this.gameCase = "undefined";
         this.ruling = "";
         this.punishment = "";

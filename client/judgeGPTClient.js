@@ -39,17 +39,41 @@ class JudgeGPTClient
             }
     }
 
+    FlagMeInPlayerList(playerList)
+    {
+        for(var i = 0; i < playerList.length; i++)
+        {
+            playerList[i].isMe = (playerList[i].clientID == this.player.clientID)
+        }
+    }
+
 
     UpdatePlayerList(playerList)
     {
+
+        this.FlagMeInPlayerList(playerList.players);
+        this.FlagMeInPlayerList(playerList.activeRoles);
+        this.FlagMeInPlayerList(playerList.audience);
+
         this.playerList = playerList.players;
         this.activeRoles = playerList.activeRoles;
         this.audience = playerList.audience;
+
+        /*
+        for(var i = 0; i < this.playerList.length; i++)
+        {
+            this.playerList[i].isMe = (this.playerList[i].clientID == this.player.clientID)
+        }
 
         for(var i = 0; i < this.playerList.length; i++)
         {
             this.playerList[i].isMe = (this.playerList[i].clientID == this.player.clientID)
         }
+
+        for(var i = 0; i < this.playerList.length; i++)
+        {
+            this.playerList[i].isMe = (this.playerList[i].clientID == this.player.clientID)
+        }*/
 
         this.onUpdatePlayerList.Invoke(playerList);   
     }
