@@ -336,7 +336,7 @@ class JudgeGPTServer {
                         }
                     }*/
                     //if they ran out of time, and there are other humans waiting
-                    else if((this.activeRoles[this.turn].timeLeft <= 0 && this.HumansInGame() > 1))
+                    else if((this.activeRoles[this.turn].timeLeft <= 0 && this.HumansConnected() > 1))
                     {
                         //if they typed something
                         if(this.activeRoles[this.turn].typing != null && this.activeRoles[this.turn].typing != "")
@@ -490,6 +490,19 @@ class JudgeGPTServer {
 
         return count;
 
+    }
+
+    HumansConnected()
+    {
+         var count = 0;
+
+        for(var i = 0; i < this.players.length; i++)
+        {
+            if(this.players[i] && this.players[i].clientID != "" && this.players[i].clientID != "disconnected")
+                count++;
+        }
+
+        return count;       
     }
 
     CleanAudience(audienceList)

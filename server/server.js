@@ -169,6 +169,10 @@ io.on('connection', (socket) => {
         PlayerHeartBeat(clientIpAddress);
     });*/
 
+    socket.on('chatroomMessage', (message) => {
+    io.emit('chatroomMessage', message); // Broadcast the message to all connected clients
+  });
+
 
     // 
     socket.on('disconnect', () => {

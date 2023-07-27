@@ -276,8 +276,21 @@ class PlayerList
 
     CreateAudience(audienceList)
     {
+        this.audienceDiv.innerHTML = "";
         console.log(audienceList);
-        this.audienceDiv.innerText = "Audience: " + audienceList.length;
+        var audeinceHeader = document.createElement('h5');
+        audeinceHeader.innerText = "Audience: " + audienceList.length;
+        this.audienceDiv.appendChild(audeinceHeader); 
+
+
+        /*var audienceIcons = document.createElement('div');
+
+        for (var key in audienceList) {
+
+            if (audienceList.hasOwnProperty(key)) {
+                this.audienceIcons.appendChild(this.CreatePlayerListMember(playerList[key]));//make smaller
+            }
+        }*/
 
     }
 
@@ -611,6 +624,14 @@ class ChatLineUI
         return this.groupDiv;
     }
 }
+
+/*class ChatRoom
+{
+    constructor(parentDiv)
+    {
+        this.chatRoomDiv = parentDiv;
+    }
+}*/
 
 
 

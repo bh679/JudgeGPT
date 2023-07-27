@@ -148,9 +148,15 @@
                                 </center>
                             </div>
                         </div>
-                        <div class="row" >
-                            <h5 id="audience"></h5>
+                        <div class="row" id="audience">
                         </div>
+                        <div id="chatRoom">
+                            <ul id="chatRoomMessages"></ul>
+                            <form id="chatRoomMessageForm">
+                              <input type="text" id="chatRoomInput" autocomplete="off" />
+                              <button type="submit">Send</button>
+                            </form>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -327,5 +333,9 @@
 
 
     </script>
+
+
+    <script src="./chat.js"></script>
+
     </body>
 </html>
