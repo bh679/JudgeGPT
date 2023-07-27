@@ -227,6 +227,8 @@ class JudgeGPTUI
 
     UpdatePlayerList(playerList)
     {
+console.log(playerList);
+
         this.playerListUI.CreateAudience(playerList.audience);
 
         playerList.activeRoles[0].profileUrl = this.judgeImageURL;
@@ -274,7 +276,7 @@ class PlayerList
 
     CreateAudience(audienceList)
     {
-        //console.log(audienceList);
+        console.log(audienceList);
         this.audienceDiv.innerText = "Audience: " + audienceList.length;
 
     }
@@ -323,21 +325,13 @@ class PlayerList
             output += playerList[i].name + " " + playerList[i].clientID + "\n";
         }
 
+        console.log(output);
+
         if(playerList != null)
         this.audienceDiv.title = output;
         //    this.audienceDiv.setAttribute("title", );//JSON.stringify(playerList, null, 2));
 
         this.RefreshToolTip(this.audienceDiv, "audienceDiv");
-
-
-
-        //let parentDiv = this.audienceDiv.parentNode;
-
-        /*let newDiv = document.createElement("div");
-
-        let audienceCopy = {... this.audienceDiv}
-
-        newDiv.innerText = JSON.stringify(playerList, null, 2);*/
 
     }
         /*this.audienceDiv.innerHTML = "";
@@ -428,15 +422,16 @@ class PlayerList
         if(id == "ai")
         {
             id = "ai " + playerMember.name;
-        }
-
-        this.RefreshToolTip(card, id);
-
-        if(playerMember.isMe)
+            card.classList.add("bg-secondary");
+           card.classList.add("text-white");
+        }else if(playerMember.isMe)
         {
            card.classList.add("text-white");
             card.classList.add("bg-primary");
         }
+
+
+        this.RefreshToolTip(card, id);
         card.style = "margin:3px";
         card.appendChild(center);
 

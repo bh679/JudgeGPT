@@ -137,7 +137,7 @@ class JudgeGPTServer {
 
     async OnPlayerDisconnected(clientID)
     {
-        console.log(clientID + " is disconnected.");
+        console.log(clientID + " is disconnecting.");
 
         //if player is part of the game
         if(this.players.hasOwnProperty(clientID))
@@ -149,31 +149,33 @@ class JudgeGPTServer {
             if(this.players[clientID].role != "Audience")
             {
 
+                console.log(this.players[clientID].testimony);
+
                 //have they already played?
                 if(this.players[clientID].testimony == null)
                 {
 
                     //Get the next audence member 
                     var nextAudience = this.GetNextAudience();
-                    //console.log(nextAudience.clientID);
 
                     //if there is a next audience member
                     if(nextAudience != null)
                     {
                         console.log("Setting role of next audience : " + nextAudience.clientID);
-                        nextAudience.SetRole(this.players[clientID].role)
+                        nextAudience.SetRole(this.players[clientID].role);
                     }
-                    else //there is not next player, and this player is yet to play.
+                    else //there is no next player, and this player is yet to play.
                     {
-                        console.log("whos turn? " + this.activeRoles[this.turn].clientID);
+                        console.log("whos turn? " + this.activeRoles[this.turn].clientID + " " + this.turn) ;
 
                         //if its players turn
                         if(this.activeRoles[this.turn].clientID == clientID)
                         {
 
                             console.log("It is disconnecting players turn");
+
                             //if there are are other players waiting
-                            if(this.activeRoles.length > this.turn+1)
+                            if(this.activeRoles.length > this.turn + 1)
                             {
                                 console.log("There are other players waiting");
                                 //get role
@@ -197,7 +199,8 @@ class JudgeGPTServer {
                             }else
                             {
                                 console.log("no one else is here");
-                                this.RestartGame();//---------------------------------- Find a better thing to do here
+                                //this.RestartGame();//---------------------------------- Find a better thing to do here
+                                Restart();//find a better thing then this
                             }
                         }//its not their turn, no worries just delete them and remove the role
                     }
@@ -312,7 +315,7 @@ class JudgeGPTServer {
                         resolve();
                     }
                     //if the human has disconnected
-                    else if (this.HumansInGame() == 0)
+                    /*else if (this.HumansInGame() == 0)
                     {
 
                         //wait 5 seconds
@@ -331,7 +334,7 @@ class JudgeGPTServer {
                             clearInterval(intervalId);
                             resolve();
                         }
-                    }
+                    }*/
                     //if they ran out of time, and there are other humans waiting
                     else if((this.activeRoles[this.turn].timeLeft <= 0 && this.HumansInGame() > 1))
                     {
@@ -402,15 +405,14 @@ class JudgeGPTServer {
 
         this.messagesChat.AddToChat(this.activeRoles[this.turn], this.activeRoles[this.turn].testimony);
 
-        if(this.turn < this.keyRoles.length-1)
+        this.turn++;
+
+        if(this.turn < this.keyRoles.length)
         {
-            this.turn++;
             this.NextPlayerTurn();
 
-            //LogDiscordMessages(this.messagesChat);
         }else
         {
-            this.turn++;
             await this.CreateRuling();
             await this.DeclareWinner();
             await this.CreatePunsihment();
@@ -461,12 +463,9 @@ class JudgeGPTServer {
 
     GetPlayers()
     {
-        var audienceList = [];
-        for(var i = 0; i < this.players.length; i++)
-        {
-            if(this.players[i].role == "Audience")
-                audienceList.unshift(this.players[i]);
-        }
+
+        var audienceList = Object.values(this.players).filter(player => player.role === "Audience");
+        
         //audienceList = Object.values(this.players);
 
         var activeRoles = [];

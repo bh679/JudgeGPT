@@ -42,9 +42,18 @@ app.use(function(req, res, next) {
 // Restart the server
 app.get('/Restart', function (req, res) {
     //judgeGPTServer.RestartGame();
+    Restart();
+});
+
+function Restart()
+{
     judgeGPTServer = new JudgeGPTServer();
     judgeGPTServer.Start();
-});
+
+        server = https.createServer(options, app).listen(port, () => {
+        console.log(`Secure server is running on port ${port}`);
+    });
+}
 
 // Call to GPT for older version of JudgeGPT
 app.post('/AskGPT', function (req, res) {
@@ -84,7 +93,7 @@ app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io/client
 const port = 3000;  // Define server port. Note: HTTPS servers typically use port 443 by default.
 
 // Create and start the HTTPS server
-const server = https.createServer(options, app).listen(port, () => {
+var server = https.createServer(options, app).listen(port, () => {
     console.log(`Secure server is running on port ${port}`);
 });
 
