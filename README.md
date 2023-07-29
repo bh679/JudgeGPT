@@ -1,5 +1,5 @@
 # JudgeGPT
-<a href="https://brennan.games/JudgeGPT/">Play at brennan.games/JudgeGPT</a><br />
+<a href="https://brennan.games/JudgeGPT/">Play at ``brennan.games/JudgeGPT``</a><br />
 
 JudgeGPT, the game where ai decides you or your friends fate in courtroom. 
 It also decides well as what you are been accused of. 
