@@ -111,6 +111,9 @@ class JudgeGPTUI
 
         var message = "<i>Typing: " + player.typing + this.typingContent + "</i>";
 
+        if(player.typing == null)
+            message = "<i>Typing: " + this.typingContent + "</i>";
+
         chatline = new ChatLineUI({message: message, sender: player},(this.messageUI.messages.length % 2 == 0), false);
 
         typingDiv.innerHTML = "";
