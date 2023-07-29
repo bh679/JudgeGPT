@@ -1,9 +1,11 @@
 # JudgeGPT
-Play: https://brennan.games/JudgeGPT/<br />
-Convince the ai judge you are innocent. You and another player fight it out in the court room to see who wins the case. The Judge decides your fate!
+<a href="https://brennan.games/JudgeGPT/">Play at brennan.games/JudgeGPT</a><br />
 
+JudgeGPT, the game where ai decides you or your friends fate in courtroom. 
+It also decides well as what you are been accused of. 
+You each have one chance to prove your innocence. 
+Convince the ai judge you are innocent. 
 Efficient and succinct justice with all the bias and inaccuracy of ai.
-
 Who is better at convincing the Judge they are innocent?
 
 ## Setup 
