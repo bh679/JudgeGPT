@@ -41,6 +41,16 @@ Run ``pm2 start ecosystem.config.js``
 
 ## Update
 
+### V3 July 29, 23
+JudgeGPT, the game where ai decides you or your friends fate in courtroom. 
+It also decides well as what you are been accused of. 
+You each have one chance to prove your innocence. 
+Convince the ai judge you are innocent. 
+Efficient and succinct justice with all the bias and inaccuracy of ai.
+Who is better at convincing the Judge they are innocent?
+Note: Game is still in development. There is only one courtroom, so if you aren't in the hearing you are in the audience. If it seems stuck, there is a restart button at the bottom. 
+![image](https://github.com/bh679/JudgeGPT/assets/2542558/c6cc44ad-0fbb-467b-8675-2707bf52d5dc)
+
 ### V2 July 24, 23
 Latest version of JudgeGPT is looking great!
 
