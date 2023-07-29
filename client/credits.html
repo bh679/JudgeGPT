@@ -29,7 +29,8 @@
 
         <!-- JdugeGPT -->
         <script src="backgroundImages.js"></script>
-        <script src="randomLines.js"></script>
+        <script src="AskGPT.js"></script>
+        <script src="courtroomChat.js"></script>
 
 
         <!-- timer (needs a file namechage) -->
@@ -77,19 +78,19 @@
                         <div id="chat">
                             <div class="message row judge">
                                 <div class="col-4 col-s-3 col-xxs-2 sender" style="">Brennan Hatton</div>
-                                <div class="col messageContents rounded-3">Lead Dev & Designer. He made this.</div>
+                                <div class="col messageContents rounded-3" id="brennan">Lead Dev & Designer. He made this.</div>
                             </div>
                             <div class="message row judge">
                                 <div class="col-4 col-s-3 col-xxs-2 sender" style="">Colin</div>
-                                <div class="col messageContents rounded-3 alt">The OG Idea Man. He first came up with the idea.</div>
-                            </div>
-                            <div class="message row judge">
-                                <div class="col-4 col-s-3 col-xxs-2 sender" style="">Tim Christie</div>
-                                <div class="col messageContents rounded-3">The Funny Man.</div>
+                                <div class="col messageContents rounded-3 alt" id="colin">The OG Idea Man. He first came up with the idea.</div>
                             </div>
                             <div class="message row judge">
                                 <div class="col-4 col-s-3 col-xxs-2 sender" style="">Faith Louise</div>
-                                <div class="col messageContents rounded-3 alt">The Ideas Women.</div>
+                                <div class="col messageContents rounded-3 alt" id="faith">The Ideas Women.</div>
+                            </div>
+                            <div class="message row judge">
+                                <div class="col-4 col-s-3 col-xxs-2 sender" style="">Tim Christie</div>
+                                <div class="col messageContents rounded-3" id="tim">The Funny Man.</div>
                             </div>
                     </div>
                         <div id="typing"></div>
@@ -195,13 +196,46 @@
 
         // Define global variables
         const hero =  document.getElementById('hero');
+        const brennan =  document.getElementById('brennan');
+        const faith =  document.getElementById('faith');
+        const tim =  document.getElementById('tim');
+        const colin =  document.getElementById('colin');
+        const chatDiv = document.getElementById('chat');
 
         BackgroundImages.SetBackground();
 
+        messageUI = new MessageUI(chatDiv);
+
+        async function SetText()
+        {
+            var JudgeGPT = {};
+            JudgeGPT.name = "GPT";
+            JudgeGPT.role = "Judge";
+            JudgeGPT.class = "judge";
+
+            var BrennanHatton = {};
+            BrennanHatton.name = "Brennan";
+            BrennanHatton.role = "";
+            BrennanHatton.class = "brennan";
+
+            var message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Brennan Hatton in a sentence or two, he made you, this game. Lead dev and designed.");
+            messageUI.AddMessage(JudgeGPT, message);
+            
+            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Faith Petrie in a sentence or two, she has lots of ideas for the game that is you.");
+            messageUI.AddMessage(JudgeGPT, message);
+            
+            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Tim Christie in a sentence or two, he makes sure the game that is you is funny.");
+            messageUI.AddMessage(JudgeGPT, message);
+            
+            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Colin in a sentence or two, he is a lawyer who first came up with the idea for the game that is you.");
+            messageUI.AddMessage(JudgeGPT, message);
+            messageUI.AddMessage(BrennanHatton, "Sometimes Judge GPT lies about us and who we are.");
+        }
+
+        SetText();
+
     </script>
 
-
-    <script src="./chat.js"></script>
 
     </body>
 </html>

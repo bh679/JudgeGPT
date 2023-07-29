@@ -371,6 +371,12 @@ class JudgeGPTServer {
                             //stop waiting
                             clearInterval(intervalId);
                             resolve();
+                        }else
+                        {
+                           
+                            //stop waiting
+                            clearInterval(intervalId);
+                            resolve(); 
                         }
                     }
                     //they are still connected and have time left
