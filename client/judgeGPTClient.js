@@ -36,7 +36,7 @@ class JudgeGPTClient
         {
             this.myTurn = false;
             this.onNotMyTurn.Invoke(playerTurn);
-            }
+        }
     }
 
     FlagMeInPlayerList(playerList)
@@ -58,22 +58,6 @@ class JudgeGPTClient
         this.playerList = playerList.players;
         this.activeRoles = playerList.activeRoles;
         this.audience = playerList.audience;
-
-        /*
-        for(var i = 0; i < this.playerList.length; i++)
-        {
-            this.playerList[i].isMe = (this.playerList[i].clientID == this.player.clientID)
-        }
-
-        for(var i = 0; i < this.playerList.length; i++)
-        {
-            this.playerList[i].isMe = (this.playerList[i].clientID == this.player.clientID)
-        }
-
-        for(var i = 0; i < this.playerList.length; i++)
-        {
-            this.playerList[i].isMe = (this.playerList[i].clientID == this.player.clientID)
-        }*/
 
         this.onUpdatePlayerList.Invoke(playerList);   
     }

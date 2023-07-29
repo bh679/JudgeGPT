@@ -102,7 +102,6 @@ class JudgeGPTUI
     OnNotMyTurn(player)
     {
         this.userInput.group.hidden = true;
-        //console.log(player);
 
         var chatline;
         this.typingContent += ".";
@@ -110,14 +109,9 @@ class JudgeGPTUI
         if(this.typingContent == "....")
         this.typingContent = "";
 
-        var message = "<i>Typing: " + player.testimony + this.typingContent + "</i>";
-
-        if(player.testimony == null)
-            message = "<i>Typing: " + this.typingContent + "</i>";
+        var message = "<i>Typing: " + player.typing + this.typingContent + "</i>";
 
         chatline = new ChatLineUI({message: message, sender: player},(this.messageUI.messages.length % 2 == 0), false);
-
-        //console.log(chatline);
 
         typingDiv.innerHTML = "";
         typingDiv.appendChild(chatline.GetDiv());
@@ -252,9 +246,10 @@ console.log(playerList);
         if (this.winner != "")
             return;
 
+        console.loe(winner);
         this.winner = winner;
 
-        if(this.winner.toLowerCase() == "plaintiff")
+        if(this.winner.toLowerCase() == "guilty")
             this.winnerDiv.src="./images/guilty.png";
         else
             this.winnerDiv.src="./images/notguilty.png";

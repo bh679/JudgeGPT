@@ -125,7 +125,15 @@ class JudgeGPTServer {
         if(this.HumansConnected() == 0 && this.activeRoles > 0 && seconds > 60)
         {
             //restart the game 
-            this.Restart();
+            this.restartCallback();
+            return;
+        }
+
+        //Has the game been over 5min?
+        if(seconds > 60*15)
+        {
+            //restart the game 
+            this.restartCallback();
             return;
         }
 
@@ -141,7 +149,7 @@ class JudgeGPTServer {
             this.JoinHearing(newPlayer);
         }
 
-        console.log(newPlayer);
+        //console.log(newPlayer);
 
         return newPlayer;
     }
@@ -373,7 +381,7 @@ class JudgeGPTServer {
                             resolve();
                         }else
                         {
-                           
+
                             //stop waiting
                             clearInterval(intervalId);
                             resolve(); 
@@ -680,7 +688,7 @@ class JudgeGPTServer {
         
         console.log(this.winner);
 
-        if(this.winner.toLowerCase().includes(this.activeRoles[1].role.toLowerCase()))
+        if(this.winner.toLowerCase().includes("innocent"))//this.activeRoles[1].role.toLowerCase()))
         {
             return this.activeRoles[1];
         }
@@ -780,7 +788,7 @@ class Prompts {
             "Come up with an absurd and/or hilarious accusation to be argued in court between two parties.",
             "Come up with a ridiculous and hilarious accusation to be argued in court between two parties."];
         this.punishment = "Provide a funny, absurd and unfitting punishment and lesson to be learnt for the following court ruling:{$}";
-        this.winner = "A judge ruled the following: {$} Give a single word response of who is the winner, Plaintiff, Defendant or neither. ";
+        this.winner = "A judge ruled the following: {$} Give a single word response of 'guity' or 'innocent' for the defendant. ";
         this.scoring = "You are scoring the result of a text based improv game, by %. Score the sentence on each of the four metrics, creativity, intelligence, humor and provide explanations on each. The sentence to be scored is {$}. At the end, provide a total score.";
     }
 }
