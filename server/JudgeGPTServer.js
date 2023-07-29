@@ -9,6 +9,7 @@ class JudgeGPTServer {
     constructor(restartCallback) {
         this.restartCallback = restartCallback;
         this.players = {}; //all human players, and audience
+        this.stop = false;
 
         this.init();
     }
@@ -95,6 +96,8 @@ class JudgeGPTServer {
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
         this.messagesChat.AddToChat(this.judge, this.gameCase);
         await new Promise(resolve => setTimeout(resolve, 3000));
+        if(this.stop)
+            return;
 
         if(this.courtEmpty)
             this.messagesChat.AddToChat(this.narrator, "The court will begin when the members arrive.");
@@ -102,6 +105,8 @@ class JudgeGPTServer {
         while(this.courtEmpty)
         {
             await new Promise(resolve => setTimeout(resolve, 1000));
+            if(this.stop)
+                return;
         }
 
         this.NextPlayerTurn();
@@ -207,6 +212,8 @@ class JudgeGPTServer {
                                 
                                 //generate and submit repsonse
                                 this.SubmitTestimony(await this.AiRespond());
+                                if(this.stop)
+                                    return;
 
                                 return;
                             }else
@@ -295,6 +302,9 @@ class JudgeGPTServer {
 
         //Judge Sends Message
         await new Promise(resolve => setTimeout(resolve, 1000));
+        if(this.stop)
+            return;
+
         this.messagesChat.AddToChat(this.judge, this.PlayerIntroduction(this.activeRoles[this.turn]));
 
 
@@ -303,7 +313,12 @@ class JudgeGPTServer {
             this.activeRoles[this.turn] = this.AddAIToHearing(this.keyRoles[this.turn]);
 
             //this.messagesChat.AddToChat(this.narrator, "The " + this.activeRoles[this.turn].role + " " + this.activeRoles[this.turn].name + " entered the courtroom.");
-            await this.SubmitTestimony(await this.AiRespond());
+            
+            var response = await this.AiRespond()
+            if(this.stop)
+                return;
+
+            await this.SubmitTestimony(response);
             return;
         }
         
@@ -321,6 +336,9 @@ class JudgeGPTServer {
         await new Promise((resolve) => {
             let intervalId = setInterval(() => {
 
+                    if(this.stop)
+                        return;
+
                     //if the turn has progressed (through a submission, or its now the ai's turn (thorugh a submission))
                     if (turnBeforeWait != this.turn || this.aiTurn) 
                     {
@@ -331,7 +349,7 @@ class JudgeGPTServer {
                     //if the human has disconnected
                     else if (this.HumansInGame() == 0)
                     {
-                        
+
                         //stop waiting for a repsonse
                         clearInterval(intervalId);
                         resolve();
@@ -370,6 +388,10 @@ class JudgeGPTServer {
         });
 
 
+        if(this.stop)
+            return;
+
+
         //console.log(this.activeRoles[this.turn].timeLeft);
         //if still same turn
         if(turnBeforeWait == this.turn && this.HumansConnected() > 0)
@@ -377,7 +399,14 @@ class JudgeGPTServer {
             //this.player[this.turn].clientID = "AI";  
             this.activeRoles[this.turn].name = RandomLines.GetRandomName() + " ai"; 
             this.activeRoles[this.turn].clientID = aiID; 
-            await this.SubmitTestimony(await this.AiRespond());
+
+            var response = await this.AiRespond()
+            if(this.stop)
+                return;
+
+            await this.SubmitTestimony(response);
+            if(this.stop)
+                return;
         }
         
 
@@ -394,7 +423,7 @@ class JudgeGPTServer {
             return newNPC;
     }
 
-    async UserTyping(typing, clientID)
+    UserTyping(typing, clientID)
     {
         this.players[clientID].typing = typing;
     }
@@ -422,14 +451,31 @@ class JudgeGPTServer {
         }else
         {
             await this.CreateRuling();
+            if(this.stop)
+                return;
+
             await this.DeclareWinner();
+            if(this.stop)
+                return;
+
             await this.CreatePunsihment();
+            if(this.stop)
+                return;
+
             for(var i = 0 ; i < this.activeRoles.length; i++)
+            {
                 await this.Analysis(i);
+                if(this.stop)
+                    return;
+            }
         
             await new Promise(resolve => setTimeout(resolve, 20000));
+            if(this.stop)
+                return;
         
             await this.RestartGame();
+            if(this.stop)
+                return;
 
         }
 
@@ -599,6 +645,9 @@ class JudgeGPTServer {
     {
         var prompt = this.prompts.judgeCharacter  + "You are creating a story and drawing your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.activeRoles[0].role+"'s' testimony is: {" + this.activeRoles[0].testimony + "} The "+this.activeRoles[1].role+"'s' defence testimony is: {" + this.activeRoles[1].testimony + "}";
         this.ruling = await AskGPT(prompt);
+        if(this.stop)
+            return;
+
         this.messagesChat.AddToChat(this.judge, this.ruling);
         await new Promise(resolve => setTimeout(resolve, 5000));
     }
@@ -608,6 +657,9 @@ class JudgeGPTServer {
         var prompt =  this.prompts.punishment.replace("$", this.ruling);
         console.log(prompt);
         this.punishment = await AskGPT(prompt);
+        if(this.stop)
+            return;
+
         this.messagesChat.AddToChat(this.judge, this.punishment);
         await new Promise(resolve => setTimeout(resolve, 5000));
     }
@@ -617,6 +669,8 @@ class JudgeGPTServer {
         //LogDiscordMessages(this.messagesChat);  
         var prompt = this.prompts.winner.replace("$", this.ruling);
         this.winner = await AskGPT(prompt);
+        if(this.stop)
+            return;
         
         console.log(this.winner);
 
@@ -654,6 +708,11 @@ class JudgeGPTServer {
             return this.activeRoles[this.turn];
 
         return this.judge;
+    }
+
+    Stop()
+    {
+        this.stop = true;
     }
 
 }

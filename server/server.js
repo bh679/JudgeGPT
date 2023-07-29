@@ -47,6 +47,7 @@ app.get('/Restart', function (req, res) {
 
 function Restart()
 {
+    judgeGPTServer.Stop();
     judgeGPTServer = new JudgeGPTServer(Restart);
     judgeGPTServer.Start();
 
