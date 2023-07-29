@@ -23,7 +23,7 @@ let promptResponse = {};
 //Judge GPT
 const RandomLines = require('./RandomLines');
 const JudgeGPTServer = require('./JudgeGPTServer');
-var judgeGPTServer = new JudgeGPTServer();
+var judgeGPTServer = new JudgeGPTServer(Restart);
 judgeGPTServer.Start();
 
 
@@ -47,12 +47,12 @@ app.get('/Restart', function (req, res) {
 
 function Restart()
 {
-    judgeGPTServer = new JudgeGPTServer();
+    judgeGPTServer = new JudgeGPTServer(Restart);
     judgeGPTServer.Start();
 
-        server = https.createServer(options, app).listen(port, () => {
+    /*    server = https.createServer(options, app).listen(port, () => {
         console.log(`Secure server is running on port ${port}`);
-    });
+    });*/
 }
 
 // Call to GPT for older version of JudgeGPT
@@ -107,7 +107,7 @@ const io = socketIO(server, {
 });
 
 // Handle client connections using socket.io
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
 
     // Get client's IP address
     const clientIpAddress = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
@@ -118,9 +118,10 @@ io.on('connection', (socket) => {
     var clientID = socket.id;
 
     //Player has successful joined game, here is player details
+    let player = await judgeGPTServer.OnPlayerConnected(clientID);
     socket.emit('OnJoinEvent', { 
-            player: judgeGPTServer.OnPlayerConnected(clientID), 
-        });
+        player: player, 
+    });
 
     // Emit status updates to the client at regular intervals
     const interval = setInterval(() => {

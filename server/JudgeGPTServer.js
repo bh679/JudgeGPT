@@ -6,8 +6,8 @@ const aiID = "ai";
 
 class JudgeGPTServer {
 
-    constructor() {
-
+    constructor(restartCallback) {
+        this.restartCallback = restartCallback;
         this.players = {}; //all human players, and audience
 
         this.init();
@@ -33,6 +33,7 @@ class JudgeGPTServer {
 
         this.messagesChat = new MessageBackEnd();
         this.prompts = new Prompts();
+        this.timeStart = Date.now();
 
         this.running = false;
         this.aiTurn = true;
@@ -109,8 +110,20 @@ class JudgeGPTServer {
 
 
 
-    OnPlayerConnected(clientID)
+    async OnPlayerConnected(clientID)
     {
+        const now = Date.now();
+        const lastTime = this.timeStart || now;
+        const seconds =  (now - lastTime) / 1000; // returns seconds
+
+        //are you the first person to connect? --hack for quick bug fix
+        if(this.HumansConnected() == 0 && this.activeRoles > 0 && seconds > 60)
+        {
+            //restart the game 
+            this.Restart();
+            return;
+        }
+
         if(this.players.hasOwnProperty(clientID))
             return this.players[clientID];
 
@@ -200,7 +213,8 @@ class JudgeGPTServer {
                             {
                                 console.log("no one else is here");
                                 //this.RestartGame();//---------------------------------- Find a better thing to do here
-                                Restart();//find a better thing then this
+                                //Restart();//find a better thing then this
+                                this.restartCallback();
                             }
                         }//its not their turn, no worries just delete them and remove the role
                     }
@@ -315,26 +329,13 @@ class JudgeGPTServer {
                         resolve();
                     }
                     //if the human has disconnected
-                    /*else if (this.HumansInGame() == 0)
+                    else if (this.HumansInGame() == 0)
                     {
-
-                        //wait 5 seconds
-                        if(waitForReconnect >= 5)
-                        {
-                            //increase time waited
-                            waitForReconnect++;
-
-                            //decrease time
-                            this.activeRoles[this.turn].timeLeft--;
-                        }
-                        //if they have not come back
-                        else if(this.HumansInGame() == 0)
-                        {
-                            //stop waiting for a repsonse
-                            clearInterval(intervalId);
-                            resolve();
-                        }
-                    }*/
+                        
+                        //stop waiting for a repsonse
+                        clearInterval(intervalId);
+                        resolve();
+                    }
                     //if they ran out of time, and there are other humans waiting
                     else if(this.activeRoles[this.turn].timeLeft <= 0)
                     {
@@ -371,7 +372,7 @@ class JudgeGPTServer {
 
         //console.log(this.activeRoles[this.turn].timeLeft);
         //if still same turn
-        if(turnBeforeWait == this.turn)
+        if(turnBeforeWait == this.turn && this.HumansConnected() > 0)
         {
             //this.player[this.turn].clientID = "AI";  
             this.activeRoles[this.turn].name = RandomLines.GetRandomName() + " ai"; 
