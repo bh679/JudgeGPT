@@ -21,6 +21,7 @@ class JudgeGPTClient
 
         this.player = {};
         this.playerTurn = {clientID:""};
+        this.spectatorFlag = false;
     }
 
     GenerateID() {

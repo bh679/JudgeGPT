@@ -30,11 +30,11 @@
         <link rel="stylesheet" type="text/css" href="./chat.css">
 
         <!-- JdugeGPT -->
-        <script src="backgroundImages.js"></script>
-        <script src="randomLines.js"></script>
-        <script src="judgeGPTClient.js"></script>
+        <script src="./js/backgroundImages.js"></script>
+        <script src="./js/randomLines.js"></script>
+        <script src="./js/judgeGPTClient.js"></script>
         <script src="./js/playerlist.js"></script>
-        <script src="judgeGPTUI.js"></script>
+        <script src="./js/judgeGPTUI.js"></script>
 
         <!-- Socket.io -->
         <script src="https://brennan.games:3000/socket.io/socket.io.js"></script>
@@ -153,12 +153,13 @@
                         </div>
                         <div class="row" id="audience">
                         </div>
-                        <div id="chatRoom" class="chatRoom" hidden>
+                        <div id="chatRoom" class="chatRoom">
                             <ul id="chatRoomMessages"></ul>
                             <form id="chatRoomMessageForm">
-                              <input type="text" id="chatRoomInput" autocomplete="off" />
-                              <button type="submit">Send</button>
+                              <input type="text" placeholder="" id="chatRoomInput" autocomplete="off" />
+                              <button id="chatSubmitButton" type="submit">Send</button>
                             </form>
+
                       </div>
                     </div>
                 </div>
@@ -353,7 +354,7 @@
     </script>
 
 
-    <script src="./chat.js"></script>
+    <script src="./js/chat.js"></script>
 
     </body>
 </html>

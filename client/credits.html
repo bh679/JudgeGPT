@@ -28,9 +28,9 @@
         <link rel="stylesheet" type="text/css" href="./style.css">
 
         <!-- JdugeGPT -->
-        <script src="backgroundImages.js"></script>
-        <script src="AskGPT.js"></script>
-        <script src="courtroomChat.js"></script>
+        <script src="./js/backgroundImages.js"></script>
+        <script src="./js/AskGPT.js"></script>
+        <script src="./js/courtroomChat.js"></script>
 
 
         <!-- timer (needs a file namechage) -->
@@ -216,6 +216,9 @@
             BrennanHatton.name = "Brennan";
             BrennanHatton.role = "";
             BrennanHatton.class = "brennan";
+
+
+            messageUI.AddMessage(BrennanHatton, "Hey Judge, can you introduce us?");
 
             var message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Brennan Hatton in a sentence or two, he made you, this game. Lead dev and designed.");
             message = message.replace("Brennan Hatton","<b>Brennan Hatton</b>");

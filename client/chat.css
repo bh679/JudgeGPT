@@ -4,11 +4,27 @@ div.chatRoom ul {
   margin: 0; /* Remove margins */
 }
 
+#chatRoomInput {
+  background-color: transparent;
+  border-color: transparent;
+  border-bottom-color: black;  /* Replace with your desired color */
+}
+
+#chatRoomInput:focus {
+  background-color: white;  /* Change as needed */
+  border-color: #ced4da;      /* Change as needed */
+}
+
+
 
 /* Style for alternating li background colors */
 div.chatRoom ul li:nth-child(odd) {
-  background-color: rgba(242, 242, 242, 0.5); /* 50% opaque light gray */
+  background-color: rgba(242, 242, 242, 0.15); /* 50% opaque light gray */
 }
 div.chatRoom ul li:nth-child(even) {
-  background-color: rgba(230, 230, 230, 0.5); /* 50% opaque darker gray */
+  background-color: rgba(230, 230, 230, 0.15); /* 50% opaque darker gray */
+}
+
+#chatSubmitButton {
+  display: none; /* Hidden by default */
 }
