@@ -33,6 +33,7 @@
         <script src="backgroundImages.js"></script>
         <script src="randomLines.js"></script>
         <script src="judgeGPTClient.js"></script>
+        <script src="./js/playerlist.js"></script>
         <script src="judgeGPTUI.js"></script>
 
         <!-- Socket.io -->
@@ -178,7 +179,7 @@
         <!-- Footer -->
         <div class="container fixed-bottom">
             <div class="row">
-                <p><a href="https://life.brennanhatton.com" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">BrennanHatton.com</a> | <a href="https://github.com/bh679" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">Github</a> | <a href="https://discord.gg/4sXaaAYHDQ" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Discord</a> | <a href="#" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" onclick="Restart(); location.reload()">Restart</a> | <a href="https://brennan.games/JudgeGPT_v0/" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">V0</a> | <a href="./credits.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Credits</a></p>
+                <p><a href="https://life.brennanhatton.com" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">BrennanHatton.com</a> | <a href="https://github.com/bh679" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">Github</a> | <a href="https://discord.gg/4sXaaAYHDQ" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Discord</a> | <a href="#" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" onclick="Restart();">Restart</a> | <a href="https://brennan.games/JudgeGPT_v0/" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">V0</a> | <a href="./credits.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Credits</a></p>
             </div>
         </div>
 
@@ -234,8 +235,22 @@
         restartButton.innerText = RandomLines.GetRestartButtonLabel();
         subheading.innerText = RandomLines.GetTagLine();
 
+        var restarting = false;
         async function Restart()
         {
+            if(restarting) return;
+
+            restarting = true;
+
+            (async () => {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                restarting = false;
+
+                location.reload();
+            })();  // The () at the end calls the function
+
+
             const response = await fetch('https://brennan.games:3000/Restart', 
             {
                 method: 'GET',
@@ -243,6 +258,7 @@
                     'Content-Type': 'application/json',
                 }
             });
+
         }
 
 

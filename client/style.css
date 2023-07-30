@@ -132,6 +132,11 @@ Identity
     margin:20px
 }
 
+.border-transparent {
+  border-color: transparent !important;
+}
+
+
 /* Large desktop * /
 @media (min-width: 1200px) { ... }*/
  

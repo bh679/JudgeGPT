@@ -794,7 +794,7 @@ class Prompts {
 }
 
 
-module.exports = JudgeGPTServer;
+module.exports = JudgeGPTPartyServer;
 
 async function AskGPT(input) {
     // Create a new OpenAI Reponse with prompt

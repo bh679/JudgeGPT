@@ -20,6 +20,7 @@ class JudgeGPTClient
         this.audience = [];
 
         this.player = {};
+        this.playerTurn = {clientID:""};
     }
 
     GenerateID() {
@@ -37,13 +38,16 @@ class JudgeGPTClient
             this.myTurn = false;
             this.onNotMyTurn.Invoke(playerTurn);
         }
+
+        this.playerTurn = playerTurn;
     }
 
-    FlagMeInPlayerList(playerList)
+    FlagMeInPlayerList(playerList, turnId)
     {
         for(var i = 0; i < playerList.length; i++)
         {
             playerList[i].isMe = (playerList[i].clientID == this.player.clientID)
+            playerList[i].myTurn = ((playerList[i].clientID == this.playerTurn.clientID) && (playerList[i].name == this.playerTurn.name))
         }
     }
 
