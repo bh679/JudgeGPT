@@ -189,6 +189,7 @@ class PlayerList
             
             var cardHeader = document.createElement("center");
             cardHeader.classList.add("card-header");
+            cardHeader.style="padding:0";
             cardHeader.appendChild(you);
             card.appendChild(cardHeader);
         }
