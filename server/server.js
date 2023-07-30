@@ -26,9 +26,9 @@ const JudgeGPTServer = require('./JudgeGPTServer');
 var judgeGPTServer = new JudgeGPTServer(Restart);
 judgeGPTServer.Start();
 
-const JudgeGPTPartyServer = require('./JudgeGPTPartyServer');
+/*const JudgeGPTPartyServer = require('./JudgeGPTPartyServer');
 var judgeGPTPartyServer = new JudgeGPTPartyServer(Restart);
-judgeGPTPartyServer.Start();
+judgeGPTPartyServer.Start();*/
 
 
 // Use cors middleware for handling Cross-Origin Resource Sharing
