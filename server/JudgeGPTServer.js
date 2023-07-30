@@ -504,6 +504,10 @@ class JudgeGPTServer {
             if(this.stop)
                 return;
 
+            await this.CreateLesson();
+            if(this.stop)
+                return;
+
             for(var i = 0 ; i < this.activeRoles.length; i++)
             {
                 await this.Analysis(i);
@@ -615,46 +619,9 @@ class JudgeGPTServer {
             }
         }
     }
-
-    
-
-    /*JoinHearing(playerData)
-    {
-
-        console.log("playerData.clientID: " + playerData.clientID);
-        for(var i = 0; i < this.player.length; i++)
-        {
-            if(this.player[i].clientID == "")
-            {
-                this.courtEmpty = false;
-                this.player[i].clientID = playerData.clientID;
-                this.player[i].name = playerData.name;
-                this.player[i].profileUrl = playerData.profileUrl;
-
-                this.messagesChat.AddToChat(this.narrator, "The " + this.player[i].role + " " + this.player[i].name + " entered the courtroom.");
-
-                if (this.audience.hasOwnProperty(playerData.clientID))
-                    delete this.audience[playerData.clientID];
-
-                return this.player[i];
-            }
-        }
-
-        /*if(this.running && this.player.length < this.roles.length)
-        {
-            return AddPlayer();
-        }*/
-/*
-        console.log("is not joining");
-        return null;
-    }*/
    
     PlayerIntroduction()
     {
-        console.log("PlayerIntroduction()");
-        console.log(this.turn);
-        console.log(this.keyRoles[this.turn]);
-        console.log(this.keyRoles);
         if(this.keyRoles[this.turn] == "Plaintiff")
             return "Plaintiff, do you have anything to add?";
         else if(this.keyRoles[this.turn] == "Defendant")
@@ -703,6 +670,18 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.punishment);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+
+    async CreateLesson()
+    {
+        var prompt =  this.prompts.lesson.replace("$", this.ruling);
+        console.log(prompt);
+        this.lesson = await AskGPT(prompt);
+        if(this.stop)
+            return;
+
+        this.messagesChat.AddToChat(this.judge, this.lesson);
         await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
@@ -815,7 +794,8 @@ class Prompts {
         this.cases = [ "Come up with an absurd and/or hilarious accusation to be argued in small claims court between two parties.",
             "Come up with an absurd and/or hilarious accusation to be argued in court between two parties.",
             "Come up with a ridiculous and hilarious accusation to be argued in court between two parties."];
-        this.punishment = "Provide a funny, absurd and unfitting punishment and lesson to be learnt for the following court ruling:{$}";
+        this.punishment = "Provide a funny, absurd and unfitting punishment to be learnt for the following court ruling:{$}";
+        this.lesson = "Provide a funny, absurd and unfitting lesson to be learnt for the following court ruling:{$}";
         this.winner = "A judge ruled the following: {$} Give a single word response of 'guity' or 'innocent' for the defendant. ";
         this.scoring = "You are scoring the result of a text based improv game, by %. Score the sentence on each of the four metrics, creativity, intelligence, humor and provide explanations on each. The sentence to be scored is {$}. At the end, provide a total score.";
     }
@@ -843,24 +823,6 @@ async function AskGPT(input) {
 
 
 
-
-
-
-/*
-
-const profileImages = [
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_6afb3b07-5722-4095-99b5-674658d56429.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_d5de75c4-d7fa-40e5-b370-b4e97ee8920d.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_b44a92bc-be0e-45d7-add5-349f4c2c0687.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_01f3ff74-4a43-4f8e-b067-e027b01445ba.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_7304d215-0a0f-46ab-a971-5516a8790cc7.png"
-    ];
-
-function GetRandomProfileImage()
-{
-    return 'https://brennan.games/JudgeGPT/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
-}*/
 
 /*
 async function GetImage(input)
