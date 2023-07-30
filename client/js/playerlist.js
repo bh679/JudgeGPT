@@ -145,11 +145,12 @@ class PlayerList
         roleDiv.innerText = playerMember.role;
 
         var nameDiv = document.createElement('div');
-        nameDiv.style = "font-size:10px"
+        nameDiv.style = "font-size:10px";
         nameDiv.innerText = playerMember.name;
 
 
         var center = document.createElement('center');
+        //center.classList.add("card-body");
         center.style = "margin:5px;";
         center.appendChild(profileImg);
         center.appendChild(roleDiv);
@@ -165,9 +166,7 @@ class PlayerList
 
         var id = playerMember.clientID;
 
-
-        var you = document.createElement('center');
-        you.style="padding:0px; margin:0px";
+        card.appendChild(center);
 
         if(id == "ai")
         {
@@ -176,10 +175,22 @@ class PlayerList
            card.classList.add("text-white");
         }else if(playerMember.isMe)
         {
-           card.classList.add("text-white");
+            card.classList.add("text-white");
             card.classList.add("bg-info");
-            card.classList.add("mb-3"); 
-            you.innerText = "you";
+
+            var you = document.createElement('center');
+            you.style="font-size:10px";
+
+            if(playerMember.myTurn)
+                you.innerText = "Your Turn";
+            else
+                you.innerText = "You";
+
+            
+            var cardHeader = document.createElement("center");
+            cardHeader.classList.add("card-header");
+            cardHeader.appendChild(you);
+            card.appendChild(cardHeader);
         }
 
         card.classList.add("border");
@@ -193,7 +204,6 @@ class PlayerList
 
         this.RefreshToolTip(card, id);
         card.style = "margin:3px";
-        card.appendChild(center);
 
 
         var groupDiv = document.createElement('div');
@@ -203,7 +213,6 @@ class PlayerList
         groupDiv.classList.add("col-xxs-2");
         groupDiv.style = "padding:0";
         groupDiv.appendChild(card);
-        groupDiv.appendChild(you);
 
         return groupDiv;
     }

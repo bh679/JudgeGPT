@@ -46,6 +46,8 @@ class JudgeGPTServer {
         this.SetActiveRolesFromPlayers();
 
         this.RestPlayers();
+
+        this.activeRoles.reverse();
     }
 
     //also removes disconnected players
@@ -70,6 +72,7 @@ class JudgeGPTServer {
             const player = this.players[id];
             if (this.activeRoles.length < this.keyRoles.length) {
                 player.SetRole(this.keyRoles[this.activeRoles.length]);
+
                 this.activeRoles.push(player);
             } else {
                 break;
