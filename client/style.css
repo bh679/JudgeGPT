@@ -35,6 +35,7 @@ Chat
 .sender 
 {
     text-align:right;
+    padding-left: 0px;
 }
 
 .judge > .sender
