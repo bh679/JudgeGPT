@@ -1,3 +1,63 @@
+const judgeProfileImages = [
+    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge_63826ce4-a661-4b4f-9714-e24c92478dc9.png",
+    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge__8afa7999-e05d-4384-893d-1236a802ac63.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_holograph_t_c7599d91-b5e2-4bd5-a058-307300ab8428.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__e33a0d20-0bcf-4a5e-87aa-918c8fc545b1.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__c6db7b68-3486-48a2-8f4f-ad3f71c5223b.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__2ccf8b3f-d800-4344-b865-888aef0d3a6c.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__29b4582e-bbb8-4888-819e-ccc232666002.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__af4d9faa-6ea8-4c87-b6e9-7f5fd13850e3.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__f79644b5-7b4b-4bc7-8fb2-5b31fecab787.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_24aaf35e-a722-46be-a8cb-3f29357efdb6.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_0b9e7c16-63b0-4a9d-bf59-61851d07b4ea.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_15185e1d-2da9-466c-ad99-dd9ed1bac904.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_bd832eac-911f-4de0-a271-5708f8069c41.png"
+ ]
+
+
+const profileImages = [
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_6afb3b07-5722-4095-99b5-674658d56429.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_d5de75c4-d7fa-40e5-b370-b4e97ee8920d.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_b44a92bc-be0e-45d7-add5-349f4c2c0687.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_01f3ff74-4a43-4f8e-b067-e027b01445ba.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_7304d215-0a0f-46ab-a971-5516a8790cc7.png",
+    "brennanhatton_profile_picture_of_farmer_49d21a53-7ff1-4017-9691-405c5898ae7c.png",
+    "brennanhatton_profile_picture_of_sailor_afb12f26-05d1-45a9-84b7-40d21b7da906.png",
+    "brennanhatton_profile_picture_of_farmer_e235a1f8-0ed6-42a2-a0a7-0c681ed7eade.png",
+    "brennanhatton_profile_picture_of_farmer_3e4556d9-a298-4f76-b08a-5a9de772830e.png",
+    "brennanhatton_profile_picture_of_train_driver_women_b886b9ea-e444-4fcd-ad38-612349d5864d.png",
+    "brennanhatton_profile_picture_of_train_driver_women_a63ce0c5-7e85-4bb7-a085-2fa6d6d012a5.png",
+    "brennanhatton_profile_picture_of_train_driver_women_8a4eb90c-225f-4302-9900-8140a9a0193b.png",
+    "brennanhatton_profile_picture_of_buddhist_monk_7535d7d7-dd08-452f-a7ab-9457a536d512.png",
+    "brennanhatton_profile_picture_of_doctor_women_738bcb6e-027a-42d9-aceb-3e05c285bb13.png",
+    "brennanhatton_profile_picture_of_doctor_women_ae26d860-9efc-4a55-af55-a391433aed19.png",
+    "brennanhatton_profile_picture_of_job_worker_afriacan_5f45333f-dfa3-42b0-959b-0c0884bc3f85.png",
+    "brennanhatton_profile_picture_of_farmer_asian_dd9c94d2-b10c-4098-bb27-30047b5d2019.png",
+    "brennanhatton_profile_picture_of_farmer_asian_9cf5dfe0-0a28-42ed-b6fb-95bda4309f8d.png",
+    "brennanhatton_profile_picture_of_cleaner_caucasion_6a97d4ed-3bf8-463a-818d-a131f4802c66.png",
+    "brennanhatton_profile_picture_of_cleaner_caucasion_a373457e-70d0-4ff8-a3a7-22645c2b317d.png",
+    "brennanhatton_profile_picture_of_cleaner_caucasion_e217bf0e-f193-487a-84e3-5c749bb4152f.png",
+    "brennanhatton_profile_picture_of_cleaner_caucasion_e217bf0e-f193-487a-84e3-5c749bb4152f.png",
+    "brennanhatton_profile_picture_of_astronaut_middle_eastern_6f8ffdaf-27b3-4f91-9715-dedfdf00964e.png",
+    "brennanhatton_profile_picture_of_farmer_women_black_c38e862d-60b3-4766-8763-d92a57acc4f4.png",
+    "brennanhatton_profile_picture_of_farmer_women_black_0bb0f88b-5073-4b29-b7c4-677d372eff77.png",
+    "brennanhatton_profile_picture_of_astronaut_women_c4e16431-70c1-42b8-966d-f04259d2ea80.png",
+    "brennanhatton_profile_picture_of_astronaut_women_9c4c9bff-3300-40e8-8b73-ca63348941fb.png",
+    "brennanhatton_profile_picture_african_journalist_d6d8c9d3-8a1b-44d2-a983-e544d74b888b.png",
+    "brennanhatton_profile_picture_african_journalist_c189a87e-2446-49c5-81f9-b70ce1fc9431.png",
+    "brennanhatton_profile_picture_african_journalist_068f8043-4ce4-4c58-9170-808fbbd7518a.png",
+    "brennanhatton_profile_picture_french_baker_93deafdd-4e10-4617-8e97-24f9e77ed8a1.png",
+    "brennanhatton_profile_picture_french_baker_d46f99bb-a3d9-4434-915c-3e8a3b1d6c0b.png",
+    "brennanhatton_profile_picture_women_acfrican_b06e53d6-aa7c-4f36-8a61-fd495741e33a.png",
+    "brennanhatton_profile_picture_women_acfrican_f00b90e1-999e-48cf-836b-7b13f3005762.png",
+    "brennanhatton_profile_picture_black_women_nerd_f7c942ba-4902-4c38-b5cc-01502a0e3d9b.png",
+    "brennanhatton_profile_picture_black_women_nerd_80b638aa-e7ad-479a-be92-360c8e6b7343.png",
+    "brennanhatton_profile_picture_black_women_nerd_5d8f0f45-9601-4981-aad4-dc5a36d6dc5c.png"
+
+    ];
+
+
 const backgroundImages = [
     "brennanhatton_judge_chatgpt_ai_legal_system_in_courtroom.png",
     "brennanhatton_empty_ai_courtroom_of_the_future._1f180d1f-5c23-4b84-9f1f-7e7360a5ff43.png",
@@ -170,88 +230,17 @@ class BackgroundImages
 
     }
 
-    /*static async GlitchBackground() {
-
-        // Choose a random image.
-        var nextBgId = Math.floor(Math.random() * backgroundImages.length);
-
-        // Create a new image object.
-        var img = new Image();
-
-        // Once the image is loaded, switch between the current and glitch image.
-        var imageLoadPromise = new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = './images/' + backgroundImages[nextBgId];
-        });
-
-        try {
-            await imageLoadPromise;
-
-            // Image has loaded, you can continue with the next part of your code.
-
-            var glitchInterval = setInterval(function() {
-
-                if(Math.floor(Math.random()*2)==0)
-                    switchBG = './images/' + backgroundImages[bgId];
-                else
-                    switchBG = './images/' + backgroundImages[nextBgId];
-
-                document.documentElement.style.setProperty('--bg-image', `url(`+switchBG+`)`);
-                console.log(getComputedStyle(document.documentElement).getPropertyValue('--bg-image'));
-
-            }, 100);  // Change the image every 100 milliseconds.
-
-            // After 1 second, stop glitching and set the new background image.
-            setTimeout(function() {
-                clearInterval(glitchInterval);
-
-                bgId = nextBgId;
-                var bgImage = './images/'+backgroundImages[bgId];
-                document.documentElement.style.setProperty('--bg-image', `url('${bgImage}')`);
-                
-            }, 3000);  // Stop glitching after 1 second.
+    static GetRandomProfileImage()
+    {
+        return 'https://brennan.games/JudgeGPT/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
+    }
 
 
-        } catch (error) {
-            console.error("Failed to load image: ", error);
-        }   
-    }*/
+    static GetRandomJudgeProfileImage()
+    {
+        return './images/profiles/judge/' + judgeProfileImages[Math.floor(Math.random() * judgeProfileImages.length)];
+    }
 }
 
-const judgeProfileImages = [
-    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge_63826ce4-a661-4b4f-9714-e24c92478dc9.png",
-    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge__8afa7999-e05d-4384-893d-1236a802ac63.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_holograph_t_c7599d91-b5e2-4bd5-a058-307300ab8428.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__e33a0d20-0bcf-4a5e-87aa-918c8fc545b1.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__c6db7b68-3486-48a2-8f4f-ad3f71c5223b.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__2ccf8b3f-d800-4344-b865-888aef0d3a6c.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__29b4582e-bbb8-4888-819e-ccc232666002.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__af4d9faa-6ea8-4c87-b6e9-7f5fd13850e3.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__f79644b5-7b4b-4bc7-8fb2-5b31fecab787.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_24aaf35e-a722-46be-a8cb-3f29357efdb6.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_0b9e7c16-63b0-4a9d-bf59-61851d07b4ea.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_15185e1d-2da9-466c-ad99-dd9ed1bac904.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_bd832eac-911f-4de0-a271-5708f8069c41.png"
- ]
 
-
-function GetRandomJudgeProfileImage()
-{
-    return './images/profiles/judge/' + judgeProfileImages[Math.floor(Math.random() * judgeProfileImages.length)];
-}
-
-const profileImages = [
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_6afb3b07-5722-4095-99b5-674658d56429.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_d5de75c4-d7fa-40e5-b370-b4e97ee8920d.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_b44a92bc-be0e-45d7-add5-349f4c2c0687.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_01f3ff74-4a43-4f8e-b067-e027b01445ba.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_7304d215-0a0f-46ab-a971-5516a8790cc7.png"
-    ];
-
-function GetRandomProfileImage()
-{
-    return 'https://brennan.games/JudgeGPT/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
-}
-
+module.exports = BackgroundImages;

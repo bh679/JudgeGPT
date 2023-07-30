@@ -1,6 +1,7 @@
 
 const PromptGPT = require('./PromptGPT');
 const RandomLines = require('./RandomLines');
+const BackgroundImages = require('./BackgroundImages');
 
 const aiID = "ai";
 
@@ -299,7 +300,7 @@ class JudgeGPTServer {
             var newPlayer = new Player(RandomLines.GetRandomName(), "Audience", clientID);
 
             //Genearte ProfileURL
-            newPlayer.profileUrl = GetRandomProfileImage();
+            newPlayer.profileUrl = BackgroundImages.GetRandomProfileImage();
 
             this.players[clientID] = newPlayer;
             
@@ -821,7 +822,7 @@ async function AskGPT(input) {
 
 
 
-
+/*
 
 const profileImages = [
     "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",
@@ -835,7 +836,7 @@ const profileImages = [
 function GetRandomProfileImage()
 {
     return 'https://brennan.games/JudgeGPT/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
-}
+}*/
 
 /*
 async function GetImage(input)

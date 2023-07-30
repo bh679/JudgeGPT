@@ -22,6 +22,7 @@ let promptResponse = {};
 
 //Judge GPT
 const RandomLines = require('./RandomLines');
+const BackgroundImages = require('./BackgroundImages');
 const JudgeGPTServer = require('./JudgeGPTServer');
 var judgeGPTServer = new JudgeGPTServer(Restart);
 judgeGPTServer.Start();
@@ -58,6 +59,8 @@ function Restart()
     /*    server = https.createServer(options, app).listen(port, () => {
         console.log(`Secure server is running on port ${port}`);
     });*/
+
+    io.emit('ReloadPage',"");
 }
 
 // Call to GPT for older version of JudgeGPT

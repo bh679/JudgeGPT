@@ -250,14 +250,14 @@
 
             restarting = true;
 
-            (async () => {
+            /*(async () => {
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
                 restarting = false;
 
                 location.reload();
             })();  // The () at the end calls the function
-
+*/
 
             const response = await fetch('https://brennan.games:3000/Restart', 
             {
@@ -298,6 +298,10 @@
         
         socket.on('AiResponse', (data) => {
             UI.AiResponded(data.response);
+        });
+        
+        socket.on('ReloadPage', (data) => {
+            location.reload();
         });
 
         /*setInterval(() => {

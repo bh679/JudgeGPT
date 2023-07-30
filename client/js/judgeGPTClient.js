@@ -30,6 +30,9 @@ class JudgeGPTClient
 
     SetPlayersTurn(playerTurn)
     {
+        if(this.player == {})
+            return;
+
         if(playerTurn.clientID == this.player.clientID)
         {
             this.myTurn = true;
