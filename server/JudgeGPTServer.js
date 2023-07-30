@@ -48,7 +48,7 @@ class JudgeGPTServer {
 
         this.RestPlayers();
 
-        this.activeRoles.reverse();
+        //this.activeRoles.reverse();
     }
 
     //also removes disconnected players
@@ -63,12 +63,16 @@ class JudgeGPTServer {
         }
     }
 
-    SetActiveRolesFromPlayers() {
+   SetActiveRolesFromPlayers() {
         // Reset activeRoles
         this.activeRoles = [];
 
         // Get the first two players from the players object
-        const playerIDs = Object.keys(this.players);
+        let playerIDs = Object.keys(this.players);
+
+        // Shuffle the array of player IDs
+        playerIDs = this.shuffleArray(playerIDs);
+
         for (const id of playerIDs) {
             const player = this.players[id];
             if (this.activeRoles.length < this.keyRoles.length) {
@@ -80,6 +84,26 @@ class JudgeGPTServer {
             }
         }
     }
+
+    // Fisher-Yates (aka Knuth) Shuffle algorithm to shuffle an array
+    shuffleArray(array) {
+        let currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
 
     RestPlayers() 
     {
@@ -436,7 +460,7 @@ class JudgeGPTServer {
             var newNPC = new Player(RandomLines.GetRandomName(), role, aiID);
 
             //Genearte ProfileURL
-            newNPC.profileUrl = GetRandomProfileImage();
+            newNPC.profileUrl = BackgroundImages.GetRandomProfileImage();
             
             return newNPC;
     }
