@@ -508,6 +508,7 @@ class JudgeGPTServer {
             if(this.stop)
                 return;
 
+            this.messagesChat.AddToChat(this.judge, "");
             for(var i = 0 ; i < this.activeRoles.length; i++)
             {
                 this.messagesChat.AddToChat(this.judge, await this.Analysis(i));
@@ -714,10 +715,7 @@ class JudgeGPTServer {
 
     async RestartGame()
     {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log("restart");
-        this.init();
-        this.Start();
+        this.restartCallback();
     }
 
     GetPlayersTurn()
@@ -797,7 +795,7 @@ class Prompts {
         this.punishment = "Provide a funny, absurd and unfitting punishment to be learnt for the following court ruling:{$}";
         this.lesson = "Provide a funny, absurd and unfitting lesson to be learnt for the following court ruling:{$}";
         this.winner = "A judge ruled the following: {$} Give a single word response of 'guity' or 'innocent' for the defendant. ";
-        this.scoring = "You are scoring the result of a text based improv game, by %. Score the sentence on each of the four metrics, creativity, intelligence, humor and provide explanations on each. The sentence to be scored is {$}. At the end, provide a total score. use <br /> for new lines";
+        this.scoring = "You are scoring the result of a text based improv game, by %. Score the sentence on each of the four metrics, creativity, intelligence, humor and provide explanations on each. The sentence to be scored is {$}. If inside {} is nothing, there is no statement, score the no statement. At the end, provide a total score. use <br /> for new lines";
     }
 }
 
