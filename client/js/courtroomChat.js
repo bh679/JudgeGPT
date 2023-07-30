@@ -87,6 +87,14 @@ class ChatLineUI
     }
 }
 
+class Analysis
+{
+    constructor(div)
+    {
+        this.div = div;
+    }
+}
+
 /*class ChatRoom
 {
     constructor(parentDiv)

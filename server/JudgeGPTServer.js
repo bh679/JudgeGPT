@@ -510,12 +510,12 @@ class JudgeGPTServer {
 
             for(var i = 0 ; i < this.activeRoles.length; i++)
             {
-                await this.Analysis(i);
+                this.messagesChat.AddToChat(this.judge, await this.Analysis(i));
                 if(this.stop)
                     return;
             }
         
-            await new Promise(resolve => setTimeout(resolve, 20000));
+            await new Promise(resolve => setTimeout(resolve, 40000));
             if(this.stop)
                 return;
         
@@ -709,7 +709,7 @@ class JudgeGPTServer {
         console.log(prompt);
         this.activeRoles[playerid].score = await AskGPT(prompt);
 
-        return this.activeRoles[playerid];
+        return this.activeRoles[playerid].score;
     }
 
     async RestartGame()
@@ -797,7 +797,7 @@ class Prompts {
         this.punishment = "Provide a funny, absurd and unfitting punishment to be learnt for the following court ruling:{$}";
         this.lesson = "Provide a funny, absurd and unfitting lesson to be learnt for the following court ruling:{$}";
         this.winner = "A judge ruled the following: {$} Give a single word response of 'guity' or 'innocent' for the defendant. ";
-        this.scoring = "You are scoring the result of a text based improv game, by %. Score the sentence on each of the four metrics, creativity, intelligence, humor and provide explanations on each. The sentence to be scored is {$}. At the end, provide a total score.";
+        this.scoring = "You are scoring the result of a text based improv game, by %. Score the sentence on each of the four metrics, creativity, intelligence, humor and provide explanations on each. The sentence to be scored is {$}. At the end, provide a total score. use <br /> for new lines";
     }
 }
 
