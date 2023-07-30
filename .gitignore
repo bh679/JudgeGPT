@@ -131,3 +131,10 @@ dist
 bitnami-env.sh
 env.js
 images
+JudgeGPT_v0/backgroundImages.js
+JudgeGPT_v0/index.html
+JudgeGPT_v0/judgeGPTUI.js
+JudgeGPT_v0/package-lock.json
+JudgeGPT_v0/package.json
+JudgeGPT_v0/randomLines.js
+JudgeGPT_v0/style.css
