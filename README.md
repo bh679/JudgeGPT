@@ -50,6 +50,8 @@ Efficient and succinct justice with all the bias and inaccuracy of ai.
 Who is better at convincing the Judge they are innocent?
 Note: Game is still in development. There is only one courtroom, so if you aren't in the hearing you are in the audience. If it seems stuck, there is a restart button at the bottom. 
 ![image](https://github.com/bh679/JudgeGPT/assets/2542558/c6cc44ad-0fbb-467b-8675-2707bf52d5dc)
+![image](https://github.com/bh679/JudgeGPT/assets/2542558/46f70cea-d8c4-4e4d-9108-60c1fecd3699)
+
 
 ### V2 July 24, 23
 Latest version of JudgeGPT is looking great!
