@@ -7,6 +7,7 @@ class MessageUI
         this.messages = [];
 
         this.UpdateChat = this.UpdateChat.bind(this);
+        this.voiced = true;
     }
 
     UpdateChat(messages)
@@ -41,41 +42,22 @@ class MessageUI
 
         this.UpdateChat(this.messages);
     }
-}
 
-var speaking = false;
-var queue = []; // create a queue to store the messages
+    ToggleVoices(toggleOn)
+    {
+        this.voiced = toggleOn;
+
+        if(toggle)
+            ResumeSpeaking()
+        else
+            StopSpeaking();
+        
+    }
+}
 
 function SpeakMessage(message)
 {
-    queue.push(message); // add new messages to the queue
-    
-    // if not currently speaking, start speaking
-    if (!speaking)
-        processNextMessage();
-}
-
-function processNextMessage() 
-{
-    if (queue.length === 0) 
-    {
-        return; // no messages to process
-    }
-
-    // get the first message from the queue
-    let currentMessage = queue.shift();
-    
-    speaking = true;
-    Speak(currentMessage.message, currentMessage.sender.voiceId, FinishedSpeaking);
-}
-
-function FinishedSpeaking()
-{
-    speaking = false;
-    
-    // if there are still messages in the queue, speak the next message
-    if (queue.length > 0)
-        processNextMessage();
+    speechManager.Speak(message.message, message.sender.voiceId);
 }
 
 
