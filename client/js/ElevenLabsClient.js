@@ -8,8 +8,38 @@ class SpeechManager {
         this.voicing = false;  // A flag indicating whether speech synthesis is currently allowed
         this.isSpeaking = false;  // A flag indicating whether speech synthesis is currently happening
         
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.unlocked = false;
+
         if(status)
             this.status = status;
+    }
+
+    async unlockAudioContext() {
+    if (this.unlocked) return;
+
+    const buffer = this.audioContext.createBuffer(1, 1, 22050);
+    const source = this.audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(this.audioContext.destination);
+    source.start(0);
+
+    // Older browsers might require 'noteOn' instead of 'start'.
+    // source.noteOn(0); 
+
+    // By checking the play state after some time, we can see if we're really unlocked
+    setTimeout(() => {
+        if((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
+            this.unlocked = true;
+        }
+    }, 0);
+}
+
+
+    async resumeAudioContext() {
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            await this.audioContext.resume();
+        }
     }
 
     // The AddToStatus function updates the status text
@@ -52,48 +82,36 @@ class SpeechManager {
         }
     }
 
-    async PlaySpeech()
-    {
-
-        if(this.isSpeaking || this.queue.length === 0)
+    async PlaySpeech() {
+        if (this.isSpeaking || this.queue.length === 0)
             return;
 
-        this.isSpeaking = true;  // Set the isSpeaking flag to true
+        this.isSpeaking = true;
 
         console.log("getting message to play");
 
-        // Get the next speech task from the queue
         let message = this.queue.shift();
 
-        // Update the status text
         this.AddToStatus("Speak: " + message.text, true);
 
         try {
-            // Create an Audio object from the blob URL
-            const audio = new Audio(message.blobUrl);
+            const response = await fetch(message.blobUrl);
+            const arrayBuffer = await response.arrayBuffer();
+            const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
 
-            // Wait for the audio to be loaded
-            audio.oncanplaythrough = () => {
-                // If the voicing flag is false, return immediately
-                if (!this.voicing) {
-                    return;
-                }
+            const source = this.audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(this.audioContext.destination);
+            source.start(0);
 
-                // Play the audio
-                audio.play();
-
-                this.currentAudio = audio;  // Set the currently playing audio
-
-                // Handle the end of the audio
-                this.handleAudioEnd(audio, message.callBack);
-            };
+            this.handleAudioEnd(source, message.callBack);
 
         } catch (error) {
-            // Log the error and update the status text
             console.error('Error:', error);
             this.AddToStatus('Error: ' + error.message);
         }
     }
+
 
     // The fetchSpeech function fetches the speech audio from the API
     async fetchSpeech(text, voice) {
@@ -115,24 +133,18 @@ class SpeechManager {
         return url;
     }
 
-    // The handleAudioEnd function handles the end of the audio
-    handleAudioEnd(audio, callBack) {
-        audio.onended = () => {
-            // Update the status text
+    handleAudioEnd(source, callBack) {
+        source.onended = () => {
             this.AddToStatus('Audio has finished playing!');
 
-            // Call the callback function if it's provided
             if (callBack != null)
                 callBack();
 
-            this.currentAudio = null;  // Clear the currently playing audio
+            this.isSpeaking = false;
 
-            this.isSpeaking = false; // Set the isSpeaking flag to false
-
-            // If there are more speech tasks in the queue, start the next one
             if (this.queue.length > 0) {
                 this.PlaySpeech();
-            } 
+            }
         };
     }
 
@@ -153,7 +165,14 @@ class SpeechManager {
             this.PlaySpeech();  // Start the next speech task if there are any in the queue
         }
     }
+
 }
 
 // Create a new SpeechManager object
 let speechManager = new SpeechManager('https://brennan.games:3000');
+
+// Use this function to unlock the audio context after a user interaction (e.g., button press)
+async function buttonPressHandler() {
+    await speechManager.unlockAudioContext();
+    await speechManager.resumeAudioContext();
+}

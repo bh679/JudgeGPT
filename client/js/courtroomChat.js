@@ -7,7 +7,6 @@ class MessageUI
         this.messages = [];
 
         this.UpdateChat = this.UpdateChat.bind(this);
-        this.voiced = true;
     }
 
     UpdateChat(messages)
@@ -43,9 +42,9 @@ class MessageUI
         this.UpdateChat(this.messages);
     }
 
-    ToggleVoices(toggleOn)
+    async ToggleVoices(toggleOn)
     {
-        this.voiced = toggleOn;
+        await buttonPressHandler();
 
         if(toggleOn)
         {
