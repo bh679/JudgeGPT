@@ -46,29 +46,36 @@ class MessageUI
 var speaking = false;
 var queue = []; // create a queue to store the messages
 
-async function SpeakMessage(message)
+function SpeakMessage(message)
 {
     queue.push(message); // add new messages to the queue
     
-    // check if currently speaking or if there is no message in the queue
-    if (speaking || queue.length === 0)
-        return;
-        
-    speaking = true;
-    
+    // if not currently speaking, start speaking
+    if (!speaking)
+        processNextMessage();
+}
+
+function processNextMessage() 
+{
+    if (queue.length === 0) 
+    {
+        return; // no messages to process
+    }
+
     // get the first message from the queue
     let currentMessage = queue.shift();
     
+    speaking = true;
     Speak(currentMessage.message, currentMessage.sender.voiceId, FinishedSpeaking);
 }
- 
+
 function FinishedSpeaking()
 {
     speaking = false;
     
-    // if there are still messages in the queue, call SpeakMessage with the next message
+    // if there are still messages in the queue, speak the next message
     if (queue.length > 0)
-        SpeakMessage(queue[0]);
+        processNextMessage();
 }
 
 
