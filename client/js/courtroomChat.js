@@ -28,7 +28,7 @@ class MessageUI
             this.chatDiv.appendChild(this.messagesDivs[i].groupDiv);
         }
 
-        if(this.messages.length <= 7)
+        if(this.messages.length <= 8)
             SpeakMessage(messages[messages.length-1]);
     }
 
@@ -47,10 +47,10 @@ class MessageUI
     {
         this.voiced = toggleOn;
 
-        if(toggle)
-            ResumeSpeaking()
+        if(toggleOn)
+            speechManager.ResumeSpeaking()
         else
-            StopSpeaking();
+            speechManager.StopSpeaking();
         
     }
 }

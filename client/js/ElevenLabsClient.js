@@ -5,7 +5,7 @@ class SpeechManager {
         this.apiDomain = apiDomain;  // The domain of the API to fetch speech from
         this.currentAudio = null;  // The Audio object of the currently playing speech
         this.queue = [];  // A queue of speech tasks
-        this.voicing = true;  // A flag indicating whether speech synthesis is currently allowed
+        this.voicing = false;  // A flag indicating whether speech synthesis is currently allowed
         this.isSpeaking = false;  // A flag indicating whether speech synthesis is currently happening
         
         if(status)
@@ -41,7 +41,7 @@ class SpeechManager {
 
             // Fetch the speech audio from the API and add the speech task to the queue
             this.fetchSpeech(text, voice)
-                ..then(blobUrl => {
+                .then(blobUrl => {
                 this.queue.push({text: text, voice: voice, callBack: callBack, blobUrl: blobUrl});
 
                 // If it's not currently speaking, start to play
@@ -85,7 +85,7 @@ class SpeechManager {
                 this.currentAudio = audio;  // Set the currently playing audio
 
                 // Handle the end of the audio
-                this.handleAudioEnd(audio, callBack, status);
+                this.handleAudioEnd(audio, message.callBack);
             };
 
         } catch (error) {
@@ -116,7 +116,7 @@ class SpeechManager {
     }
 
     // The handleAudioEnd function handles the end of the audio
-    handleAudioEnd(audio, callBack, status) {
+    handleAudioEnd(audio, callBack) {
         audio.onended = () => {
             // Update the status text
             this.AddToStatus('Audio has finished playing!');
