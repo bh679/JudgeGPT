@@ -174,17 +174,16 @@ class SpeechManager {
         };
     }
 
-
-    // The StopSpeaking function stops the currently playing audio and pauses any further speech synthesis
+    // The StopSpeaking function stops the currently playing audio, clears the queue of speech tasks, and pauses any further speech synthesis
     StopSpeaking() {
         if (this.currentSource) {
             this.currentSource.stop();  // Stop the currently playing audio
             this.currentSource = null;  // Clear the currently playing audio
         }
+        this.queue = [];  // Clear the queue of speech tasks
         this.isSpeaking = false;  // Set the isSpeaking flag to false
         this.voicing = false;  // Set the voicing flag to false
     }
-
 
     // The ResumeSpeaking function resumes speech synthesis
     ResumeSpeaking() {
