@@ -1,0 +1,343 @@
+</html>
+<!DOCTYPE html>
+<!-- This site was created in Webflow. https://www.webflow.com -->
+<!-- Last Published: Thu May 18 2023 15:06:15 GMT+0000 (Coordinated Universal Time) -->
+<html data-wf-domain="">
+    <head>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-1760E3YTQP"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-1760E3YTQP');
+        </script>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>JudgeGPT</title>
+
+        <!-- Bookstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <!-- Judge GPT Style Shee -->
+        <link rel="stylesheet" type="text/css" href="./style.css">
+
+        <link rel="stylesheet" type="text/css" href="./chat.css">
+
+        <!-- JdugeGPT -->
+        <script src="backgroundImages.js"></script>
+        <script src="randomLines.js"></script>
+        <script src="judgeGPTClient.js"></script>
+        <script src="judgeGPTUI.js"></script>
+
+        <!-- Socket.io -->
+        <script src="https://brennan.games:3000/socket.io/socket.io.js"></script>
+
+        <!-- timer (needs a file namechage) -->
+        <link rel="stylesheet" type="text/css" href="./progresbar.css">
+
+
+    </head>
+
+    <body class="body">
+
+        <!-- tool tips -->
+        <script>
+            $(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
+
+        <!-- background -->
+        <div id="background">
+            <!-- This div will serve as your background. -->
+        </div>
+
+        
+
+        <!-- The Game -->
+        <div>
+
+            <!-- heading -->
+            <div class="container" id="hero">
+                <center>
+                    <h1 >Judge GPT</h1>
+
+                    <h5 id="subheading"></h5>
+                </center>
+            </div>
+
+            <!-- chat -->
+            <div class="container">
+                <div class="row">
+
+                    <!-- Courtroom -->
+                    <div id="courtRoom" class="col-9 col-xs-12">
+
+                        <!-- Hearing -->
+                        <div id="chat"></div>
+                        <div id="typing"></div>
+
+                        <center hidden>
+                            <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()" style="margin: 10%;">Join</button>
+                        </center>
+                        <div id="endButtons">
+                            <div id="analysisGroup" class="row">
+                                <div id="analysis0" class="Analysis col-6"></div>
+                                <div id="analysis1" class="Analysis col-6"></div>
+                            </div>
+                            <div class="row">
+                                <button id="restartButton" class="button w-button col" onclick="location.reload()">
+                                    Restart
+                                </button>
+                                <button id="analysisButton" class="button w-button col" onclick="UI.Analysis()">
+                                    Analyze Responses
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div id="inputGroup" class="row">
+                            <div class="col-4 col-s-3 col-xxs-2 sender">You:</div>
+
+                            <div class="col form-floating">
+                              <input id="userInput" type="text" class="form-control" id="floatingInput" placeholder="Plaintiff" value="" oninput="TypeInput()">
+                              <label id="timer" for="floatingInput" style="margin-left:10px;">Plaintiff : 60 sec</label>
+                            </div>
+
+                            <div class="col-2 col-s-3 col-xx-12">
+                                <div class="row">
+                                    <button id="submitButton" class="button w-button rounded-3 col" onclick="SubmitTestimony()">
+                                        Submit
+                                    </button>
+                                    <button id="aiRespondButton" class="button w-button col-4 col-s-12 col-ss-4 rounded-3" onclick="AIRepsonse()">
+                                        AI
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audience / Gallery -->
+                    <div class="col">
+
+                        <!-- User Profile / Identity -->
+                        <div class="row" hidden>
+                            <div class="card" style="margin:5px">
+                                <center style="margin:20px">
+                                    <div id="courtRoomIdentity">
+                                    </div>
+                                    <!--button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button-->
+                                </center>
+                            </div>
+                        </div>
+
+
+                        <!-- Hearing Participants -->
+                        <div class="row">
+                            <h3>In Court</h3>
+                        </div>
+                        <div id="playerList" class="row">
+                            <div class="card col-4" style="margin:5px" hidden>
+                                <center style="margin:5px;">
+                                        <img src="https://brennan.games/JudgeGPT/images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
+                                        <div>Name</div>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="row" id="audience">
+                        </div>
+                        <div id="chatRoom" class="chatRoom" hidden>
+                            <ul id="chatRoomMessages"></ul>
+                            <form id="chatRoomMessageForm">
+                              <input type="text" id="chatRoomInput" autocomplete="off" />
+                              <button type="submit">Send</button>
+                            </form>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Winner -->
+            <div class="container fixed-top" style="z-index: -1;   ">
+                <img id="winner" src="" style="opacity: 0.45;"/>
+                <img src="./images/guilty.png" hidden/>
+                <img src="./images/notguilty.png" hidden/> <!-- find a better way to preload these -->
+            </div>
+
+        </div>    
+        <!-- End of game-->
+
+
+        <!-- Footer -->
+        <div class="container fixed-bottom">
+            <div class="row">
+                <p><a href="https://life.brennanhatton.com" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">BrennanHatton.com</a> | <a href="https://github.com/bh679" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">Github</a> | <a href="https://discord.gg/4sXaaAYHDQ" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Discord</a> | <a href="#" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" onclick="Restart(); location.reload()">Restart</a> | <a href="https://brennan.games/JudgeGPT_v0/" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">V0</a> | <a href="./credits.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Credits</a></p>
+            </div>
+        </div>
+
+        <div id="settings">
+            
+        </div>
+
+
+    <script>
+
+        // Define global variables
+        const hero =  document.getElementById('hero');
+
+        const courtRoomIdentityGroup = document.getElementById('courtRoomIdentity');
+        const joinHearingButton = document.getElementById('joinHearingButton');
+
+        const chatDiv = document.getElementById('chat');
+        const winnerDiv = document.getElementById('winner');
+        const subheading = document.getElementById('subheading');
+
+        const gameOverUI = {};
+        gameOverUI.group= document.getElementById('endButtons');
+        gameOverUI.restartButton = document.getElementById('restartButton');
+
+        const analysis = {};
+        analysis.player = {};
+        analysis.player[0] = document.getElementById('analysis0');
+        analysis.player[1] = document.getElementById('analysis1');
+        analysis.group = document.getElementById('analysisGroup');
+        analysis.button = document.getElementById('analysisButton');
+
+        const typingDiv = document.getElementById('typing');
+
+        const userInput = {};
+        userInput.submitButton = document.getElementById('submitButton');
+        userInput.aiRespondButton = document.getElementById('aiRespondButton');
+        userInput.inputFeild = document.getElementById('userInput');
+        userInput.timer = document.getElementById('timer');
+        userInput.group = document.getElementById('inputGroup');
+
+        const audienceDiv = document.getElementById('audience');
+        const playerListDiv = document.getElementById('playerList');
+
+        client = new JudgeGPTClient();
+        //client.ConnectToServer();
+
+        UI = new JudgeGPTUI(hero, chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, audienceDiv, playerListDiv, typingDiv, client);
+
+        UI.Start();
+
+        BackgroundImages.SetBackground();
+
+        restartButton.innerText = RandomLines.GetRestartButtonLabel();
+        subheading.innerText = RandomLines.GetTagLine();
+
+        async function Restart()
+        {
+            const response = await fetch('https://brennan.games:3000/Restart', 
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+        }
+
+
+        const socket = io('https://brennan.games:3000');
+
+        // Emit the 'testEvent' after connecting
+        socket.on('connect', () => {
+            console.log('Connected to the server!');
+            //socket.emit('testEvent', { data: 'Hello from the client!' });
+        });
+
+        
+        socket.on('OnJoinEvent', (data) => {
+            console.log('Received data.player:');
+            console.log(data.player);
+            client.OnJoinGame(data.player);
+        });
+
+        
+        socket.on('GameUpdate', (data) => {
+            //console.log('Received ChatUpdate:', data);
+            //console.log('Received ChatUpdate:', data.messages);
+            client.UpdateState(data.messages);
+            client.SetPlayersTurn(data.playerTurn);
+            client.UpdatePlayerList(data.playerList);
+            if (data.winner != "")
+                UI.SetWinner(data.winner);
+        });
+        
+        socket.on('AiResponse', (data) => {
+            UI.AiResponded(data.response);
+        });
+
+        /*setInterval(() => {
+            socket.emit('heartbeat', {});
+        }, 30000);  // Every 30 seconds*/
+
+        function SubmitTestimony()
+        {
+            testimony = userInput.inputFeild.value;
+            console.log(testimony);
+            socket.emit('SubmitTestimony', { testimony: testimony });
+            UI.SubmitTestimony(testimony);
+        }
+
+        function TypeInput()
+        {
+            UI.TypeIntoInput();
+            testimony = userInput.inputFeild.value;
+            socket.emit('Typing', { typing: testimony });
+        }
+
+        function AIRepsonse()
+        {
+            UI.AiResponding();
+            socket.emit('AiRespond');
+        }
+
+
+        /*function makeRequest() {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('GET', 'https://brennan.games:3000/socket.io/?EIO=4&transport=polling&t=Oc3kMAX', true);
+
+            xhr.onload = function() {
+                if (this.status >= 200 && this.status < 400) {
+                    // Success!
+                    console.log(this.response);
+                } else {
+                    // We reached our target server, but it returned an error
+                    handleError();
+                }
+            };
+
+            xhr.onerror = function() {
+                // There was a connection error of some sort
+                handleError();
+            };
+
+            xhr.send();
+        }
+
+        function handleError() {
+            console.error("There was an error with the request, possibly a CORS issue.");
+            // Handle the error here, e.g., show a message to the user, retry the request, etc.
+            client.OnJoinGame({});
+        }*/
+
+
+
+
+    </script>
+
+
+    <script src="./chat.js"></script>
+
+    </body>
+</html>
