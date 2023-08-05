@@ -11,6 +11,9 @@ class MessageUI
 
     UpdateChat(messages)
     {
+        if(this.messages.length == messages.length)
+            return;
+
         this.messages = messages;
 
         this.chatDiv.innerHTML = '';
@@ -24,6 +27,7 @@ class MessageUI
             this.chatDiv.appendChild(this.messagesDivs[i].groupDiv);
         }
 
+        SpeakMessage(messages[messages.length-1]);
     }
 
     AddMessage(sender, message)
@@ -36,6 +40,11 @@ class MessageUI
 
         this.UpdateChat(this.messages);
     }
+}
+
+function SpeakMessage(message)
+{
+    Speak(message.message, message.sender.voiceId);
 }
 
 class ChatLineUI

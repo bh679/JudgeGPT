@@ -96,7 +96,7 @@ app.post('/AskGPT', function (req, res) {
 });
 
 // Import the 'speak' function from 'ElevenLabs.js'
-const Speak = require('./ElevenLabs');
+const Speak = require('./ElevenLabsServer');
 // Use the 'speak' function as a route handler for the '/Speak' route
 app.post('/Speak', Speak);
 

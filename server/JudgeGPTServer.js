@@ -11,6 +11,7 @@ class JudgeGPTServer {
         this.restartCallback = restartCallback;
         this.players = {}; //all human players, and audience
         this.stop = false;
+        this.speechCharTime = 50;
 
         this.init();
     }
@@ -123,7 +124,7 @@ class JudgeGPTServer {
         
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
         this.messagesChat.AddToChat(this.judge, this.gameCase);
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 3000+this.gameCase.length*this.speechCharTime));
         if(this.stop)
             return;
 
@@ -484,6 +485,8 @@ class JudgeGPTServer {
 
         this.messagesChat.AddToChat(this.activeRoles[this.turn], this.activeRoles[this.turn].testimony);
 
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[this.turn].testimony.length*speechCharTime));
+
         this.turn++;
 
         if(this.turn < this.keyRoles.length)
@@ -626,7 +629,7 @@ class JudgeGPTServer {
         if(this.keyRoles[this.turn] == "Plaintiff")
             return "Plaintiff, do you have anything to add?";
         else if(this.keyRoles[this.turn] == "Defendant")
-            return "Defendant, what is your repsonse?";
+            return "Defendant, what is your response?";
         else
             return "Does anyone else have anything to say?";
         
@@ -659,7 +662,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.ruling);
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.ruling*this.speechCharTime));
     }
 
     async CreatePunsihment()
@@ -671,7 +674,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.punishment);
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.punishment*this.speechCharTime));
     }
 
     async CreateLesson()
@@ -683,7 +686,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.lesson);
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.lesson*this.speechCharTime));
     }
 
     async DeclareWinner()
@@ -709,6 +712,7 @@ class JudgeGPTServer {
         var prompt =  this.prompts.scoring.replace("$", this.activeRoles[playerid].testimony).replace("%", this.activeRoles[playerid].role);
         console.log(prompt);
         this.activeRoles[playerid].score = await AskGPT(prompt);
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[playerid].score*this.speechCharTime));
 
         return this.activeRoles[playerid].score;
     }
@@ -768,6 +772,7 @@ class Player {
         this.lastHeard = Date.now();
         this.timeLeft = 60;
         this.connected = true;
+        this.voiceId = "21m00Tcm4TlvDq8ikWAM";
     }
 
     Reset()

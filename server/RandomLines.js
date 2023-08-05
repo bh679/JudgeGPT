@@ -107,7 +107,26 @@ const names = [
 ];
 
 
+//popoulate these
+const PlayerVoiceId = [
+    "Alex",
+    "Casey",
+    "Jamie",
+    "Taylor",
+    "Morgan",
+    "Riley",
+    "Jordan"
+];
 
+const JudgeVoiceId = [
+    "Alex",
+    "Casey",
+    "Jamie",
+    "Taylor",
+    "Morgan",
+    "Riley",
+    "Jordan"
+];
 
 class RandomLines
 {
@@ -124,6 +143,11 @@ class RandomLines
     static GetRandomName()
     {
         return names[Math.floor(Math.random() * names.length)];
+    }
+
+    static GetRandomVoiceID()
+    {
+
     }
 }
 
