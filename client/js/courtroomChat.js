@@ -29,7 +29,7 @@ class MessageUI
         }
 
         if(this.messages.length <= 8)
-            SpeakMessage(messages[messages.length-1]);
+            SpeakMessage(this.messages[this.messages.length-1]);
     }
 
     AddMessage(sender, message)
@@ -48,7 +48,20 @@ class MessageUI
         this.voiced = toggleOn;
 
         if(toggleOn)
-            speechManager.ResumeSpeaking()
+        {
+            speechManager.ResumeSpeaking();
+
+            if(this.messages.length <= 8)
+            {
+                if(this.messages.length > 1)
+                    SpeakMessage(this.messages[this.messages.length-2]);
+                else
+                    SpeakMessage(this.messages[this.messages.length-1]);
+            }
+            else
+                SpeakMessage(this.messages[7]);
+
+        }
         else
             speechManager.StopSpeaking();
         
