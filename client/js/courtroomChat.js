@@ -53,7 +53,7 @@ class MessageUI
             if(this.messages.length <= 8)
             {
                 if(this.messages.length > 1)
-                    SpeakMessage(this.messages[this.messages.length-2]);
+                    await SpeakMessage(this.messages[this.messages.length-2]);
                 
                 SpeakMessage(this.messages[this.messages.length-1]);
             }
@@ -67,9 +67,9 @@ class MessageUI
     }
 }
 
-function SpeakMessage(message)
+async function SpeakMessage(message)
 {
-    speechManager.Speak(message.message, message.sender.voiceId);
+    return await speechManager.Speak(message.message, message.sender.voiceId);
 }
 
 
