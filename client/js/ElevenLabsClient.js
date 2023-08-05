@@ -83,34 +83,49 @@ class SpeechManager {
     }
 
     async PlaySpeech() {
+        // If the system is currently speaking or there's no speech task in the queue, return immediately
         if (this.isSpeaking || this.queue.length === 0)
             return;
 
-        this.isSpeaking = true;
+        this.isSpeaking = true;  // Set the isSpeaking flag to true
 
         console.log("getting message to play");
 
+        // Dequeue the next speech task
         let message = this.queue.shift();
 
+        // Update the status text
         this.AddToStatus("Speak: " + message.text, true);
 
         try {
+            // Fetch the audio data from the blob URL
             const response = await fetch(message.blobUrl);
+            // Convert the response to an array buffer
             const arrayBuffer = await response.arrayBuffer();
+            // Decode the audio data into an AudioBuffer
             const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
 
+            // Create an AudioBufferSourceNode from the AudioBuffer
             const source = this.audioContext.createBufferSource();
             source.buffer = audioBuffer;
+            // Connect the AudioBufferSourceNode to the AudioContext's destination (the speakers)
             source.connect(this.audioContext.destination);
+            // Start playing the audio immediately
             source.start(0);
 
+            // Keep a reference to the AudioBufferSourceNode that's currently playing
+            this.currentSource = source;
+
+            // Handle the end of the audio
             this.handleAudioEnd(source, message.callBack);
 
         } catch (error) {
+            // Log the error and update the status text
             console.error('Error:', error);
             this.AddToStatus('Error: ' + error.message);
         }
     }
+
 
 
     // The fetchSpeech function fetches the speech audio from the API
@@ -132,31 +147,44 @@ class SpeechManager {
 
         return url;
     }
-
+    /*
+     * The handleAudioEnd function handles the end of the audio.
+     * It sets up a callback to be called when the audio finishes playing.
+     *
+     * @param {AudioBufferSourceNode} source - The AudioBufferSourceNode that is playing the audio.
+     * @param {function} callBack - A function to be called when the audio finishes playing.
+     */
     handleAudioEnd(source, callBack) {
+        // Set up a callback to be called when the audio finishes playing
         source.onended = () => {
+            // Update the status text
             this.AddToStatus('Audio has finished playing!');
 
+            // If a callback function was provided, call it
             if (callBack != null)
                 callBack();
 
+            // Set the isSpeaking flag to false, since the audio has finished playing
             this.isSpeaking = false;
 
+            // If there are more speech tasks in the queue, start the next one
             if (this.queue.length > 0) {
                 this.PlaySpeech();
             }
         };
     }
 
+
     // The StopSpeaking function stops the currently playing audio and pauses any further speech synthesis
     StopSpeaking() {
-        if (this.currentAudio) {
-            this.currentAudio.pause();  // Stop the currently playing audio
-            this.currentAudio = null;  // Clear the currently playing audio
+        if (this.currentSource) {
+            this.currentSource.stop();  // Stop the currently playing audio
+            this.currentSource = null;  // Clear the currently playing audio
         }
         this.isSpeaking = false;  // Set the isSpeaking flag to false
         this.voicing = false;  // Set the voicing flag to false
     }
+
 
     // The ResumeSpeaking function resumes speech synthesis
     ResumeSpeaking() {
