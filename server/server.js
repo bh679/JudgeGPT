@@ -1,4 +1,5 @@
 
+
 // Required libraries
 const cors = require('cors');             // Middleware for enabling CORS (Cross-Origin Resource Sharing)
 const axios = require('axios');           // Promise based HTTP client for node.js
@@ -94,12 +95,10 @@ app.post('/AskGPT', function (req, res) {
 
 });
 
-
 // Import the 'speak' function from 'ElevenLabs.js'
 const Speak = require('./ElevenLabs');
 // Use the 'speak' function as a route handler for the '/Speak' route
 app.post('/Speak', Speak);
-
 
 // Serve static files related to socket.io from the node_modules directory
 app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io/client-dist'));
@@ -131,15 +130,6 @@ io.on('connection', async (socket) => {
     console.log(`A user connected with ID: ${socket.id} from ${clientIpAddress}`);
 
     var clientID = socket.id;
-
-
-
-    // 
-    socket.on('PlayerConnected', (data) => {
-        console.log('A player connected ' + data.ClientID);
-        judgeGPTServer.SubmitTestimony(data.testimony, clientID);
-        
-    });
 
     //Player has successful joined game, here is player details
     let player = await judgeGPTServer.OnPlayerConnected(clientID);
