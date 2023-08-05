@@ -90,8 +90,22 @@ const names = [
     "Wobble",
     "Xylophone",
     "Yo-yo",
-    "Zigzag"
+    "Zigzag",
+    "Ash", "Blair", "Briar", "Cael", "Dale", "Eden", "Fable", "Gale", 
+    "Haven", "Indigo", "Joss", "Kai", "Lane", "Max", "Nell", "Oak",
+    "Pace", "Quin", "Rael", "Sage", "Teal", "Vale", "Wren", "Xan", 
+    "Yule", "Zephyr", "Alba", "Bevin", "Clay", "Devon", "Eris", "Fern",
+    "Greer", "Hollis", "Irie", "Jet", "Keir", "Lark", "Mace", "Noa",
+    "Orla", "Pim", "Reef", "Sky", "True", "Vega", "West", "Xeno",
+    "Yael", "Zane", "Aero", "Blaze", "Cove", "Dune", "Echo", "Flare",
+    "Gala", "Hero", "Ilex", "Jem", "Kestrel", "Lynx", "Mars", "Nova",
+    "Onyx", "Pace", "Quest", "Rune", "Sol", "Trill", "Umber", "Vex",
+    "Wave", "Xol", "Yarrow", "Zen", "Alpha", "Bex", "Cadence", "Drift",
+    "Elm", "Fizz", "Gust", "Ion", "Jinx", "Kip", "Lux", "Mirth", 
+    "Neon", "Opal", "Pip", "Quill", "Roan", "Shift", "Twill", "Umbral", 
+    "Vim", "Whim", "Xemi", "Yara"
 ];
+
 
 
 

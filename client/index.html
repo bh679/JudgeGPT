@@ -36,6 +36,7 @@
         <script src="./js/playerlist.js"></script>
         <script src="./js/courtroomChat.js"></script>
         <script src="./js/judgeGPTUI.js"></script>
+        <script src="./js/cookies.js"></script>
 
         <!-- Socket.io -->
         <script src="https://brennan.games:3000/socket.io/socket.io.js"></script>
@@ -274,6 +275,11 @@
 
 
         const socket = io('https://brennan.games:3000');
+        var cookies = {};
+        cookies.name = "";
+        cookies.backstory = [];
+        const clientIDCookie = "playerData";
+        var cookiesSaved = false;
 
         // Emit the 'testEvent' after connecting
         socket.on('connect', () => {
@@ -286,9 +292,24 @@
             console.log('Received data.player:');
             console.log(data.player);
             client.OnJoinGame(data.player);
+
+            //cookies = getCookie(clientIDCookie);
+
+            if(cookies != "")
+            {
+                socket.emit('PlayerConnected', cookies);
+            }else
+            {
+                cookies.name = data.player.name;
+                cookies.profileUrl = data.player.profileUrl;
+                cookies.backstory = [];
+            }
+                    
+
+            
+
         });
 
-        
         socket.on('GameUpdate', (data) => {
             //console.log('Received ChatUpdate:', data);
             //console.log('Received ChatUpdate:', data.messages);
@@ -296,7 +317,24 @@
             client.SetPlayersTurn(data.playerTurn);
             client.UpdatePlayerList(data.playerList);
             if (data.winner != "")
+            {
                 UI.SetWinner(data.winner);
+
+                if(!cookiesSaved)
+                {
+
+                    cookies.backstory[cookies.backstory.length] = data.playerTurn.testimony;
+
+                    if(data.winner == "guilty" && client.player.role == "Defendant")
+                    {
+                        cookies.backstory[cookies.backstory.length] = data.ruling;
+                    }
+
+                    setSessionCookie(clientIDCookie, cookies);
+                    cookiesSaved = true;
+
+                }
+            }
         });
         
         socket.on('AiResponse', (data) => {

@@ -86,22 +86,3 @@ class ChatLineUI
         return this.groupDiv;
     }
 }
-
-class Analysis
-{
-    constructor(div)
-    {
-        this.div = div;
-    }
-}
-
-/*class ChatRoom
-{
-    constructor(parentDiv)
-    {
-        this.chatRoomDiv = parentDiv;
-    }
-}*/
-
-
-
