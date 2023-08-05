@@ -27,7 +27,8 @@ class MessageUI
             this.chatDiv.appendChild(this.messagesDivs[i].groupDiv);
         }
 
-        SpeakMessage(messages[messages.length-1]);
+        if(this.messages.length <= 7)
+            SpeakMessage(messages[messages.length-1]);
     }
 
     AddMessage(sender, message)
@@ -42,10 +43,34 @@ class MessageUI
     }
 }
 
-function SpeakMessage(message)
+var speaking = false;
+var queue = []; // create a queue to store the messages
+
+async function SpeakMessage(message)
 {
-    Speak(message.message, message.sender.voiceId);
+    queue.push(message); // add new messages to the queue
+    
+    // check if currently speaking or if there is no message in the queue
+    if (speaking || queue.length === 0)
+        return;
+        
+    speaking = true;
+    
+    // get the first message from the queue
+    let currentMessage = queue.shift();
+    
+    Speak(currentMessage.message, currentMessage.sender.voiceId, FinishedSpeaking);
 }
+ 
+function FinishedSpeaking()
+{
+    speaking = false;
+    
+    // if there are still messages in the queue, call SpeakMessage with the next message
+    if (queue.length > 0)
+        SpeakMessage(queue[0]);
+}
+
 
 class ChatLineUI
 {

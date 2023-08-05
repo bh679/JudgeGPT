@@ -107,25 +107,52 @@ const names = [
 ];
 
 
-//popoulate these
-const PlayerVoiceId = [
-    "Alex",
-    "Casey",
-    "Jamie",
-    "Taylor",
-    "Morgan",
-    "Riley",
-    "Jordan"
+const playerVoiceId = [
+    "21m00Tcm4TlvDq8ikWAM",
+    "2EiwWnXFnvU5JabPnv8n",
+    "AZnzlk1XvdvUeBnXmlld",
+    "CYw3kZ02Hs0563khs1Fj",
+    "D38z5RcWu1voky8WS1ja",
+    "EXAVITQu4vr4xnSDxMaL",
+    "ErXwobaYiN019PkySvjV",
+    "GBv7mTt0atIp3Br8iCZE",
+    "IKne3meq5aSn9XLyUdCD",
+    "LcfcDJNUP1GQjkzn1xUU",
+    "MF3mGyEYCl7XYWbV9V6O",
+    "N2lVS1w4EtoT3dr4eOWO",
+    "ODq5zmih8GrVes37Dizd",
+    "SOYHLrjzK2X1ezoPC6cr",
+    "TX3LPaxmHKxFdv7VOQHJ",
+    "ThT5KcBeYPX3keUQqHPh",
+    "TxGEqnHWrfWFTfGW9XjX",
+    "VR6AewLTigWG4xSOukaG",
+    "XB0fDUnXU5powFXDhCwa",
+    "XrExE9yKIg1WjnnlVkGX",
+    "Yko7PKHZNXotIFUBG7I9",
+    "ZQe5CZNOzWyzPSCn5a3c",
+    "Zlb1dXrM653N07WRdFW3",
+    "bVMeCyTHy58xNoL34h3p",
+    "flq6f7yk4E4fJM5XTYuZ",
+    "g5CIjZEefAph4nQFvHAz",
+    "jBpfuIE2acCO8z3wKNLl",
+    "jsCqWAovK2LkecY7zXl4",
+    "oWAxZDx7w5VEj9dCyTzz",
+    "onwK4e9ZLuTAKqWW03F9",
+    "pMsXgVXv3BLzUgSXRplE",
+    "pNInz6obpgDQGcFmaJgB",
+    "piTKgcLEGmPE4e6mEKli",
+    "t0jbNlBVZ17f02VDIeMI",
+    "wViXBPUzp2ZZixB1xQuM",
+    "yoZ06aMxZJJ28mfd3POQ",
+    "z9fAnlkpzviPz146aGWa",
+    "zcAOhNBS3c14rBihAFp1",
+    "zrHiDhphv9ZnVXBqCLjz"
 ];
 
-const JudgeVoiceId = [
-    "Alex",
-    "Casey",
-    "Jamie",
-    "Taylor",
-    "Morgan",
-    "Riley",
-    "Jordan"
+
+
+const judgeVoiceId = [
+    "21m00Tcm4TlvDq8ikWAM"
 ];
 
 class RandomLines
@@ -147,7 +174,12 @@ class RandomLines
 
     static GetRandomVoiceID()
     {
+        return playerVoiceId[Math.floor(Math.random() * playerVoiceId.length)];
+    }
 
+    static GetJudgeVoiceID()
+    {
+        return judgeVoiceId[Math.floor(Math.random() * judgeVoiceId.length)];
     }
 }
 

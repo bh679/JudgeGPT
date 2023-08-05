@@ -485,7 +485,7 @@ class JudgeGPTServer {
 
         this.messagesChat.AddToChat(this.activeRoles[this.turn], this.activeRoles[this.turn].testimony);
 
-        await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[this.turn].testimony.length*speechCharTime));
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[this.turn].testimony.length*this.speechCharTime));
 
         this.turn++;
 
@@ -662,7 +662,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.ruling);
-        await new Promise(resolve => setTimeout(resolve, 3000 + this.ruling*this.speechCharTime));
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.ruling.length*this.speechCharTime));
     }
 
     async CreatePunsihment()
@@ -674,7 +674,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.punishment);
-        await new Promise(resolve => setTimeout(resolve, 3000 + this.punishment*this.speechCharTime));
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.punishment.length*this.speechCharTime));
     }
 
     async CreateLesson()
@@ -686,7 +686,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.lesson);
-        await new Promise(resolve => setTimeout(resolve, 3000 + this.lesson*this.speechCharTime));
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.lesson.length*this.speechCharTime));
     }
 
     async DeclareWinner()
@@ -712,7 +712,7 @@ class JudgeGPTServer {
         var prompt =  this.prompts.scoring.replace("$", this.activeRoles[playerid].testimony).replace("%", this.activeRoles[playerid].role);
         console.log(prompt);
         this.activeRoles[playerid].score = await AskGPT(prompt);
-        await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[playerid].score*this.speechCharTime));
+        await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[playerid].score.length*this.speechCharTime));
 
         return this.activeRoles[playerid].score;
     }
@@ -772,7 +772,11 @@ class Player {
         this.lastHeard = Date.now();
         this.timeLeft = 60;
         this.connected = true;
-        this.voiceId = "21m00Tcm4TlvDq8ikWAM";
+        this.voiceId = RandomLines.GetRandomVoiceID();
+
+        if(role == "Judge")
+            this.voiceId = '21m00Tcm4TlvDq8ikWAM';
+
     }
 
     Reset()

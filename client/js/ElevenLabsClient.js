@@ -1,6 +1,6 @@
 const apiDomain = 'https://brennan.games:3000';
 
-async function Speak(text, voice, status) {
+async function Speak(text, voice, callBack, status) {
     if(status != null) status.innerText = "Speak: " + text + '\n';
 
     try {
@@ -27,6 +27,9 @@ async function Speak(text, voice, status) {
 
         audio.onended = () => {
             if(status != null) status.innerText += 'Audio has finished playing!\n';
+            
+            if(callBack != null)
+                callBack();
         };
 
     } catch (error) {
