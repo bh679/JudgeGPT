@@ -9,17 +9,22 @@ class SpeechManager {
         this.isSpeaking = false;  // A flag indicating whether speech synthesis is currently happening
         
         if(status)
-            this.status = stutus;
+            this.status = status;
     }
 
+    // The AddToStatus function updates the status text
+    // newLine is the text to be added
+    // reset is a boolean indicating whether the status text should be cleared before adding newLine
     AddToStatus(newLine, reset)
     {
         console.log(newLine);
 
+        // If reset is true, clear the status text
         if(reset)
             if (this.status != null)
                 this.status.innerText = "";
         
+        // Add newLine to the status text
         if (this.status != null) this.status.innerText += newLine + "\n";
     }
 
@@ -34,12 +39,23 @@ class SpeechManager {
         {
             console.log("Adding to queue");
 
-            // Add the speech task to the queue
-            this.queue.push({text: text, voice: voice, callBack: callBack});
+            // Fetch the speech audio from the API and add the speech task to the queue
+            this.fetchSpeech(text, voice)
+                ..then(blobUrl => {
+                this.queue.push({text: text, voice: voice, callBack: callBack, blobUrl: blobUrl});
 
+                // If it's not currently speaking, start to play
+                if (!this.isSpeaking) {
+                    this.PlaySpeech();
+                }
+            });
         }
+    }
 
-        if(this.isSpeaking)
+    async PlaySpeech()
+    {
+
+        if(this.isSpeaking || this.queue.length === 0)
             return;
 
         this.isSpeaking = true;  // Set the isSpeaking flag to true
@@ -53,32 +69,24 @@ class SpeechManager {
         this.AddToStatus("Speak: " + message.text, true);
 
         try {
-            // Update the status text
-            this.AddToStatus('Processing...');
+            // Create an Audio object from the blob URL
+            const audio = new Audio(message.blobUrl);
 
-            // Fetch the speech audio from the API
-            const response = await this.fetchSpeech(message.text, message.voice);
+            // Wait for the audio to be loaded
+            audio.oncanplaythrough = () => {
+                // If the voicing flag is false, return immediately
+                if (!this.voicing) {
+                    return;
+                }
 
-            // Update the status text
-            this.AddToStatus('Speech successfully generated!');
+                // Play the audio
+                audio.play();
 
-            // Create a blob URL from the response
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
+                this.currentAudio = audio;  // Set the currently playing audio
 
-            // If the voicing flag is false, return immediately
-            if (!this.voicing) {
-                return;
-            }
-
-            // Create an Audio object from the blob URL and play it
-            const audio = new Audio(url);
-            audio.play();
-
-            this.currentAudio = audio;  // Set the currently playing audio
-
-            // Handle the end of the audio
-            this.handleAudioEnd(audio, callBack, status);
+                // Handle the end of the audio
+                this.handleAudioEnd(audio, callBack, status);
+            };
 
         } catch (error) {
             // Log the error and update the status text
@@ -101,7 +109,10 @@ class SpeechManager {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return response;
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        return url;
     }
 
     // The handleAudioEnd function handles the end of the audio
@@ -120,7 +131,7 @@ class SpeechManager {
 
             // If there are more speech tasks in the queue, start the next one
             if (this.queue.length > 0) {
-                this.Speak();
+                this.PlaySpeech();
             } 
         };
     }
@@ -139,7 +150,7 @@ class SpeechManager {
     ResumeSpeaking() {
         this.voicing = true;  // Set the voicing flag to true
         if(this.queue.length > 0) {
-            this.Speak();  // Start the next speech task if there are any in the queue
+            this.PlaySpeech();  // Start the next speech task if there are any in the queue
         }
     }
 }
