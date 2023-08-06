@@ -1,7 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
 
+const dbAddress = './jgptdb.sqlite3';
+
 class JudgeGPTDBManager {
-    constructor(Server, dbAddress) {
+    constructor(Server) {
         this.setData(Server);  // Initialize data
         this.dbAddress = dbAddress;
         this.initializeDB();   // Ensure table exists and get ID

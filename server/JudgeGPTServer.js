@@ -53,6 +53,8 @@ class JudgeGPTServer {
 
         this.RestPlayers();
 
+        this.judgeGPTDBManager = new JudgeGPTDBManager(this);
+
         //this.activeRoles.reverse();
     }
 
@@ -488,6 +490,9 @@ class JudgeGPTServer {
         this.activeRoles[this.turn].testimony = testimony;//this.UI.userInput.inputFeild.value;
 
         this.messagesChat.AddToChat(this.activeRoles[this.turn], this.activeRoles[this.turn].testimony);
+
+        //save to database
+        this.judgeGPTDBManager.UpdateData(this);
 
         await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[this.turn].testimony.length*this.speechCharTime));
 
