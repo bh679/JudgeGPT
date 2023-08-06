@@ -128,8 +128,8 @@ class JudgeGPTServer {
         if(this.stop)
             return;
 
-        if(this.courtEmpty)
-            this.messagesChat.AddToChat(this.narrator, "The court will begin when the members arrive.");
+        //if(this.courtEmpty)
+        //   this.messagesChat.AddToChat(this.narrator, "The court will begin when the members arrive.");
 
         while(this.courtEmpty)
         {

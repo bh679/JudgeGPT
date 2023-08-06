@@ -55,7 +55,7 @@ class MessageUI
                 if(this.messages.length > 1)
                     await SpeakMessage(this.messages[this.messages.length-2]);
                 
-                SpeakMessage(this.messages[this.messages.length-1]);
+                await SpeakMessage(this.messages[this.messages.length-1]);
             }
             else
                 SpeakMessage(this.messages[7]);
