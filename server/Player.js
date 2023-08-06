@@ -17,7 +17,10 @@ class Player {
         this.voiceId = RandomLines.GetRandomVoiceID();
 
         if(role == "Judge")
+        {
             this.voiceId = '21m00Tcm4TlvDq8ikWAM';
+            this.profileUrl = BackgroundImages.GetRandomJudgeProfileImage();
+        }
 
     }
 

@@ -11,7 +11,10 @@ const judgeProfileImages = [
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_24aaf35e-a722-46be-a8cb-3f29357efdb6.png",
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_0b9e7c16-63b0-4a9d-bf59-61851d07b4ea.png",
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_15185e1d-2da9-466c-ad99-dd9ed1bac904.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_bd832eac-911f-4de0-a271-5708f8069c41.png"
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_bd832eac-911f-4de0-a271-5708f8069c41.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_chemical_ho_72598500-f163-4483-ba2c-9f01a0af63e0.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_chemical_ho_83f28a6b-38f2-4850-88b2-718a5aaec10f.png",
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_chemical_ho_ec42553a-1daa-4291-a0ce-c312c9a453f3.png"
  ]
 
 
@@ -194,6 +197,7 @@ const backgroundImages = [
 ];
 
 var bgId = 0;
+var url = 'https://brennan.games/JudgeGPT/';
 
 class BackgroundImages
 {
@@ -232,13 +236,13 @@ class BackgroundImages
 
     static GetRandomProfileImage()
     {
-        return 'https://brennan.games/JudgeGPT/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
+        return url+'/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
     }
 
 
     static GetRandomJudgeProfileImage()
     {
-        return './images/profiles/judge/' + judgeProfileImages[Math.floor(Math.random() * judgeProfileImages.length)];
+        return url+'/images/profiles/judge/' + judgeProfileImages[Math.floor(Math.random() * judgeProfileImages.length)];
     }
 }
 
