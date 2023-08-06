@@ -21,6 +21,7 @@ Replace the ``/opt/bitnami/apache/conf/bitnami/bitnami-ssl.conf``<br />
 ``npm install axios``<br />
 ``npm install elevenlabs-node``<br />
 ``npm install play-sound``<br />
+``npm install sqlite3``<br />
 ``npm install dotenv``//cant tell if I am using this<br /> 
 Put evnionment variables into ``env.js``
 Looking like this
