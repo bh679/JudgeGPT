@@ -4,56 +4,7 @@
     $box-shadow:   0 .75rem 1rem rgba(0,0,0, .25);
 }
 
-/*
 
-Chat
-
-*/
-
-#chat
-{
-    /*padding-right: calc(var(--bs-gutter-x) * 1);
-    padding-left: calc(var(--bs-gutter-x) * 1);*/
-}
-
-.message 
-{
-    padding:3px;
-}
-
-.messageContents 
-{
-
-    background-color: rgba(245, 246, 247, 0.75);
-}
-
-.messageContents.alt
-{
-    background-color: rgba(210, 210, 210, 0.75);
-}
-
-.sender 
-{
-    text-align:right;
-    padding-left: 0px;
-}
-
-.judge > .sender
-{
-    font-weight: bold;
-}
-
-.plaintiff > .sender,
-#winner.plaintiff
-{
-    color: blue;
-}
-
-.defendant > .sender,
-#winner.defendant
-{
-    color: green;
-}
 
 /*
 User Input

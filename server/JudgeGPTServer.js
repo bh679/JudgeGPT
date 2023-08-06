@@ -293,7 +293,7 @@ class JudgeGPTServer {
         if(this.players.hasOwnProperty(clientID))
         {
             this.players[clientID].connected = false;
-            this.players[clientID].role = "disconnected";
+            this.players[clientID].role = "Disconnected";
             
             for(var i = 0; i < this.activeRoles.length; i++)
             {

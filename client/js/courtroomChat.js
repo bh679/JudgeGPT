@@ -96,34 +96,36 @@ class ChatLineUI
         //this.messageContentsDiv.classList.add("card");
         this.messageContentsDiv.classList.add("messageContents");
         this.messageContentsDiv.classList.add("rounded-3");
-        this.messageContentsDiv.innerHTML = this.message.message;
 
-        if(alt)
+        if(this.message.sender.role.toLowerCase() == "judge")
            this.messageContentsDiv.classList.add("alt");
 
 
         this.senderIconDiv = document.createElement('div');
-        this.senderIconDiv.classList.add("col-2");
-        this.senderIconDiv.classList.add("col-s-1");
-        this.senderIconDiv.classList.add("col-xxs-1");
+        this.senderIconDiv.classList.add("col-1");
+
         this.senderIconDiv.classList.add("sender");
         if(!consecutive)
         {
             this.profileImg = document.createElement('img');
             this.profileImg.classList.add("rounded-circle");
-            this.profileImg.style = "width:60%;margin:20px";
+            this.profileImg.classList.add("profilePicture");
+            this.profileImg.style = "";
             this.profileImg.src = this.message.sender.profileUrl;
             this.senderIconDiv.appendChild(this.profileImg);
 
-
             this.senderNameDiv = document.createElement('div');
-            this.senderNameDiv.classList.add("row");
+            //this.senderNameDiv.classList.add("row");
             this.senderNameDiv.innerText = this.message.sender.role + " "+ this.message.sender.name+": ";
-            this.groupDiv.appendChild(this.senderNameDiv);
+            this.senderNameDiv.style = "";
+            this.senderNameDiv.classList.add("senderName");
 
-            //this.senderIconDiv.style = "";
-            //this.senderIconDiv.innerText = this.message.sender.role + " "+ this.message.sender.name+": ";
+            this.messageContentsDiv.appendChild(this.senderNameDiv);
         }
+
+
+        this.messageContentsDiv.innerHTML += this.message.message;
+
         this.groupDiv.appendChild(this.senderIconDiv);
         this.groupDiv.appendChild(this.messageContentsDiv);
     }

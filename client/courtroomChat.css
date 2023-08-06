@@ -1,0 +1,59 @@
+/*
+
+Chat
+
+*/
+
+#chat
+{
+    /*padding-right: calc(var(--bs-gutter-x) * 1);
+    padding-left: calc(var(--bs-gutter-x) * 1);*/
+}
+
+.message 
+{
+    padding:3px;
+}
+
+.messageContents 
+{
+    background-color: rgba(245, 246, 247, 1.75);
+}
+
+.messageContents.alt
+{
+    background-color: rgba(210, 210, 210, 1.75);
+}
+
+.sender 
+{
+    padding-left: 3px;
+    /*text-align:right;*/
+    /*font-size: 13px;*/
+}
+
+.senderName
+{
+    font-weight: bold;
+}
+
+.judge > .senderName
+{
+    font-weight: bold;
+}
+
+.plaintiff .senderName,
+#winner.plaintiff {
+    color: blue;
+}
+
+.defendant .senderName,
+#winner.defendant {
+    color: green;
+}
+
+.profilePicture
+{
+    width:100%;
+    margin:0px
+}
