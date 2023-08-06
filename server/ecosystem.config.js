@@ -2,10 +2,10 @@ module.exports = {
   apps: [{
     name: 'JudgeGPT Socket Singleton',
     script: 'server.js',
-    instances: '1', // or a number to specify how many instances you want
-    //exec_mode: 'cluster', // optional, only needed if 'instances' is more than 1
-    watch: true, // optional, if you want PM2 to automatically restart your app when files change
-    max_memory_restart: '20G', // optional, restart your app if it reaches 1GB memory
+    instances: '1', // This ensures only one instance of the app runs
+    // exec_mode: 'cluster', // Not necessary since 'instances' is set to 1
+    watch: ['*.js', '*.json', '!*.sqlite3-journal'], // Restart app when these files change, but ignore SQLite journal files
+    max_memory_restart: '1G', // Restart your app if it reaches 1GB memory
     env: {
       NODE_ENV: 'development'
     },
