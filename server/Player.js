@@ -1,3 +1,5 @@
+const RandomLines = require('./RandomLines');
+
 class Player {
     constructor(name, role, clientID) {
         this.name = name;
