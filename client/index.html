@@ -70,7 +70,7 @@
             <!-- heading -->
             <div class="container" id="hero">
                 <div class="text-center">
-                    <h1>Judge GPT</h1>
+                    <h1 style="text-shadow: 0 0 2rem rgba(255,255,255, .55);">Judge GPT</h1>
                     <h5 id="subheading"></h5>
                 </div>
                 <div class="d-flex justify-content-center">
@@ -115,7 +115,9 @@
 
 
                         <div id="inputGroup" class="row">
-                            <div class="col-1 col-s-1 col-xxs-2 sender"><img id="inputProfile" class="rounded-circle profilePicture" src="" style=""></div>
+                            <div class="col-1 col-s-1 col-xxs-2 sender">
+                                <img id="inputProfile" class="rounded-circle profilePicture" src="" style="">
+                            </div>
 
                             <div class="col ">
                                 <div class="senderName rounded-top" style="background-color:#0dcaf0">Your Turn:</div>
@@ -127,11 +129,11 @@
 
                             <div class="col-2 col-s-3 col-xx-12">
                                 <div class="row">
-                                    <button id="submitButton" class="button w-button rounded-3 col" onclick="SubmitTestimony()">
-                                        Submit
-                                    </button>
                                     <button id="aiRespondButton" class="button w-button col-4 col-s-12 col-ss-4 rounded-3" onclick="AIRepsonse()">
                                         AI
+                                    </button>
+                                    <button id="submitButton" class="button w-button rounded-3 col-12" onclick="SubmitTestimony()">
+                                        Submit
                                     </button>
                                 </div>
                             </div>
