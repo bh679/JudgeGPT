@@ -111,6 +111,8 @@ class JudgeGPTDBManager {
     UpdateData(Server) {
         this.setData(Server);
 
+        console.log("UpdateData for id of : " + this.id);
+
         this.db = new sqlite3.Database(this.dbAddress, (err) => {
             if (err) {
                 return console.error(err.message);

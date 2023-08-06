@@ -102,17 +102,29 @@ class ChatLineUI
            this.messageContentsDiv.classList.add("alt");
 
 
-        this.senderDiv = document.createElement('div');
-        this.senderDiv.classList.add("col-4");
-        this.senderDiv.classList.add("col-s-3");
-        this.senderDiv.classList.add("col-xxs-2");
-        this.senderDiv.classList.add("sender");
+        this.senderIconDiv = document.createElement('div');
+        this.senderIconDiv.classList.add("col-2");
+        this.senderIconDiv.classList.add("col-s-1");
+        this.senderIconDiv.classList.add("col-xxs-1");
+        this.senderIconDiv.classList.add("sender");
         if(!consecutive)
         {
-            this.senderDiv.style = "";
-            this.senderDiv.innerText = this.message.sender.role + " "+ this.message.sender.name+": ";
+            this.profileImg = document.createElement('img');
+            this.profileImg.classList.add("rounded-circle");
+            this.profileImg.style = "width:60%;margin:20px";
+            this.profileImg.src = this.message.sender.profileUrl;
+            this.senderIconDiv.appendChild(this.profileImg);
+
+
+            this.senderNameDiv = document.createElement('div');
+            this.senderNameDiv.classList.add("row");
+            this.senderNameDiv.innerText = this.message.sender.role + " "+ this.message.sender.name+": ";
+            this.groupDiv.appendChild(this.senderNameDiv);
+
+            //this.senderIconDiv.style = "";
+            //this.senderIconDiv.innerText = this.message.sender.role + " "+ this.message.sender.name+": ";
         }
-            this.groupDiv.appendChild(this.senderDiv);
+        this.groupDiv.appendChild(this.senderIconDiv);
         this.groupDiv.appendChild(this.messageContentsDiv);
     }
 
