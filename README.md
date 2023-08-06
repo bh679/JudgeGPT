@@ -21,12 +21,14 @@ Replace the ``/opt/bitnami/apache/conf/bitnami/bitnami-ssl.conf``<br />
 ``npm install axios``<br />
 ``npm install elevenlabs-node``<br />
 ``npm install play-sound``<br />
+``npm install sqlite3``<br />
 ``npm install dotenv``//cant tell if I am using this<br /> 
 Put evnionment variables into ``env.js``
 Looking like this
 ```const ENV = {};
 ENV.TNL_API_KEY = 'XXXX';
 ENV.OPENAI_API_KEY = 'XXXX';
+ENV.ELEVENLABS_API_KEY = 'XXXX';
 
 module.exports = ENV;
 ```
@@ -40,6 +42,14 @@ Run ``pm2 start ecosystem.config.js``
 
 
 ## Update
+
+### V4 Aug 6, 23
+JudgeGPT is now voiced by ai, and live at https://brennan.games/JudgeGPT👩‍⚖️🧑‍⚖️👨‍⚖️
+V4 now has the option to turn on voices! They are fantastic,  hilarious an shockingly human for ai generated voices. Make sure you turn it on first thing when loading up the game.
+The game exists as a single multiplayer courtroom. Join in on the action, or watch the current hearing and wait your turn to be served justice!
+Whiles it’s v4, it’s still buggy. If it gets stuck, there is a restart server button at the bottom! 😅
+[![Watch the video](https://img.youtube.com/vi/Jq2GZEuAnx4/maxresdefault.jpg)](https://www.youtube.com/watch?v=Jq2GZEuAnx4)
+
 
 ### V3 July 29, 23
 JudgeGPT, the game where ai decides you or your friends fate in courtroom. 
