@@ -81,28 +81,29 @@ class ChatLineUI
 
         this.groupDiv = document.createElement('div');
         this.groupDiv.classList.add("message");
-        
-        //this.groupDiv.classList.add("message");
         this.groupDiv.classList.add("row");
-        //this.messageContentsDiv.classList.add("messageContents");
-        //console.log(this.message.sender.class);
-        if(this.message.sender.class != null && this.message.sender.class != "")
-            this.groupDiv.classList.add(this.message.sender.class);
-        //if(alt)
-        //    this.groupDiv.classList.add("alt");
+
+
+        this.messageNameGroup = document.createElement('div');
+        this.messageNameGroup.classList.add("col");
 
         this.messageContentsDiv = document.createElement('div');
-        this.messageContentsDiv.classList.add("col");
-        //this.messageContentsDiv.classList.add("card");
         this.messageContentsDiv.classList.add("messageContents");
-        this.messageContentsDiv.classList.add("rounded-3");
 
-        if(this.message.sender.role.toLowerCase() == "judge")
+        this.messageNameGroup.appendChild(this.messageContentsDiv);
+
+        if(alt)
            this.messageContentsDiv.classList.add("alt");
 
+        if(this.message.sender.class != null && this.message.sender.class != "")
+        {
+            this.groupDiv.classList.add(this.message.sender.class);
+            this.messageContentsDiv.classList.add(this.message.sender.class);
+        }
 
         this.senderIconDiv = document.createElement('div');
         this.senderIconDiv.classList.add("col-1");
+        this.senderIconDiv.classList.add("col-xxs-2");
 
         this.senderIconDiv.classList.add("sender");
         if(!consecutive)
@@ -119,15 +120,20 @@ class ChatLineUI
             this.senderNameDiv.innerText = this.message.sender.role + " "+ this.message.sender.name+": ";
             this.senderNameDiv.style = "";
             this.senderNameDiv.classList.add("senderName");
+            this.senderNameDiv.classList.add("rounded-top");
 
-            this.messageContentsDiv.appendChild(this.senderNameDiv);
-        }
+            this.messageNameGroup.insertBefore(this.senderNameDiv, this.messageNameGroup.firstChild);
+            
+            this.messageContentsDiv.classList.add("rounded-but-top-left");
+
+        }else
+        this.messageContentsDiv.classList.add("rounded-3");
 
 
         this.messageContentsDiv.innerHTML += this.message.message;
 
         this.groupDiv.appendChild(this.senderIconDiv);
-        this.groupDiv.appendChild(this.messageContentsDiv);
+        this.groupDiv.appendChild(this.messageNameGroup);
     }
 
     GetDiv()

@@ -163,7 +163,7 @@ class BackgroundImages
             document.documentElement.style.setProperty('--bg-image', `url('${img.src}')`);
 
             // Then, fade in the background
-            document.body.style.setProperty('--bg-opacity', 0.5);
+            document.body.style.setProperty('--bg-opacity', 0.75);
         } catch (error) {
             console.error("Failed to load image: ", error);
             this.SetBackground();

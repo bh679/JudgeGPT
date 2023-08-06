@@ -26,6 +26,7 @@
 
         <!-- Judge GPT Style Shee -->
         <link rel="stylesheet" type="text/css" href="./style.css">
+        <link rel="stylesheet" type="text/css" href="./courtroomChat.css">
 
         <!-- JdugeGPT -->
         <script src="./js/backgroundImages.js"></script>
@@ -224,12 +225,14 @@
             JudgeGPT.role = "Judge";
             JudgeGPT.class = "judge";
             JudgeGPT.voiceId = '21m00Tcm4TlvDq8ikWAM';
+            JudgeGPT.profileUrl = GetRandomJudgeProfileImage();
 
             var BrennanHatton = {};
             BrennanHatton.name = "Brennan";
             BrennanHatton.role = "";
             BrennanHatton.class = "brennan";
             BrennanHatton.voiceId = 'EZYvN1hBxpVgOy2hGxBs';
+            BrennanHatton.profileUrl = GetRandomProfileImage();
 
 
             messageUI.AddMessage(BrennanHatton, "Hey Judge, can you introduce us?");
@@ -246,7 +249,7 @@
             message = message.replace("Tim Christie","<b>Tim Christie</b>");
             messageUI.AddMessage(JudgeGPT, message);
             
-            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Dale Keaveny in a sentence or two, he compsoned and directed the music.");
+            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Dale Keaveny in a sentence or two, he compsoned and directed the music that is coming soon.");
             message = message.replace("Dale Keaveny","<b>Dale Keaveny</b>");
             messageUI.AddMessage(JudgeGPT, message);
             

@@ -18,11 +18,18 @@ Chat
 .messageContents 
 {
     background-color: rgba(245, 246, 247, 1.75);
+    padding:10px;
+    display: table;
 }
 
 .messageContents.alt
 {
-    background-color: rgba(210, 210, 210, 1.75);
+    background-color: rgba(230, 230, 247, 1.75);
+}
+
+.messageContents.judge
+{
+    background-color: rgba(230, 230, 247, 1.75);
 }
 
 .sender 
@@ -35,25 +42,44 @@ Chat
 .senderName
 {
     font-weight: bold;
+    background-color: rgba(45, 45, 45, 1.75);
+    padding: 3 10 3 10;
+    display: inline-block;
+    color: white;
+}
+
+.rounded-top
+{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.rounded-but-top-left
+{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .judge > .senderName
 {
     font-weight: bold;
+    color: white;
 }
 
 .plaintiff .senderName,
 #winner.plaintiff {
-    color: blue;
+    color: rgba(190, 190, 255, 1.75);
 }
 
 .defendant .senderName,
 #winner.defendant {
-    color: green;
+    color: rgba(190, 255, 190, 1.75);
 }
 
 .profilePicture
 {
     width:100%;
-    margin:0px
+    margin:0px;
 }
