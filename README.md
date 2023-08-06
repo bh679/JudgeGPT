@@ -27,6 +27,7 @@ Looking like this
 ```const ENV = {};
 ENV.TNL_API_KEY = 'XXXX';
 ENV.OPENAI_API_KEY = 'XXXX';
+ENV.ELEVENLABS_API_KEY = 'XXXX';
 
 module.exports = ENV;
 ```
