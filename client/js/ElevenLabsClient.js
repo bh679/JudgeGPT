@@ -5,7 +5,7 @@ class SpeechManager {
         this.apiDomain = apiDomain;  // The domain of the API to fetch speech from
         this.currentAudio = null;  // The Audio object of the currently playing speech
         this.queue = [];  // A queue of speech tasks
-        this.voicing = true;  // A flag indicating whether speech synthesis is currently allowed
+        this.voicing = false;  // A flag indicating whether speech synthesis is currently allowed
         this.isSpeaking = false;  // A flag indicating whether speech synthesis is currently happening
         
         this.audioContext = null;//new (window.AudioContext || window.webkitAudioContext)();
