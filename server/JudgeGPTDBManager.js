@@ -1,3 +1,4 @@
+//https://chat.openai.com/share/88c64e7b-418b-4894-90dd-7069a9021047
 const sqlite3 = require('sqlite3').verbose();
 
 const dbAddress = './jgptdb.sqlite3';
@@ -59,6 +60,7 @@ class JudgeGPTDBManager {
     }
 
     saveToDB() {
+        // Open a new connection to the SQLite database using the provided dbAddress
         this.db = new sqlite3.Database(this.dbAddress, (err) => {
             if (err) {
                 return console.error(err.message);
@@ -69,8 +71,10 @@ class JudgeGPTDBManager {
             INSERT INTO judge_gpt_games (players, activeRoles, messages, gameCase, ruling, punishment, winner, timeStart, timeSaved)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        this.db.run(
-            insertSQL,
+
+        // Run the INSERT SQL command
+        // The parameters provided in the second argument will replace the question marks in the SQL
+        this.db.run(insertSQL,
             [
                 JSON.stringify(this.players),
                 JSON.stringify(this.activeRoles),
@@ -84,20 +88,25 @@ class JudgeGPTDBManager {
             ],
             function(err) {
                 if (err) {
+                    // Log any errors that occur during the insertion process
                     return console.error(err.message);
                 }
                 // Retrieve and save the last inserted row's ID to the class instance
+                // this.lastID is provided by the sqlite3 library's context
                 this.id = this.lastID;
+
                 console.log("Successfully saved game to database with ID:", this.id);
-            }.bind(this)  // Bind the callback to the current class instance
+            }.bind(this)  // Ensure the callback's context (this) remains the JudgeGPTDBManager instance
         );
 
+        // Close the database connection after the insert operation
         this.db.close((err) => {
             if (err) {
                 return console.error(err.message);
             }
         });
     }
+
 
     UpdateData(Server) {
         this.setData(Server);
