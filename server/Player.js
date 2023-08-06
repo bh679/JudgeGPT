@@ -1,4 +1,5 @@
 const RandomLines = require('./RandomLines');
+const BackgroundImages = require('./BackgroundImages');
 
 class Player {
     constructor(name, role, clientID) {
@@ -9,7 +10,7 @@ class Player {
         this.class = role.toLowerCase();
         this.score;
         this.clientID = clientID;
-        this.profileUrl = "";
+        this.profileUrl = BackgroundImages.GetRandomProfileImage();
         this.lastHeard = Date.now();
         this.timeLeft = 60;
         this.connected = true;
@@ -32,6 +33,11 @@ class Player {
     {
         this.role = role;
         this.class = role.toLowerCase();
+
+        if(this.role == "Judge")
+        {
+            this.profileUrl = BackgroundImages.GetRandomJudgeProfileImage();
+        }
     }
 }
 
