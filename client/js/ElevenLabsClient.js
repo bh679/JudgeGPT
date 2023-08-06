@@ -72,12 +72,12 @@ class SpeechManager {
     {
         this.AddToStatus("Speak text:" + text + " voice:" + voice);
 
-        if (!this.unlocked)
-            await buttonPressHandler();
-
         // If the system is not currently allowed to speak, or if there is an audio currently playing, or if a speech task is already happening, return immediately
         if (!this.voicing)
             return;
+
+        if (!this.unlocked)
+            await buttonPressHandler();
 
         //if new thing to be said
         if (text != null && voice != null) {

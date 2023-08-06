@@ -25,12 +25,10 @@ let promptResponse = {};
 const RandomLines = require('./RandomLines');
 const BackgroundImages = require('./BackgroundImages');
 const JudgeGPTServer = require('./JudgeGPTServer');
+const { Speak, ResetCache } = require('./ElevenLabsServer');// Import functions from 'ElevenLabsServer.js'
+
 var judgeGPTServer = new JudgeGPTServer(Restart);
 judgeGPTServer.Start();
-/*
-const JudgeGPTPartyServer = require('./JudgeGPTPartyServer');
-var judgeGPTPartyServer = new JudgeGPTPartyServer(Restart);
-judgeGPTPartyServer.Start();*/
 
 
 // Use cors middleware for handling Cross-Origin Resource Sharing
@@ -45,21 +43,21 @@ app.use(function(req, res, next) {
     next();  // Pass control to the next middleware function
 });
 
+// Use the 'Speak' function as a route handler for the '/Speak' route - Eleven Labs
+app.post('/Speak', Speak);
+
 // Restart the server
 app.get('/Restart', function (req, res) {
-    //judgeGPTServer.RestartGame();
     Restart();
 });
 
 function Restart()
 {
+    ResetCache();
+
     judgeGPTServer.Stop();
     judgeGPTServer = new JudgeGPTServer(Restart);
     judgeGPTServer.Start();
-
-    /*    server = https.createServer(options, app).listen(port, () => {
-        console.log(`Secure server is running on port ${port}`);
-    });*/
 
     io.emit('ReloadPage',"");
 }
@@ -95,10 +93,10 @@ app.post('/AskGPT', function (req, res) {
 
 });
 
-// Import the 'speak' function from 'ElevenLabs.js'
-const Speak = require('./ElevenLabsServer');
-// Use the 'speak' function as a route handler for the '/Speak' route
-app.post('/Speak', Speak);
+
+//-------------------------
+//  Socket.io
+//-------------------------
 
 // Serve static files related to socket.io from the node_modules directory
 app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io/client-dist'));

@@ -146,7 +146,8 @@ const playerVoiceId = [
     "yoZ06aMxZJJ28mfd3POQ",
     "z9fAnlkpzviPz146aGWa",
     "zcAOhNBS3c14rBihAFp1",
-    "zrHiDhphv9ZnVXBqCLjz"
+    "zrHiDhphv9ZnVXBqCLjz",
+    "EZYvN1hBxpVgOy2hGxBs"//Brennan
 ];
 
 

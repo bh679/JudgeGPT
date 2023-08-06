@@ -9,9 +9,9 @@ class MessageUI
         this.UpdateChat = this.UpdateChat.bind(this);
     }
 
-    UpdateChat(messages)
+    UpdateChat(messages, force)
     {
-        if(this.messages.length == messages.length)
+        if(this.messages.length == messages.length && force != true)
             return;
 
         this.messages = messages;
@@ -39,7 +39,7 @@ class MessageUI
 
         this.messages[this.messages.length] = newMessage;
 
-        this.UpdateChat(this.messages);
+        this.UpdateChat(this.messages, true);
     }
 
     async ToggleVoices(toggleOn)

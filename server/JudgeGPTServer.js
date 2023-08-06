@@ -2,6 +2,10 @@
 const PromptGPT = require('./PromptGPT');
 const RandomLines = require('./RandomLines');
 const BackgroundImages = require('./BackgroundImages');
+const Player = require('./Player');
+const MessageBackEnd = require('./Messages');
+const Prompts = require('./Prompts');
+const JudgeGPTDBManager = require('./JudgeGPTDBManager');
 
 const aiID = "ai";
 
@@ -738,74 +742,6 @@ class JudgeGPTServer {
         this.stop = true;
     }
 
-}
-
-class MessageBackEnd
-{
-    constructor()
-    {
-        this.messages = {};
-        this.messages.length = 0;
-    }
-
-     //Add a message to the chat - maybe this should be in a message class
-    AddToChat(playerSpeaking, chat)
-    {
-        this.messages[this.messages.length] = {};
-        this.messages[this.messages.length].sender = playerSpeaking;
-        this.messages[this.messages.length].message = chat;
-        this.messages[this.messages.length].discord = false;
-        this.messages.length++;
-    }
-}
-
-class Player {
-    constructor(name, role, clientID) {
-        this.name = name;
-        this.role = role;
-        this.testimony = null;
-        this.typing="";
-        this.class = role.toLowerCase();
-        this.score;
-        this.clientID = clientID;
-        this.profileUrl = "";
-        this.lastHeard = Date.now();
-        this.timeLeft = 60;
-        this.connected = true;
-        this.voiceId = RandomLines.GetRandomVoiceID();
-
-        if(role == "Judge")
-            this.voiceId = '21m00Tcm4TlvDq8ikWAM';
-
-    }
-
-    Reset()
-    {
-        this.testimony = null;
-        this.typing = null;
-        this.score = null;
-        this.timeLeft = 60;
-    }
-
-    SetRole(role)
-    {
-        this.role = role;
-        this.class = role.toLowerCase();
-    }
-}
-
-class Prompts {
-    constructor() {
-
-        this.judgeCharacter = "You are JudgeGPT, a judge in a televised small claims court TV show. You are similar to Judge Judy.";
-        this.cases = [ "Come up with an absurd and/or hilarious accusation to be argued in small claims court between two parties.",
-            "Come up with an absurd and/or hilarious accusation to be argued in court between two parties.",
-            "Come up with a ridiculous and hilarious accusation to be argued in court between two parties."];
-        this.punishment = "Provide a funny, absurd and unfitting punishment to be learnt for the following court ruling:{$}";
-        this.lesson = "Provide a funny, absurd and unfitting lesson to be learnt for the following court ruling:{$}";
-        this.winner = "A judge ruled the following: {$} Give a single word response of 'guity' or 'innocent' for the defendant. ";
-        this.scoring = "You are scoring the result of a text based improv game, by %. Score the sentence on each of the four metrics, creativity, intelligence, humor and provide explanations on each. The sentence to be scored is {$}. If inside {} is nothing, there is no statement, score the no statement. At the end, provide a total score. use <br /> for new lines";
-    }
 }
 
 

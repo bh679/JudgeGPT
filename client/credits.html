@@ -30,6 +30,7 @@
         <!-- JdugeGPT -->
         <script src="./js/backgroundImages.js"></script>
         <script src="./js/AskGPT.js"></script>
+        <script src="./js/ElevenLabsClient.js"></script>
         <script src="./js/courtroomChat.js"></script>
 
 
@@ -65,6 +66,12 @@
 
                     <h5 id="subheading">Credits</h5>
                 </center>
+                <div class="d-flex justify-content-center">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="voicesSwitch" onchange="messageUI.ToggleVoices(this.checked)">
+                        <label class="form-check-label" for="flexSwitchCheckChecked">Voiced</label>
+                    </div>
+                </div>
             </div>
 
             <!-- chat -->
@@ -87,6 +94,10 @@
                             <div class="message row judge">
                                 <div class="col-4 col-s-3 col-xxs-2 sender" style="">Faith Louise</div>
                                 <div class="col messageContents rounded-3 alt" id="faith">The Ideas Woman.</div>
+                            </div>
+                            <div class="message row judge">
+                                <div class="col-4 col-s-3 col-xxs-2 sender" style="">Dale</div>
+                                <div class="col messageContents rounded-3 alt" id="dale">The Music Man.</div>
                             </div>
                             <div class="message row judge">
                                 <div class="col-4 col-s-3 col-xxs-2 sender" style="">Tim Christie</div>
@@ -198,6 +209,7 @@
         const brennan =  document.getElementById('brennan');
         const faith =  document.getElementById('faith');
         const tim =  document.getElementById('tim');
+        const dale =  document.getElementById('dale');
         const colin =  document.getElementById('colin');
         const chatDiv = document.getElementById('chat');
 
@@ -211,11 +223,13 @@
             JudgeGPT.name = "GPT";
             JudgeGPT.role = "Judge";
             JudgeGPT.class = "judge";
+            JudgeGPT.voiceId = '21m00Tcm4TlvDq8ikWAM';
 
             var BrennanHatton = {};
             BrennanHatton.name = "Brennan";
             BrennanHatton.role = "";
             BrennanHatton.class = "brennan";
+            BrennanHatton.voiceId = 'EZYvN1hBxpVgOy2hGxBs';
 
 
             messageUI.AddMessage(BrennanHatton, "Hey Judge, can you introduce us?");
