@@ -115,11 +115,14 @@
 
 
                         <div id="inputGroup" class="row">
-                            <div class="col-4 col-s-3 col-xxs-2 sender">You:</div>
+                            <div class="col-1 col-s-1 col-xxs-2 sender"><img id="inputProfile" class="rounded-circle profilePicture" src="" style=""></div>
 
-                            <div class="col form-floating">
-                              <input id="userInput" type="text" class="form-control" id="floatingInput" placeholder="Plaintiff" value="" oninput="TypeInput()">
-                              <label id="timer" for="floatingInput" style="margin-left:10px;">Plaintiff : 60 sec</label>
+                            <div class="col ">
+                                <div class="senderName rounded-top" style="background-color:#0dcaf0">Your Turn:</div>
+                                <div class="form-floating">
+                                  <input id="userInput" type="text" class="form-control" id="floatingInput" placeholder="Plaintiff" value="" oninput="TypeInput()">
+                                  <label id="timer" for="floatingInput" style="margin-left:10px;">Plaintiff : 60 sec</label>
+                                </div>
                             </div>
 
                             <div class="col-2 col-s-3 col-xx-12">
@@ -238,6 +241,7 @@
         userInput.inputFeild = document.getElementById('userInput');
         userInput.timer = document.getElementById('timer');
         userInput.group = document.getElementById('inputGroup');
+        userInput.profile = document.getElementById('inputProfile');
 
         const audienceDiv = document.getElementById('audience');
         const playerListDiv = document.getElementById('playerList');

@@ -23,7 +23,7 @@ class JudgeGPTUI
 
         this.joinNextHearing = false;
 
-        this.judgeImageURL = GetRandomJudgeProfileImage();
+        //this.judgeImageURL = GetRandomJudgeProfileImage();
 
 
         this.client = client;// = new JudgeGPT();
@@ -89,6 +89,7 @@ class JudgeGPTUI
 
     OnMyTurn(player)
     {
+        this.userInput.profile.src = player.profileUrl;
         this.userInput.group.hidden = false;
         //this.userInput.inputFeild.value = "";
         this.userInput.inputFeild.placeholder = player.role + " " + player.name;
@@ -228,7 +229,7 @@ class JudgeGPTUI
 
         this.playerListUI.CreateAudience(playerList.audience);
 
-        playerList.activeRoles[0].profileUrl = this.judgeImageURL;
+        //playerList.activeRoles[0].profileUrl = this.judgeImageURL;
 
         this.playerListUI.CreatePlayerList(playerList.activeRoles)
 
@@ -271,7 +272,7 @@ class CourtRoomIdentity
 
         this.playerData = {};
 
-        this.playerData.profileUrl = GetRandomProfileImage();
+        //this.playerData.profileUrl = GetRandomProfileImage();
         // = RandomLines.GetRandomName();
         this.playerData.name = "";
 
