@@ -2,7 +2,8 @@ const axios = require('axios');
 const ENV = require('./env');
 const ELEVENLABS_API_KEY = ENV.ELEVENLABS_API_KEY;
 
-//Speak text with ElevenLabs
+const audioCache = new Map(); // Create a cache to store audio results
+
 const Speak = async (req, res) => {
     console.log("Speak");
     const text = req.body.text;
@@ -12,6 +13,13 @@ const Speak = async (req, res) => {
         voiceId = '21m00Tcm4TlvDq8ikWAM';  // default voice
     else
         voiceId = req.body.voiceId;
+
+    const cacheKey = `${text}-${voiceId}`; // Create a unique key based on text and voiceId
+
+    // If audio data is in cache, send it
+    if(audioCache.has(cacheKey)) {
+        return res.send(audioCache.get(cacheKey));
+    }
 
     console.log("VoiceId " + voiceId);
 
@@ -30,13 +38,22 @@ const Speak = async (req, res) => {
         }
     });
 
-    const response = await axios.post(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, body, {
-        headers: headers,
-        responseType: 'arraybuffer'  // This is important for handling binary data
-    });
+    try {
+        const response = await axios.post(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, body, {
+            headers: headers,
+            responseType: 'arraybuffer'  // This is important for handling binary data
+        });
 
-    const audio = Buffer.from(response.data, 'binary');
-    res.send(audio);
+        const audio = Buffer.from(response.data, 'binary');
+
+        audioCache.set(cacheKey, audio); // Store the audio data in cache
+
+        res.send(audio);
+    } catch(err) {
+        // Handle any error that occurred during the API call
+        console.error("Error fetching audio:", err);
+        res.status(500).send('Failed to generate audio');
+    }
 };
 
 module.exports = Speak;
