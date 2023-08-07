@@ -4,20 +4,27 @@
 // Import necessary modules
 const fetch = require('node-fetch');
 const FormData = require('form-data');
+const multer = require('multer');
 const ENV = require('./env');
 
 // Extract API key from ENV
 const OPENAI_API_KEY = ENV.OPENAI_API_KEY;
 
-const Transcribe = async (req, res) => {
-    // Extract chunks from the request body
-    const { chunks } = req.body;
+// Initialize multer middleware
+const upload = multer();
 
-    // Create the audio file and the form data to send to the API
-    const blob = new Blob(chunks, { type: 'audio/wav' });
-    const file = new File([blob], 'audio.wav', { type: 'audio/wav' });
+// Set up the middleware and route handler
+module.exports = [upload.single('file'), async (req, res) => {
+
+    // Extract the audio file from the request
+    const audioFile = req.file;
+
+    // Log the received file for debugging purposes
+    console.log(audioFile);
+
+    // Create the form data to send to the Whisper API
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', audioFile.buffer, { filename: 'audio.wav', contentType: 'audio/wav' });
     formData.append('model', 'whisper-1');
 
     // Make the API request
@@ -25,9 +32,10 @@ const Transcribe = async (req, res) => {
         const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + OPENAI_API_KEY
+                'Authorization': 'Bearer ' + OPENAI_API_KEY,
+                ...formData.getHeaders(),
             },
-            body: formData
+            body: formData,
         });
 
         if (!response.ok) {
@@ -46,6 +54,4 @@ const Transcribe = async (req, res) => {
         // Send the error message back in the response
         res.json({ error: error.message });
     }
-};
-
-module.exports = Transcribe;
+}];
