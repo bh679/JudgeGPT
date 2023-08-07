@@ -50,6 +50,11 @@ The game exists as a single multiplayer courtroom. Join in on the action, or wat
 Whiles it’s v4, it’s still buggy. If it gets stuck, there is a restart server button at the bottom! 😅
 [![Watch the video](https://img.youtube.com/vi/Jq2GZEuAnx4/maxresdefault.jpg)](https://www.youtube.com/watch?v=Jq2GZEuAnx4)
 
+#### V4.00.01
+New look!
+![Screenshot 2023-08-06 at 11 29 35 pm](https://github.com/bh679/JudgeGPT/assets/2542558/797498d0-bbf0-4060-87cc-13b623da904f)
+![Screenshot 2023-08-06 at 11 29 29 pm](https://github.com/bh679/JudgeGPT/assets/2542558/5bc7ad53-da88-4ad6-beb9-398512c89627)
+
 
 ### V3 July 29, 23
 JudgeGPT, the game where ai decides you or your friends fate in courtroom. 
