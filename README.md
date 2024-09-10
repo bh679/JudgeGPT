@@ -41,7 +41,8 @@ Public Client Setup
 ## Run
 Move into the server folder.
 Run ``pm2 start ecosystem.config.js``
-
+Check status ``pm2 status``
+Check log ``pm2 log``
 
 ## Update
 
