@@ -1,9 +1,10 @@
 // Import the OpenAI SDK
-import OpenAI from "openai";
+const OpenAI = require("openai");
+const ENV = require('./env');
 
 // Initialize OpenAI with the API key from the environment variable
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: ENV.OPENAI_API_KEY
 });
 
 class PromptGPT {
@@ -67,4 +68,5 @@ class PromptGPT {
   }
 }
 
-export default PromptGPT;
+
+module.exports = PromptGPT;
