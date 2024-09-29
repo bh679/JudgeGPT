@@ -5,7 +5,7 @@ const BackgroundImages = require('./BackgroundImages');
 const Player = require('./Player');
 const MessageBackEnd = require('./Messages');
 const Prompts = require('./Prompts');
-const JudgeGPTDBManager = require('./JudgeGPTDBManager');
+//const JudgeGPTDBManager = require('./JudgeGPTDBManager'); --- 1/3
 
 const aiID = "ai";
 
@@ -53,7 +53,7 @@ class JudgeGPTServer {
 
         this.RestPlayers();
 
-        //this.judgeGPTDBManager = new JudgeGPTDBManager(this); -------- Saving is currently disabled while I debug to fix other issues
+        //this.judgeGPTDBManager = new JudgeGPTDBManager(this); -------- Saving is currently disabled while I debug to fix other issues 2/3
 
         //this.activeRoles.reverse();
     }
@@ -492,7 +492,7 @@ class JudgeGPTServer {
         this.messagesChat.AddToChat(this.activeRoles[this.turn], this.activeRoles[this.turn].testimony);
 
         //save to database
-        this.judgeGPTDBManager.UpdateData(this);
+        //this.judgeGPTDBManager.UpdateData(this); -------- Saving is currently disabled while I debug to fix other issues 3/3
 
         await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[this.turn].testimony.length*this.speechCharTime));
 
