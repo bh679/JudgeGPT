@@ -26,7 +26,7 @@ const RandomLines = require('./RandomLines');
 const BackgroundImages = require('./BackgroundImages');
 const JudgeGPTServer = require('./JudgeGPTServer');
 const { Speak, ResetCache } = require('./ElevenLabsServer');// Import functions from 'ElevenLabsServer.js'
-const Transcribe = require('./WhisperTranscribeServer');// Import function from 'WhisperTranscribe.js'
+//const Transcribe = require('./WhisperTranscribeServer');// Import function from 'WhisperTranscribe.js'
 
 var judgeGPTServer = new JudgeGPTServer(Restart);
 judgeGPTServer.Start();
@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 app.post('/Speak', Speak);
 
 //Use the 'Transcribe' function as a route handler for the '/Transcribe' route - Whisper OpenAI
-app.post('/Transcribe', Transcribe);
+//app.post('/Transcribe', Transcribe);
 
 // Restart the server
 app.get('/Restart', function (req, res) {
