@@ -1,4 +1,6 @@
 "use strict";
+console.log('JudgeGPTServer loaded');
+
 const PromptGPT = require('./PromptGPT');
 const RandomLines = require('./RandomLines');
 const BackgroundImages = require('./BackgroundImages');
