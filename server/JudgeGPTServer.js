@@ -129,6 +129,9 @@ class JudgeGPTServer {
 
         
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
+
+        console.log("game case set");
+
         this.messagesChat.AddToChat(this.judge, this.gameCase);
         await new Promise(resolve => setTimeout(resolve, 3000+this.gameCase.length*this.speechCharTime));
         if(this.stop)
