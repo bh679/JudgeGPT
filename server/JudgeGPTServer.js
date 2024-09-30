@@ -527,7 +527,7 @@ class JudgeGPTServer {
 
             this.messagesChat.AddToChat(this.judge, "");
             for (var i = 0; i < this.activeRoles.length; i++) {
-                console.log("Analyzing role:", i);  // Add logging
+                console.log("Analyzing role:" + i);  // Add logging
                 const analysisResult = await this.Analysis(i);  // Ensure this is awaited properly
                 console.log(analysisResult);
                 this.messagesChat.AddToChat(this.judge, analysisResult);
