@@ -526,12 +526,16 @@ class JudgeGPTServer {
                 return;
 
             this.messagesChat.AddToChat(this.judge, "");
-            for(var i = 0 ; i < this.activeRoles.length; i++)
-            {
-                this.messagesChat.AddToChat(this.judge, await this.Analysis(i));
-                if(this.stop)
+            for (var i = 0; i < this.activeRoles.length; i++) {
+                console.log("Analyzing role:", i);  // Add logging
+                const analysisResult = await this.Analysis(i);  // Ensure this is awaited properly
+                console.log(analysisResult);
+                this.messagesChat.AddToChat(this.judge, analysisResult);
+                if (this.stop) {
                     return;
+                }
             }
+
         
             await new Promise(resolve => setTimeout(resolve, 40000));
             if(this.stop) //this is line 532
