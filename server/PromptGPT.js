@@ -1,13 +1,14 @@
-const fs = require('fs');
-const axios = require('axios');
-
+// Import the OpenAI SDK
+const OpenAI = require("openai");
 const ENV = require('./env');
-const OPENAI_API_KEY = ENV.OPENAI_API_KEY;
+
+// Initialize OpenAI with the API key from the environment variable
+const openai = new OpenAI({
+  apiKey: ENV.OPENAI_API_KEY
+});
 
 class PromptGPT {
-  constructor(inputPrompt) 
-  {
-
+  constructor(inputPrompt) {
     this.status = {
       finished: false,
       generatedText: "",
@@ -17,9 +18,7 @@ class PromptGPT {
     };
 
     this.inputPrompt = inputPrompt;
-
     this.callbacks = [];
-
   }
 
   // Add a function to add a callback
@@ -27,47 +26,47 @@ class PromptGPT {
     this.callbacks.push(callback);
   }
 
+  // Use OpenAI SDK to generate a completion
   async AskGPT() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       console.log(this.inputPrompt);
 
-        const maxTokens = 200;
-        const model = "text-davinci-003";//"gpt-3.5-turbo";//"text-davinci-003";
-
-        axios.post('https://api.openai.com/v1/completions', {
-          model,
-          prompt: this.inputPrompt,
-          max_tokens: maxTokens,
-        }, {
-          headers: {
-            'Authorization': `Bearer `+OPENAI_API_KEY,
-            'Content-Type': 'application/json',
-          },
-        }).then((response) => {
-
-          this.status.finished = true;
-          this.status.generatedText = response.data.choices[0].text.trim();
-          this.status.completeTime = new Date();
-          this.status.inputPrompt = this.inputPrompt;
-
-          // Invoke all registered callbacks
-          for (const callback of this.callbacks) {
-            try {
-              callback(null, status);
-            } catch (e) {
-              console.error('Error invoking callback:', e);
-            }
-          }
-
-          console.log("returning generated text" + this.status );
-          resolve(this.status);
-
-        }).catch((error) => {
-          reject(error);
+      try {
+        // Create a chat completion
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4", // or "gpt-3.5-turbo"
+          messages: [
+            { role: "system", content: "You are a helpful assistant." },
+            { role: "user", content: this.inputPrompt }
+          ]
         });
 
+        // Process the response
+        this.status.finished = true;
+        this.status.generatedText = completion.choices[0].message.content.trim();
+        this.status.completeTime = new Date();
+        this.status.inputPrompt = this.inputPrompt;
+
+        // Invoke all registered callbacks
+        for (const callback of this.callbacks) {
+          try {
+            callback(null, this.status);
+          } catch (e) {
+            console.error('Error invoking callback:', e);
+          }
+        }
+
+        // Resolve the promise with the status object
+        console.log("Returning generated text:", this.status.generatedText);
+        resolve(this.status);
+
+      } catch (error) {
+        console.error("Error in OpenAI API call:", error.response ? error.response.data : error.message);
+        reject(error);
+      }
     });
   }
 }
+
 
 module.exports = PromptGPT;

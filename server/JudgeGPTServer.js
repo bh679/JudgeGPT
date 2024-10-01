@@ -1,3 +1,5 @@
+"use strict";
+console.log('JudgeGPTServer loaded');
 
 const PromptGPT = require('./PromptGPT');
 const RandomLines = require('./RandomLines');
@@ -5,7 +7,7 @@ const BackgroundImages = require('./BackgroundImages');
 const Player = require('./Player');
 const MessageBackEnd = require('./Messages');
 const Prompts = require('./Prompts');
-const JudgeGPTDBManager = require('./JudgeGPTDBManager');
+//const JudgeGPTDBManager = require('./JudgeGPTDBManager'); --- 1/3
 
 const aiID = "ai";
 
@@ -53,7 +55,7 @@ class JudgeGPTServer {
 
         this.RestPlayers();
 
-        this.judgeGPTDBManager = new JudgeGPTDBManager(this);
+        //this.judgeGPTDBManager = new JudgeGPTDBManager(this); -------- Saving is currently disabled while I debug to fix other issues 2/3
 
         //this.activeRoles.reverse();
     }
@@ -129,6 +131,9 @@ class JudgeGPTServer {
 
         
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
+
+        console.log("game case set");
+
         this.messagesChat.AddToChat(this.judge, this.gameCase);
         await new Promise(resolve => setTimeout(resolve, 3000+this.gameCase.length*this.speechCharTime));
         if(this.stop)
@@ -492,7 +497,7 @@ class JudgeGPTServer {
         this.messagesChat.AddToChat(this.activeRoles[this.turn], this.activeRoles[this.turn].testimony);
 
         //save to database
-        this.judgeGPTDBManager.UpdateData(this);
+        //this.judgeGPTDBManager.UpdateData(this); -------- Saving is currently disabled while I debug to fix other issues 3/3
 
         await new Promise(resolve => setTimeout(resolve, 3000 + this.activeRoles[this.turn].testimony.length*this.speechCharTime));
 
@@ -512,7 +517,7 @@ class JudgeGPTServer {
             if(this.stop)
                 return;
 
-            await this.CreatePunsihment();
+            await this.CreatePunishment();
             if(this.stop)
                 return;
 
@@ -521,15 +526,19 @@ class JudgeGPTServer {
                 return;
 
             this.messagesChat.AddToChat(this.judge, "");
-            for(var i = 0 ; i < this.activeRoles.length; i++)
-            {
-                this.messagesChat.AddToChat(this.judge, await this.Analysis(i));
-                if(this.stop)
+            for (var i = 0; i < this.activeRoles.length; i++) {
+                console.log("Analyzing role:" + i);  // Add logging
+                const analysisResult = await this.Analysis(i);  // Ensure this is awaited properly
+                console.log(analysisResult);
+                this.messagesChat.AddToChat(this.judge, analysisResult);
+                if (this.stop) {
                     return;
+                }
             }
+
         
             await new Promise(resolve => setTimeout(resolve, 40000));
-            if(this.stop)
+            if(this.stop) //this is line 532
                 return;
         
             await this.RestartGame();
@@ -674,7 +683,7 @@ class JudgeGPTServer {
         await new Promise(resolve => setTimeout(resolve, 3000 + this.ruling.length*this.speechCharTime));
     }
 
-    async CreatePunsihment()
+    async CreatePunishment()
     {
         var prompt =  this.prompts.punishment.replace("$", this.ruling);
         console.log(prompt);
@@ -750,7 +759,6 @@ class JudgeGPTServer {
 }
 
 
-module.exports = JudgeGPTServer;
 
 async function AskGPT(input) {
     // Create a new OpenAI Reponse with prompt
@@ -769,73 +777,4 @@ async function AskGPT(input) {
 
 
 
-
-
-
-/*
-async function GetImage(input)
-{
-
-
-    try {
-        console.log("progressInterval = setInterval(async function(){\n                try {");
-
-        // Make POST request to updateUnFake
-        const response = await fetch('https://brennan.games:3000/MJImage', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ prompt: input }),
-        });
-        
-        // Parse response data
-        const data = await response.json();
-        console.log(data);
-        console.log(data.image);
-        return data.image;
-
-    } catch(error) {
-        // If an error occurs, log it and update loading element
-        console.error("Error fetching update: ", error);
-        clearInterval(AskingGPTInterval);
-        typingDiv.innerText="";
-        return "Server unresponsive...";
-    }
-}
-
-
-async function LogDiscordMessages(msgChat)
-{
-    /*var messages = msgChat.messages;
-
-    for(var i =0 ;i  < messages.count; i++)
-    {
-        if(messages[i].discord == false)
-        {
-            
-            
-            var response = await fetch('https://brennan.games:3000/DiscrdWebHook', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: messages[i].sender.role + " " + messages[i].sender.name + ": " + messages[i].message }),
-        });  
-
-            console.log(repsonse);
-
-            messages[i].discord = true;
-        }
-    }*/ /*
-}
-
-async function SendMessage(input) {
-  const response = await fetch('https://brennan.games:3000/DiscrdWebHook', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: input }),
-        });
-}*/
+module.exports = JudgeGPTServer;
