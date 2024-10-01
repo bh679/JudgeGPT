@@ -48,8 +48,17 @@ class AudioManager {
         this.musicManager.setVolume(this.musicVolume * this.masterVolume);
     }
 
-    
+    setMusicVolume(value)
+    {
+        this.musicVolume = value;
+        this.musicManager.setVolume(this.musicVolume * this.masterVolume);
+    }
 
+    setVoiceVolume(value)
+    {
+        this.voiceVolume = value;
+        //this.voiceManager.setVolume(this.voiceVolume * this.masterVolume);
+    }
 
 }
 

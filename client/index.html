@@ -81,7 +81,7 @@
                         <label class="form-check-label" for="audioSwitch">Audio</label>
 
                         <!-- Audio Settings Button -->
-                        <button id="audioSettingsButton" class="btn btn-outline-primary" style="display: none; margin-left: 10px;" onclick="UI.ToggleAudioSettings(this.checked)"><img class="audio-settings-icon" src="./images/icons/icon_tool_1.png"></button>
+                        <button id="audioSettingsButton" class="btn btn-outline-primary" style="display: none; margin-left: 10px;" onclick="UI.ToggleAudioSettings()"><img class="audio-settings-icon" src="./images/icons/icon_tool_1.png"></button>
 
                     </div>
 
@@ -90,11 +90,11 @@
                         <div class="row">
                             <div class="col">
                                 <label for="musicVolume" class="form-label">Music Volume</label>
-                                <input type="range" class="form-range" id="musicVolume" min="0" max="100" onchange="setMusicVolume(this.value)">
+                                <input type="range" class="form-range" id="musicVolume" min="0" max="100" onchange="UI.audioManager.setMusicVolume(this.value)">
                             </div>
                             <div class="col">
                                 <label for="voiceVolume" class="form-label">Voice Volume</label>
-                                <input type="range" class="form-range" id="voiceVolume" min="0" max="100" onchange="setVoiceVolume(this.value)">
+                                <input type="range" class="form-range" id="voiceVolume" min="0" max="100" onchange="UI.audioManager.setVoiceVolume(this.value)">
                             </div>
                         </div>
                     </div>

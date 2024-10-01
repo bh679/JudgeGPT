@@ -57,6 +57,8 @@ class JudgeGPTUI
 
         this.audioSettingsButton = document.getElementById('audioSettingsButton');
         this.audioSettings = document.getElementById('audioSettings');
+        this.audioSettingsEnabled = false;
+
     
     }
 
@@ -274,12 +276,22 @@ class JudgeGPTUI
             this.audioSettingsButton.style.display = 'none';
      }
 
-     ToggleAudioSettings(toggle)
+     ToggleAudioSettings()
      {
-        if(toggle)
+        console.log(this.audioSettings);
+
+        this.audioSettingsEnabled = !this.audioSettingsEnabled;
+
+        if(this.audioSettingsEnabled)
             this.audioSettings.style.display = 'inline';
         else
+        {
             this.audioSettings.style.display = 'none';
+            this.audioSettingsButton.classList.remove('pressed');
+        }
+
+
+
      }
 }
 
