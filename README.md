@@ -52,6 +52,16 @@ Check log ``pm2 log``
 
 ## Update
 
+### V5 Oct 1, 24
+Music hasbeen added (by Dale)
+Volume controls, and set default leveling of volume
+Live chat for people not playing (and current players)
+Restored the most recent version that has a chatroom for spectators
+Shorter conclusions 
+Fixed a lot of bugs.
+Ohhh.. and the game is live again after 6 months of being down.
+<img width="1422" alt="Screenshot 2024-10-01 at 11 11 50 pm" src="https://github.com/user-attachments/assets/858e4079-ac3f-4d6c-85dc-b2e87f8540d0">
+
 ### V4 Aug 6, 23
 JudgeGPT is now voiced by ai, and live at https://brennan.games/JudgeGPT👩‍⚖️🧑‍⚖️👨‍⚖️
 V4 now has the option to turn on voices! They are fantastic,  hilarious an shockingly human for ai generated voices. Make sure you turn it on first thing when loading up the game.
