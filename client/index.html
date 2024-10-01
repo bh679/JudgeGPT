@@ -90,11 +90,11 @@
                         <div class="row">
                             <div class="col">
                                 <label for="musicVolume" class="form-label">Music Volume</label>
-                                <input type="range" class="form-range" id="musicVolume" min="0" max="100" onchange="UI.audioManager.setMusicVolume(this.value)">
+                                <input type="range" class="form-range" id="musicVolumeSlider" min="0" max="1" onchange="UI.audioManager.setMusicVolume(this.value)">
                             </div>
                             <div class="col">
                                 <label for="voiceVolume" class="form-label">Voice Volume</label>
-                                <input type="range" class="form-range" id="voiceVolume" min="0" max="100" onchange="UI.audioManager.setVoiceVolume(this.value)">
+                                <input type="range" class="form-range" id="voiceVolumeSlider" min="0" max="1" onchange="UI.audioManager.setVoiceVolume(this.value)">
                             </div>
                         </div>
                     </div>

@@ -59,6 +59,12 @@ class JudgeGPTUI
         this.audioSettings = document.getElementById('audioSettings');
         this.audioSettingsEnabled = false;
 
+        this.musicVolumeSider = document.getElementById('musicVolumeSlider');
+        this.musicVolumeSider.value = this.audioManager.musicVolume;
+
+        this.voiceVolumeSider = document.getElementById('voiceVolumeSlider');
+        this.voiceVolumeSider.value = this.audioManager.voiceVolume;
+
     
     }
 
