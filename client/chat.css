@@ -19,10 +19,10 @@ div.chatRoom ul {
 
 /* Style for alternating li background colors */
 div.chatRoom ul li:nth-child(odd) {
-  background-color: rgba(242, 242, 242, 0.15); /* 50% opaque light gray */
+  background-color: rgba(242, 242, 242, 0.25); /* 50% opaque light gray */
 }
 div.chatRoom ul li:nth-child(even) {
-  background-color: rgba(230, 230, 230, 0.15); /* 50% opaque darker gray */
+  background-color: rgba(200, 200, 200, 0.25); /* 50% opaque darker gray */
 }
 
 #chatSubmitButton {
