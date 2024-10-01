@@ -262,7 +262,9 @@ class JudgeGPTUI
 
      ToggleAudio(toggle)
      {
-        this.AudioManager.toggleAudio(toggle.checked);
+        console.log(this.AudioManager);
+        console.log(toggle);
+        this.AudioManager.toggleAudio(toggle);
      }
 }
 
@@ -273,7 +275,7 @@ class CourtRoomIdentity
 
         this.playerData = {};
 
-        //this.playerData.profileUrl = GetRandomProfileImage();
+        this.playerData.profileUrl = GetRandomProfileImage();
         // = RandomLines.GetRandomName();
         this.playerData.name = "";
 
