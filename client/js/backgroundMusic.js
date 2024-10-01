@@ -39,6 +39,7 @@ class AudioManager {
         this.audioOn = isAudioOn;
 
         this.toggleMusic(this.musicOn);
+        this.toggleVoice(this.voiceOn);
 
     }
 

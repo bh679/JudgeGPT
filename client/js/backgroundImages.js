@@ -221,8 +221,8 @@ class BackgroundImages
 }
 
 const judgeProfileImages = [
-    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge_63826ce4-a661-4b4f-9714-e24c92478dc9.png"/*,
-    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge__8afa7999-e05d-4384-893d-1236a802ac63.png",
+    //"brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge_63826ce4-a661-4b4f-9714-e24c92478dc9.png",
+    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge__8afa7999-e05d-4384-893d-1236a802ac63.png"/*,
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_holograph_t_c7599d91-b5e2-4bd5-a058-307300ab8428.png",
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__e33a0d20-0bcf-4a5e-87aa-918c8fc545b1.png",
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__c6db7b68-3486-48a2-8f4f-ad3f71c5223b.png",
