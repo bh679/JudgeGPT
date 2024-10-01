@@ -221,7 +221,7 @@ class BackgroundImages
 }
 
 const judgeProfileImages = [
-    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge_63826ce4-a661-4b4f-9714-e24c92478dc9.png",
+    "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge_63826ce4-a661-4b4f-9714-e24c92478dc9.png"/*,
     "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge__8afa7999-e05d-4384-893d-1236a802ac63.png",
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_holograph_t_c7599d91-b5e2-4bd5-a058-307300ab8428.png",
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_genderless__e33a0d20-0bcf-4a5e-87aa-918c8fc545b1.png",
@@ -236,7 +236,7 @@ const judgeProfileImages = [
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_old_genderl_bd832eac-911f-4de0-a271-5708f8069c41.png",
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_chemical_ho_72598500-f163-4483-ba2c-9f01a0af63e0.png",
     "brennanhatton_profile_picture_of_judge_gpt_ai_judge_chemical_ho_83f28a6b-38f2-4850-88b2-718a5aaec10f.png",
-    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_chemical_ho_ec42553a-1daa-4291-a0ce-c312c9a453f3.png"
+    "brennanhatton_profile_picture_of_judge_gpt_ai_judge_chemical_ho_ec42553a-1daa-4291-a0ce-c312c9a453f3.png"*/
  ]
 
 
