@@ -256,6 +256,10 @@
             message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Colin Hanns in a sentence or two, he is a lawyer who first came up with the idea for the game that is you.");
             message = message.replace("Colin Hanns","<b>Colin Hanns</b>");
             messageUI.AddMessage(JudgeGPT, message);
+            
+            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. mention that Brennan also did the roles / responsiblities when developing you, of Dev-Ops, QA, Backend Developemnt, Front End Developemtn, Server Setup, built the team, puts out fires and pays for the API calls.");
+            message = message.replace("Colin Hanns","<b>Colin Hanns</b>");
+            messageUI.AddMessage(JudgeGPT, message);
             messageUI.AddMessage(BrennanHatton, "Sometimes Judge GPT lies about us and who we are.");
         }
 
