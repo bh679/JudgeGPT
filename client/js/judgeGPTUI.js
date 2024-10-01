@@ -54,6 +54,10 @@ class JudgeGPTUI
         this.winner = "";
         this.aiRespondingInterval;
         this.typingContent = "";
+
+        this.audioSettingsButton = document.getElementById('audioSettingsButton');
+        this.audioSettings = document.getElementById('audioSettings');
+    
     }
 
     GetNameFromUI()
@@ -263,6 +267,20 @@ class JudgeGPTUI
      ToggleAudio(toggle)
      {
         this.audioManager.toggleAudio(toggle);
+
+        if(toggle)
+            this.audioSettingsButton.style.display = 'block';
+        else
+            this.audioSettingsButton.style.display = 'none';
+     }
+
+     ToggleAudioSettings(toggle)
+     {
+
+        if(toggle)
+            this.audioSettings.style.display = 'block';
+        else
+            this.audioSettings.style.display = 'none';
      }
 }
 

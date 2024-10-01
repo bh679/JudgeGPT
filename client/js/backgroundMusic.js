@@ -11,9 +11,12 @@ class AudioManager {
         this.musicOn = true;
         this.voiceOn = true;
 
-        this.materVolume = 1;
-        this.musicVolume = 0.5;
+        this.masterVolume = 1;
+        this.musicVolume = 0.25;
         this.voiceVolume = 1;
+
+        this.setMasterVolume(this.masterVolume);
+
     }
 
     toggleMusic(isMusicOn) {
@@ -31,7 +34,7 @@ class AudioManager {
             return;
 
         this.voiceOn = isVoiceOn;
-        voiceManager.ToggleVoices(this.voiceOn);
+        this.voiceManager.ToggleVoices(this.voiceOn);
     }
 
     toggleAudio(isAudioOn)
@@ -41,6 +44,13 @@ class AudioManager {
         this.toggleMusic(this.musicOn);
         this.toggleVoice(this.voiceOn);
 
+    }
+
+    setMasterVolume(masterVolume)
+    {
+        this.masterVolume = masterVolume;
+
+        this.musicManager.setVolume(this.musicVolume * this.masterVolume);
     }
 
     
@@ -92,6 +102,16 @@ class BackgroundMusicManager {
             this.playRandomTrack();
         } else {
             this.audioElement.pause();
+        }
+    }
+
+    // Function to set music volume (between 0.0 and 1.0)
+    setVolume(volume) {
+        // Ensure volume is within the valid range
+        if (volume >= 0 && volume <= 1) {
+            this.audioElement.volume = volume;
+        } else {
+            console.error("Volume must be between 0.0 and 1.0");
         }
     }
 }
