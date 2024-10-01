@@ -89,12 +89,18 @@
                     <div id="audioSettings" style="display: none; margin-top: 10px;">
                         <div class="row">
                             <div class="col">
-                                <label for="musicVolume" class="form-label">Music Volume</label>
-                                <input type="range" class="form-range" id="musicVolumeSlider" min="0" max="1" onchange="UI.audioManager.setMusicVolume(this.value)">
+                                <label for="masterVolumeSlider" class="form-label">Master Volume</label>
+                                <input type="range" class="form-range" id="masterVolumeSlider" min="0" max="100" onchange="UI.audioManager.setMasterVolume(this.value/100)">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="musicVolumeSlider" class="form-label">Music Volume</label>
+                                <input type="range" class="form-range" id="musicVolumeSlider" min="0" max="100" onchange="UI.audioManager.setMusicVolume(this.value/100)">
                             </div>
                             <div class="col">
-                                <label for="voiceVolume" class="form-label">Voice Volume</label>
-                                <input type="range" class="form-range" id="voiceVolumeSlider" min="0" max="1" onchange="UI.audioManager.setVoiceVolume(this.value)">
+                                <label for="voiceVolumeSlider" class="form-label">Voice Volume</label>
+                                <input type="range" class="form-range" id="voiceVolumeSlider" min="0" max="100" onchange="UI.audioManager.setVoiceVolume(this.value/100)">
                             </div>
                         </div>
                     </div>
