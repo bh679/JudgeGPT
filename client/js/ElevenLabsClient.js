@@ -1,132 +1,103 @@
-// A class that manages speech synthesis through an external API
 class SpeechManager {
-    // The constructor initializes the class with the API domain and sets up some state variables
     constructor(apiDomain, status) {
-        this.apiDomain = apiDomain;  // The domain of the API to fetch speech from
-        this.currentAudio = null;  // The Audio object of the currently playing speech
-        this.queue = [];  // A queue of speech tasks
-        this.voicing = false;  // A flag indicating whether speech synthesis is currently allowed
-        this.isSpeaking = false;  // A flag indicating whether speech synthesis is currently happening
-        
-        this.audioContext = null;//new (window.AudioContext || window.webkitAudioContext)();
+        this.apiDomain = apiDomain;
+        this.currentAudio = null;
+        this.queue = [];
+        this.voicing = false;
+        this.isSpeaking = false;
+        this.audioContext = null;
         this.unlocked = false;
+        this.currentSource = null;
+        this.gainNode = null;  // New line: Node to control the volume
 
-        if(status)
+        if (status) {
             this.status = status;
+        }
 
-         this.cache = new Map();  // Cache to store audio blob URLs for text-voice combinations
+        this.cache = new Map();
     }
 
     async unlockAudioContext() {
-    if (this.unlocked) return;
+        if (this.unlocked) return;
 
-    this.AddToStatus("Unlocking", true);
+        this.AddToStatus("Unlocking", true);
 
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.gainNode = this.audioContext.createGain();  // New line: Initialize gainNode for volume control
+        this.gainNode.connect(this.audioContext.destination);  // New line: Connect the gainNode to the destination
 
-    const buffer = this.audioContext.createBuffer(1, 1, 22050);
-    const source = this.audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(this.audioContext.destination);
-    source.start(0);
+        const buffer = this.audioContext.createBuffer(1, 1, 22050);
+        const source = this.audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.connect(this.audioContext.destination);
+        source.start(0);
 
-    // Older browsers might require 'noteOn' instead of 'start'.
-    // source.noteOn(0); 
-
-    // By checking the play state after some time, we can see if we're really unlocked
-    setTimeout(() => {
-        if((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
-            this.unlocked = true;
-            this.AddToStatus("Unlocked");
-        }
-    }, 0);
-}
-
+        setTimeout(() => {
+            if ((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
+                this.unlocked = true;
+                this.AddToStatus("Unlocked");
+            }
+        }, 0);
+    }
 
     async resumeAudioContext() {
         if (this.audioContext && this.audioContext.state === 'suspended') {
-
             this.AddToStatus("resuming");
             await this.audioContext.resume();
         }
     }
 
-    // The AddToStatus function updates the status text
-    // newLine is the text to be added
-    // reset is a boolean indicating whether the status text should be cleared before adding newLine
-    AddToStatus(newLine, reset)
-    {
+    AddToStatus(newLine, reset) {
         console.log(newLine);
 
-        // If reset is true, clear the status text
-        if(reset)
-            if (this.status != null)
-                this.status.innerText = "";
-        
-        // Add newLine to the status text
+        if (reset && this.status != null) {
+            this.status.innerText = "";
+        }
+
         if (this.status != null) this.status.innerText += newLine + "\n";
     }
 
-    // The Speak function initiates a speech task
-    async Speak(text, voice, callBack) 
-    {
+    async Speak(text, voice, callBack) {
         this.AddToStatus("Speak text:" + text + " voice:" + voice);
 
-        // If the system is not currently allowed to speak, or if there is an audio currently playing, or if a speech task is already happening, return immediately
-        if (!this.voicing)
-            return;
+        if (!this.voicing) return;
+        if (!this.unlocked) await buttonPressHandler();
 
-        if (!this.unlocked)
-            await buttonPressHandler();
-
-        //if new thing to be said
         if (text != null && voice != null) {
             console.log("Adding to queue");
 
-            const cacheKey = `${text}-${voice}`;  // Create a unique key for text-voice combination
+            const cacheKey = `${text}-${voice}`;
             let blobUrl;
 
             if (this.cache.has(cacheKey)) {
-                blobUrl = this.cache.get(cacheKey);  // Retrieve the blob URL from the cache
+                blobUrl = this.cache.get(cacheKey);
             } else {
                 blobUrl = await this.fetchSpeech(text, voice);
-                this.cache.set(cacheKey, blobUrl);  // Store the blob URL in the cache
+                this.cache.set(cacheKey, blobUrl);
             }
 
             this.queue.push({ text: text, voice: voice, callBack: callBack, blobUrl: blobUrl });
 
-            // If it's not currently speaking, start to play
             if (!this.isSpeaking) {
                 await this.PlayNextInQueue();
             }
         }
     }
 
-
     async PlayNextInQueue() {
-        // If the system is currently speaking or there's no speech task in the queue, return immediately
-        if (this.isSpeaking || this.queue.length === 0)
-            return;
+        if (this.isSpeaking || this.queue.length === 0) return;
 
-        this.isSpeaking = true;  // Set the isSpeaking flag to true
+        this.isSpeaking = true;
 
         console.log("getting message to play");
 
-        // Dequeue the next speech task
         let message = this.queue.shift();
-
-        // Update the status text
         this.AddToStatus("Speak: " + message.text, true);
 
         try {
-            // Fetch and decode the audio for the given text
             const audioBuffer = await this.GetAudio(message.blobUrl);
-
-            // Play the decoded audio
             this.PlayAudio(audioBuffer, message.callBack);
-
         } catch (error) {
-            // Log the error and update the status text
             console.error('Error:', error);
             this.AddToStatus('Error: ' + error.message);
         }
@@ -141,26 +112,16 @@ class SpeechManager {
         return this.audioContext.decodeAudioData(arrayBuffer);
     }
 
-
     PlayAudio(audioBuffer, callBack) {
-        // Create an AudioBufferSourceNode from the AudioBuffer
         const source = this.audioContext.createBufferSource();
         source.buffer = audioBuffer;
-        // Connect the AudioBufferSourceNode to the AudioContext's destination (the speakers)
-        source.connect(this.audioContext.destination);
-        // Start playing the audio immediately
+        source.connect(this.gainNode);  // Changed line: Connect the source to the gainNode for volume control
         source.start(0);
 
-        // Keep a reference to the AudioBufferSourceNode that's currently playing
         this.currentSource = source;
-
-        // Handle the end of the audio
         this.handleAudioEnd(source, callBack);
     }
 
-
-
-    // The fetchSpeech function fetches the speech audio from the API
     async fetchSpeech(text, voice) {
         const response = await fetch(this.apiDomain + '/Speak', {
             method: 'POST',
@@ -178,55 +139,46 @@ class SpeechManager {
         const url = window.URL.createObjectURL(blob);
         console.log(`Generated blob URL: ${url}`);
         return url;
-
     }
 
-    /*
-     * The handleAudioEnd function handles the end of the audio.
-     * It sets up a callback to be called when the audio finishes playing.
-     *
-     * @param {AudioBufferSourceNode} source - The AudioBufferSourceNode that is playing the audio.
-     * @param {function} callBack - A function to be called when the audio finishes playing.
-     */
     handleAudioEnd(source, callBack) {
-        // Set up a callback to be called when the audio finishes playing
         source.onended = () => {
-            // Update the status text
             this.AddToStatus('Audio has finished playing!');
 
-            // If a callback function was provided, call it
-            if (callBack != null)
-                callBack();
+            if (callBack != null) callBack();
 
-            // Set the isSpeaking flag to false, since the audio has finished playing
             this.isSpeaking = false;
 
-            // If there are more speech tasks in the queue, start the next one
             if (this.queue.length > 0) {
                 this.PlayNextInQueue();
             }
         };
     }
 
-    // The StopSpeaking function stops the currently playing audio, clears the queue of speech tasks, and pauses any further speech synthesis
     StopSpeaking() {
         if (this.currentSource) {
-            this.currentSource.stop();  // Stop the currently playing audio
-            this.currentSource = null;  // Clear the currently playing audio
+            this.currentSource.stop();
+            this.currentSource = null;
         }
-        this.queue = [];  // Clear the queue of speech tasks
-        this.isSpeaking = false;  // Set the isSpeaking flag to false
-        this.voicing = false;  // Set the voicing flag to false
+        this.queue = [];
+        this.isSpeaking = false;
+        this.voicing = false;
     }
 
-    // The ResumeSpeaking function resumes speech synthesis
     ResumeSpeaking() {
-        this.voicing = true;  // Set the voicing flag to true
-        if(this.queue.length > 0) {
-            this.PlayNextInQueue();  // Start the next speech task if there are any in the queue
+        this.voicing = true;
+        if (this.queue.length > 0) {
+            this.PlayNextInQueue();
         }
     }
 
+    // New function to set the volume
+    setVolume(volumeLevel) {
+        if (this.gainNode) {
+            this.gainNode.gain.setValueAtTime(volumeLevel, this.audioContext.currentTime);  // New line: Set the volume level
+            this.AddToStatus(`Volume set to: ${volumeLevel}`);  // New line: Update status with the current volume
+        }
+    }
 }
 
 // Create a new SpeechManager object

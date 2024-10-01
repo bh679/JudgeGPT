@@ -57,7 +57,7 @@ class AudioManager {
     setVoiceVolume(value)
     {
         this.voiceVolume = value;
-        speechManager.SetVolume(this.voiceVolume * this.masterVolume);
+        speechManager.setVolume(this.voiceVolume * this.masterVolume);
     }
 
 }
