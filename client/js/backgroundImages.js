@@ -222,6 +222,7 @@ class BackgroundImages
 
 const audioSettingIcon = url+'/images/icon/icon_tool_1.png';
 
+//this is now handled on the backend
 const judgeProfileImages = [
     //"brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge_63826ce4-a661-4b4f-9714-e24c92478dc9.png",
     "brennanhatton_profile_picture_of_judge_gpt_genderless_ai_judge__8afa7999-e05d-4384-893d-1236a802ac63.png"/*,
