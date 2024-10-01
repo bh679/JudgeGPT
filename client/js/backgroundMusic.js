@@ -4,10 +4,10 @@ class BackgroundMusicManager {
     constructor() {
         // Array of music tracks
         this.tracks = [
-            './music/track1.mp3', // Path to the first track
-            './music/track2.mp3', // Path to the second track
-            './music/track3.mp3', // Path to the third track
-            './music/track4.mp3'  // Path to the fourth track
+            './music/JGPT_1.mp3', // Path to the first track
+            './music/JGPT_2.mp3', // Path to the second track
+            './music/JGPT_3.mp3', // Path to the third track
+            './music/JGPT_4.mp3'  // Path to the fourth track
         ];
 
         this.currentTrackIndex = null;
