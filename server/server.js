@@ -28,6 +28,7 @@ const JudgeGPTServer = require('./JudgeGPTServer');
 const { Speak, ResetCache } = require('./ElevenLabsServer');// Import functions from 'ElevenLabsServer.js'
 //const Transcribe = require('./WhisperTranscribeServer');// Import function from 'WhisperTranscribe.js'
 
+console.log(JudgeGPTServer);
 var judgeGPTServer = new JudgeGPTServer(Restart);
 judgeGPTServer.Start();
 
