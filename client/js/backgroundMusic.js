@@ -8,8 +8,8 @@ class AudioManager {
         this.voiceManager = messageUI;
 
         this.audioOn = false;
-        this.musicOn = false;
-        this.voiceOn = false;
+        this.musicOn = true;
+        this.voiceOn = true;
 
         this.materVolume = 1;
         this.musicVolume = 0.5;

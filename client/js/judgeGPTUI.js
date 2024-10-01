@@ -262,9 +262,7 @@ class JudgeGPTUI
 
      ToggleAudio(toggle)
      {
-        console.log(this.AudioManager);
-        console.log(toggle);
-        this.AudioManager.toggleAudio(toggle);
+        this.audioManager.toggleAudio(toggle);
      }
 }
 
