@@ -3,6 +3,8 @@ class JudgeGPTUI
     constructor(hero, chatDiv, winnerDiv, subheading, gameOverUI, userInput, courtRoomIdentityGroup, joinHearingButton, audienceDiv, playerListDiv, typingDiv, client) {
         
 
+        this.audioManager = new AudioManager();
+        
         // Define global variables
         this.heroDiv = hero;
         this.chatDiv = chatDiv;
@@ -258,9 +260,9 @@ class JudgeGPTUI
             this.winnerDiv.src="./images/notguilty.png";
      }
 
-     ToggleVoices(toggle)
+     ToggleAudio(toggle)
      {
-        this.messageUI.ToggleVoices(toggle.checked);
+        AudioManager.toggleAudio(toggle.checked);
      }
 }
 

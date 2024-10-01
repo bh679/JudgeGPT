@@ -1,5 +1,52 @@
 // backgroundMusic.js
 
+class AudioManager {
+
+    constructor(messageUI) {
+        // Create an instance of BackgroundMusicManager
+        this.musicManager = new BackgroundMusicManager();
+        this.voiceManager = essageUI;
+
+        this.audioOn = false;
+        this.musicOn = false;
+        this.voiceOn = false;
+
+        this.materVolume = 1;
+        this.musicVolume = 0.5;
+        this.voiceVolume = 1;
+    }
+
+    toggleMusic(isMusicOn) {
+        if(!this.audioOn)
+            return;
+
+        this.musicOn = isMusicOn;
+        this.musicManager.toggleMusic(this.musicOn);
+    }
+
+    // Function to handle the audio toggle
+    toggleVoice(isVoiceOn) {
+
+        if(!this.audioOn)
+            return;
+
+        this.voiceOn = isVoiceOn;
+        voiceManager.ToggleVoices(this.voiceOn);
+    }
+
+    toggleAudio(isAudioOn)
+    {
+        this.audioOn = isAudioOn;
+
+        this.toggleMusic(this.musicOn);
+
+    }
+
+    
+
+
+}
+
 class BackgroundMusicManager {
     constructor() {
         // Array of music tracks
@@ -46,12 +93,4 @@ class BackgroundMusicManager {
             this.audioElement.pause();
         }
     }
-}
-
-// Create an instance of BackgroundMusicManager
-const musicManager = new BackgroundMusicManager();
-
-// Function to handle the audio toggle
-function toggleMusic(isAudioOn) {
-    musicManager.toggleMusic(isAudioOn);
 }
