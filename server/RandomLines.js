@@ -16,7 +16,7 @@ const taglines =
     "Because even the Scales of Justice could use some calibration.",
     "Where 'case law' meets 'case algorithm'.",
     "Transforming legal loopholes into programming loops.",
-    "The verdict is in, and it's digital.",
+    "The verdict is in, and it's artificial.. I mean, intelligent.",
     "Making 'beyond a reasonable doubt' a matter of computation.",
     "When 'court orders' become 'coding orders'.",
     "One small step for code, one giant leap for legal-kind.",

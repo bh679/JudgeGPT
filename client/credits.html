@@ -190,11 +190,12 @@
         </div>    
         <!-- End of game-->
 
+        <div style="padding-bottom: 50px;"></div>
 
         <!-- Footer -->
         <div class="container fixed-bottom">
             <div class="row">
-                <p><a href="https://life.brennanhatton.com" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">BrennanHatton.com</a> | <a href="https://github.com/bh679" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">Github</a> | <a href="https://discord.gg/4sXaaAYHDQ" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Discord</a> | <a href="https://brennan.games/JudgeGPT_v0/" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">V0</a></p>
+                <p><a href="https://brennan.games/JudgeGPT" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Judge GPT</a> | <a href="https://life.brennanhatton.com" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">BrennanHatton.com</a> | <a href="https://github.com/bh679" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">Github</a> | <a href="https://discord.gg/4sXaaAYHDQ" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Discord</a> | <a href="https://brennan.games/JudgeGPT_v0/" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">V0</a></p>
             </div>
         </div>
 
@@ -245,7 +246,7 @@
             message = message.replace("Tim Christie","<b>Tim Christie</b>");
             messageUI.AddMessage(JudgeGPT, message);
             
-            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Dale Keaveny in a sentence or two, he compsoned and directed the music that is coming soon.");
+            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Dale Keaveny in a sentence or two, he compsoned and directed the music for JudgeGPT.");
             message = message.replace("Dale Keaveny","<b>Dale Keaveny</b>");
             messageUI.AddMessage(JudgeGPT, message);
             
@@ -259,6 +260,7 @@
             
             message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Say that its also worth noting that Brennan also did the roles / responsiblities when developing you, of Dev-Ops, QA, Backend Developemnt, Front End Developemtn, Server Setup, built the team, puts out fires and pays for the API calls. Keep it very short. One or two sentences");
             message = message.replace("Brennan Hatton","<b>Brennan Hatton</b>");
+            message = message.replace("Brennan","<b>Brennan</b>");
             messageUI.AddMessage(JudgeGPT, message);
             messageUI.AddMessage(BrennanHatton, "Sometimes Judge GPT lies about us and who we are.");
         }
