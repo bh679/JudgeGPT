@@ -38,6 +38,7 @@
         <script src="./js/ElevenLabsClient.js"></script>
         <script src="./js/courtroomChat.js"></script>
         <script src="./js/judgeGPTUI.js"></script>
+        <script src="./js/backgroundMusic.js"></script>
 
         <!-- Socket.io -->
         <script src="https://brennan.games:3000/socket.io/socket.io.js"></script>
@@ -45,8 +46,6 @@
         <!-- timer (needs a file namechage) -->
         <link rel="stylesheet" type="text/css" href="./progresbar.css">
 
-        <!-- background music -->
-        <script src="./js/backgroundMusic.js"></script>
 
 
     </head>
@@ -80,6 +79,24 @@
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" id="voicesSwitch" onchange="UI.ToggleVoices(this); toggleMusic(this.checked)">
                         <label class="form-check-label" for="audioSwitch">Audio</label>
+
+                        <!-- Audio Settings Button -->
+                        <button id="audioSettingsButton" class="btn btn-outline-primary" style="display: none; margin-left: 10px;" onclick="toggleAudioSettings()">Audio Settings</button>
+
+                    </div>
+
+                    <!-- Hidden Audio Settings -->
+                    <div id="audioSettings" style="display: none; margin-top: 10px;">
+                        <div class="row">
+                            <div class="col">
+                                <label for="musicVolume" class="form-label">Music Volume</label>
+                                <input type="range" class="form-range" id="musicVolume" min="0" max="100" onchange="setMusicVolume(this.value)">
+                            </div>
+                            <div class="col">
+                                <label for="voiceVolume" class="form-label">Voice Volume</label>
+                                <input type="range" class="form-range" id="voiceVolume" min="0" max="100" onchange="setVoiceVolume(this.value)">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

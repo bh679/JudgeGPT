@@ -257,6 +257,11 @@ class JudgeGPTUI
         else
             this.winnerDiv.src="./images/notguilty.png";
      }
+
+     ToggleVoices(toggle)
+     {
+        this.messageUI.ToggleVoices(toggle.checked);
+     }
 }
 
 class CourtRoomIdentity
