@@ -9,9 +9,15 @@ Efficient and succinct justice with all the bias and inaccuracy of ai.
 Who is better at convincing the Judge they are innocent?
 
 ## Setup 
-Server Setup
+### Server Setup
 
 AWS Lightsail NodeJS<br />
+#### Setup Security
+IPv4 Firewall: Custom	TCP	3000 Any IPv4 address<br />
+IPv6 firewall: Custom	TCP	3000 Any IPv6 address<br />
+
+### Installing Requirements 
+
 Replace the ``/opt/bitnami/apache/conf/bitnami/bitnami-ssl.conf``<br />
 ``sudo /opt/bitnami/ctlscript.sh restart apache``<br />
 <br />
