@@ -12,7 +12,7 @@ class AudioManager {
         this.voiceOn = true;
 
         this.masterVolume = 1;
-        this.musicVolume = 0.25;
+        this.musicVolume = 0.1;
         this.voiceVolume = 1;
 
         this.setMasterVolume(this.masterVolume);

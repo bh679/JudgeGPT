@@ -190,6 +190,9 @@ Identity
     /* ... continue for other grid fractions ... */
 }
 
+#audioSettingsContainer{
+    max-width: 500px;
+}
 
 /* Set the image size to match the height of the toggle switch */
 .audio-settings-icon {
