@@ -131,6 +131,7 @@ dist
 bitnami-env.sh
 env.js
 images
+music
 JudgeGPT_v0/backgroundImages.js
 JudgeGPT_v0/index.html
 JudgeGPT_v0/judgeGPTUI.js
