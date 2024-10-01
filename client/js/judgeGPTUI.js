@@ -16,6 +16,7 @@ class JudgeGPTUI
         this.typingDiv = typingDiv;
 
         this.messageUI = new MessageUI(chatDiv);
+        this.audioManager = new AudioManager(this.messageUI);
         this.courtRoomIdentity = new CourtRoomIdentity(courtRoomIdentityGroup, joinHearingButton);
 
 
@@ -259,9 +260,9 @@ class JudgeGPTUI
             this.winnerDiv.src="./images/notguilty.png";
      }
 
-     ToggleVoices(toggle)
+     ToggleAudio(toggle)
      {
-        this.messageUI.ToggleVoices(toggle.checked);
+        AudioManager.toggleAudio(toggle.checked);
      }
 }
 
