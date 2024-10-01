@@ -241,10 +241,6 @@
             message = message.replace("Brennan Hatton","<b>Brennan Hatton</b>");
             messageUI.AddMessage(JudgeGPT, message);
             
-            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Faith Petrie in a sentence or two, she is a social worker who put in lots of ideas, creative direction and emotional support into the development of the game.");
-            message = message.replace("Faith Petrie","<b>Faith Petrie</b>");
-            messageUI.AddMessage(JudgeGPT, message);
-            
             message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Tim Christie in a sentence or two, he makes sure the game that is you is funny.");
             message = message.replace("Tim Christie","<b>Tim Christie</b>");
             messageUI.AddMessage(JudgeGPT, message);
@@ -257,7 +253,11 @@
             message = message.replace("Colin Hanns","<b>Colin Hanns</b>");
             messageUI.AddMessage(JudgeGPT, message);
             
-            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. mention that Brennan also did the roles / responsiblities when developing you, of Dev-Ops, QA, Backend Developemnt, Front End Developemtn, Server Setup, built the team, puts out fires and pays for the API calls. Keep it very short. One or two sentences");
+            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Introduce Faith Petrie in a sentence or two, she is a social worker who put in lots of ideas, creative direction and emotional support into the development of the game.");
+            message = message.replace("Faith Petrie","<b>Faith Petrie</b>");
+            messageUI.AddMessage(JudgeGPT, message);
+            
+            message = await AskGPT("You are a video game called JudgeGPT, about an ai legal system. Say that its also worth noting that Brennan also did the roles / responsiblities when developing you, of Dev-Ops, QA, Backend Developemnt, Front End Developemtn, Server Setup, built the team, puts out fires and pays for the API calls. Keep it very short. One or two sentences");
             message = message.replace("Brennan Hatton","<b>Brennan Hatton</b>");
             messageUI.AddMessage(JudgeGPT, message);
             messageUI.AddMessage(BrennanHatton, "Sometimes Judge GPT lies about us and who we are.");
