@@ -269,16 +269,15 @@ class JudgeGPTUI
         this.audioManager.toggleAudio(toggle);
 
         if(toggle)
-            this.audioSettingsButton.style.display = 'block';
+            this.audioSettingsButton.style.display = 'inline';
         else
             this.audioSettingsButton.style.display = 'none';
      }
 
      ToggleAudioSettings(toggle)
      {
-
         if(toggle)
-            this.audioSettings.style.display = 'block';
+            this.audioSettings.style.display = 'inline';
         else
             this.audioSettings.style.display = 'none';
      }

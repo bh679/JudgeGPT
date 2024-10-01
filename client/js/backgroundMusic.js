@@ -20,21 +20,16 @@ class AudioManager {
     }
 
     toggleMusic(isMusicOn) {
-        if(!this.audioOn)
-            return;
 
         this.musicOn = isMusicOn;
-        this.musicManager.toggleMusic(this.musicOn);
+        this.musicManager.toggleMusic(this.musicOn && this.audioOn);
     }
 
     // Function to handle the audio toggle
     toggleVoice(isVoiceOn) {
 
-        if(!this.audioOn)
-            return;
-
         this.voiceOn = isVoiceOn;
-        this.voiceManager.ToggleVoices(this.voiceOn);
+        this.voiceManager.ToggleVoices(this.voiceOn && this.audioOn);
     }
 
     toggleAudio(isAudioOn)

@@ -189,3 +189,20 @@ Identity
     }
     /* ... continue for other grid fractions ... */
 }
+
+
+/* Set the image size to match the height of the toggle switch */
+.audio-settings-icon {
+    width: 15px; /* Adjust this value as needed */
+    height: 15px; /* Adjust this value as needed */
+}
+
+/* Remove padding from the button to match the size of the toggle */
+#audioSettingsButton {
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px; /* Match the height of the toggle switch */
+    width: 20px; /* Ensure button has the same size width */
+}
