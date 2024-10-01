@@ -5,7 +5,7 @@ class AudioManager {
     constructor(messageUI) {
         // Create an instance of BackgroundMusicManager
         this.musicManager = new BackgroundMusicManager();
-        this.voiceManager = essageUI;
+        this.voiceManager = messageUI;
 
         this.audioOn = false;
         this.musicOn = false;

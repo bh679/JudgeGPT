@@ -262,7 +262,7 @@ class JudgeGPTUI
 
      ToggleAudio(toggle)
      {
-        AudioManager.toggleAudio(toggle.checked);
+        this.AudioManager.toggleAudio(toggle.checked);
      }
 }
 
