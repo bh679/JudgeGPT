@@ -296,7 +296,7 @@ function GetRandomProfileImage()
 }
 
 
-const BrennanProfileImages = [
+const brennanProfileImages = [
     "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",
     "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_6afb3b07-5722-4095-99b5-674658d56429.png",
     "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_d5de75c4-d7fa-40e5-b370-b4e97ee8920d.png",
@@ -307,9 +307,7 @@ const BrennanProfileImages = [
 
 function GetRandomBrennanProfileImage()
 {
-    return url+'/images/profiles/' + const BrennanProfileImages = [
-[Math.floor(Math.random() * const BrennanProfileImages = [
-.length)];
+    return url+'/images/profiles/' + brennanProfileImages[Math.floor(Math.random() * brennanProfileImages.length)];
 }
 
 
