@@ -52,6 +52,13 @@ Check log ``pm2 log``
 
 ## Update
 
+### V6 Oct 2, 24
+Change footer to heading
+Made cleaner, less links
+Added about page, with links from preivous footer
+Added about details
+<img width="1335" alt="Screenshot 2024-10-02 at 12 14 54 pm" src="https://github.com/user-attachments/assets/72f2ea5f-0963-4950-8ba2-16472ec0b701">
+
 ### V5 Oct 1, 24
 Music hasbeen added (by Dale)
 Volume controls, and set default leveling of volume
