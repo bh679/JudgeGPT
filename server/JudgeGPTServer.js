@@ -674,7 +674,7 @@ class JudgeGPTServer {
 
     async CreateRuling() 
     {
-        var prompt = this.prompts.judgeCharacter  + "You are creating a very brief story of a few sentences, to draw your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.activeRoles[0].role+"'s' testimony is: {" + this.activeRoles[0].testimony + "} The "+this.activeRoles[1].role+"'s' defence testimony is: {" + this.activeRoles[1].testimony + "}. Do all this in only a few sentences.";
+        var prompt = this.prompts.judgeCharacter  + "You are creating a very brief story of one or two sentences, to draw your conclusion and announcing the verdict based on the following evidence.  Justify your verdict. The case is: {" + this.gameCase + "}. The "+this.activeRoles[0].role+"'s' testimony is: {" + this.activeRoles[0].testimony + "} The "+this.activeRoles[1].role+"'s' defence testimony is: {" + this.activeRoles[1].testimony + "}. Do all this in only a three or less sentences.";
         this.ruling = await AskGPT(prompt);
         if(this.stop)
             return;
