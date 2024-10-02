@@ -52,6 +52,11 @@ Check log ``pm2 log``
 
 ## Update
 
+### V7 Oct 2, 24
+Chatroom now has better css, and logs when people join the game.
+<img width="1278" alt="Screenshot 2024-10-02 at 12 52 10 pm" src="https://github.com/user-attachments/assets/40b8e930-29a2-4fb8-9c29-cb14e290a73e">
+
+
 ### V6 Oct 2, 24
 Change footer to heading
 Made cleaner, less links
