@@ -140,6 +140,8 @@ io.on('connection', async (socket) => {
         player: player, 
     });
 
+    io.emit('chatroomMessage', player.name + " has connected to the courtroom as a " + player.role);
+
     // Emit status updates to the client at regular intervals
     const interval = setInterval(() => {
 
