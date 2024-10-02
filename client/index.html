@@ -351,6 +351,7 @@
         // Emit the 'testEvent' after connecting
         socket.on('connect', () => {
             console.log('Connected to the server!');
+            UI.Start();
             //socket.emit('testEvent', { data: 'Hello from the client!' });
         });
 
