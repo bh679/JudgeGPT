@@ -297,17 +297,62 @@ function GetRandomProfileImage()
 
 
 const brennanProfileImages = [
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_6afb3b07-5722-4095-99b5-674658d56429.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_d5de75c4-d7fa-40e5-b370-b4e97ee8920d.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_b44a92bc-be0e-45d7-add5-349f4c2c0687.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_01f3ff74-4a43-4f8e-b067-e027b01445ba.png",
-    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_7304d215-0a0f-46ab-a971-5516a8790cc7.png"
-    ];
+    "Screenshot%202024-10-02%20at%201.18.41%20pm.png",
+    "Screenshot%202024-10-02%20at%201.19.03%20pm.png",
+    "Screenshot%202024-10-02%20at%201.19.17%20pm.png",
+    "Screenshot%202024-10-02%20at%201.19.27%20pm.png",
+    "Screenshot%202024-10-02%20at%201.19.33%20pm.png",
+    "Screenshot%202024-10-02%20at%201.19.40%20pm.png",
+    "Screenshot%202024-10-02%20at%201.19.48%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.02%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.10%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.20%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.26%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.32%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.40%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.47%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.53%20pm.png",
+    "Screenshot%202024-10-02%20at%201.20.59%20pm.png",
+    "Screenshot%202024-10-02%20at%201.21.08%20pm.png",
+    "Screenshot%202024-10-02%20at%201.21.14%20pm.png",
+    "Screenshot%202024-10-02%20at%201.21.23%20pm.png",
+    "Screenshot%202024-10-02%20at%201.21.28%20pm.png",
+    "Screenshot%202024-10-02%20at%201.21.33%20pm.png",
+    "Screenshot%202024-10-02%20at%201.21.40%20pm.png",
+    "Screenshot%202024-10-02%20at%201.21.46%20pm.png",
+    "Screenshot%202024-10-02%20at%201.21.53%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.01%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.07%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.12%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.18%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.24%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.30%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.35%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.41%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.46%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.53%20pm.png",
+    "Screenshot%202024-10-02%20at%201.22.59%20pm.png",
+    "Screenshot%202024-10-02%20at%201.23.05%20pm.png",
+    "Screenshot%202024-10-02%20at%201.23.13%20pm.png",
+    "Screenshot%202024-10-02%20at%201.23.26%20pm.png",
+    "Screenshot%202024-10-02%20at%201.23.31%20pm.png",
+    "Screenshot%202024-10-02%20at%201.23.37%20pm.png",
+    "Screenshot%202024-10-02%20at%201.23.44%20pm.png",
+    "Screenshot%202024-10-02%20at%201.23.50%20pm.png",
+    "Screenshot%202024-10-02%20at%201.23.57%20pm.png",
+    "Screenshot%202024-10-02%20at%201.24.01%20pm.png",
+    "Screenshot%202024-10-02%20at%201.24.07%20pm.png",
+    "Screenshot%202024-10-02%20at%201.24.14%20pm.png",
+    "Screenshot%202024-10-02%20at%201.24.19%20pm.png",
+    "Screenshot%202024-10-02%20at%201.24.25%20pm.png",
+    "Screenshot%202024-10-02%20at%201.24.31%20pm.png",
+    "Screenshot%202024-10-02%20at%201.24.35%20pm.png"
+];
+
 
 function GetRandomBrennanProfileImage()
 {
-    return url+'/images/profiles/' + brennanProfileImages[Math.floor(Math.random() * brennanProfileImages.length)];
+    return url+'/images/profiles/brennan/' + brennanProfileImages[Math.floor(Math.random() * brennanProfileImages.length)];
 }
 
 
