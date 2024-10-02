@@ -81,6 +81,7 @@ class JudgeGPTUI
     async Start()
     {
 
+        console.log("restarting");
         this.winner = "";
         this.winnerDiv.src="";
         this.gameOverUI.group.hidden = true;
