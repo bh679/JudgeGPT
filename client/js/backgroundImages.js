@@ -295,3 +295,21 @@ function GetRandomProfileImage()
     return url+'/images/profiles/' + profileImages[Math.floor(Math.random() * profileImages.length)];
 }
 
+
+const BrennanProfileImages = [
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_6afb3b07-5722-4095-99b5-674658d56429.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_d5de75c4-d7fa-40e5-b370-b4e97ee8920d.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_b44a92bc-be0e-45d7-add5-349f4c2c0687.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_01f3ff74-4a43-4f8e-b067-e027b01445ba.png",
+    "brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_7304d215-0a0f-46ab-a971-5516a8790cc7.png"
+    ];
+
+function GetRandomBrennanProfileImage()
+{
+    return url+'/images/profiles/' + const BrennanProfileImages = [
+[Math.floor(Math.random() * const BrennanProfileImages = [
+.length)];
+}
+
+
