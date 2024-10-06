@@ -34,7 +34,7 @@ class JudgeGPTDBManager {
             }
         });
 
-        // Create the "judge_gpt_games" table if it doesn't exist with an AUTOINCREMENT ID
+        // Create the "judge_gpt_games" table if it doesn't exist with an AUTOINCREMENT ID  --------------------------------------------------- Maybe this should be done after first message
         const createTableSQL = `
             CREATE TABLE IF NOT EXISTS judge_gpt_games (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -174,7 +174,7 @@ console.log("Inserting data into judge_gpt_games:", {
                 return console.error(err.message);
             }
         });
-        
+
         // Log the data being sent to the database for debugging
 console.log("Preparing to update database with the following data:");
 console.log({
