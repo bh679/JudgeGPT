@@ -99,6 +99,26 @@ app.post('/AskGPT', function (req, res) {
 });
 
 
+// Call to GPT for older version of JudgeGPT
+app.post('/GetCase', function (req, res) {
+    // Log the body of the request
+    console.log(req.body);
+
+    // Extract youtubeId from the request body
+    const data = req.body.data;
+
+    // Log the prompt
+    console.log(data);
+
+
+    console.log('Get case ' + data);
+    var case = judgeGPTServer.GetCase(data);
+
+    res.json(case: case);
+
+});
+
+
 //-------------------------
 //  Socket.io
 //-------------------------
@@ -196,12 +216,6 @@ io.on('connection', async (socket) => {
     socket.on('chatroomMessage', (message) => {
     io.emit('chatroomMessage', message); // Broadcast the message to all connected clients
   });
-
-    socket.on('GetCase', (data) => {
-        console.log('Get case ' + data);
-        judgeGPTServer.GetCase(data);
-        
-    });
 
 
     // 
