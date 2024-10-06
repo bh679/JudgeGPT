@@ -756,6 +756,14 @@ class JudgeGPTServer {
         this.stop = true;
     }
 
+    GetCase(data)
+    {
+        if(data.id != null)
+            return db.GetEntryById(data.id);
+
+        return;
+    }
+
 }
 
 

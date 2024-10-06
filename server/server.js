@@ -197,6 +197,12 @@ io.on('connection', async (socket) => {
     io.emit('chatroomMessage', message); // Broadcast the message to all connected clients
   });
 
+    socket.on('GetCase', (data) => {
+        console.log('Get case ' + data);
+        judgeGPTServer.GetCase(data);
+        
+    });
+
 
     // 
     socket.on('disconnect', () => {

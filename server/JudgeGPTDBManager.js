@@ -236,6 +236,39 @@ console.log({
         this.getLastXEntries(5);
     }
 
+    GetEntryById(id) {
+        const db = new sqlite3.Database(dbAddress, sqlite3.OPEN_READONLY, (err) => {
+            if (err) {
+                return console.error('Error connecting to the database:', err.message);
+            }
+            console.log('Connected to the SQLite database.');
+        });
+
+        // Query to get the entry by the given id
+        const query = `SELECT * FROM judge_gpt_games WHERE id = ?`;
+
+        db.get(query, [id], (err, row) => {
+            if (err) {
+                return console.error('Error running query:', err.message);
+            }
+            
+            // Display the row
+            if (row) {
+                console.log(`Entry with ID ${id}:`, row);
+            } else {
+                console.log(`No entry found with ID ${id}.`);
+            }
+        });
+
+        db.close((err) => {
+            if (err) {
+                return console.error('Error closing the database:', err.message);
+            }
+            console.log('Closed the database connection.');
+        });
+    }
+
+
     getLastXEntries(x) {
         const db = new sqlite3.Database(dbAddress, sqlite3.OPEN_READONLY, (err) => {
             if (err) {
