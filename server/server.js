@@ -140,7 +140,11 @@ io.on('connection', async (socket) => {
         player: player, 
     });
 
-    io.emit('chatroomMessage', player.name + " has connected to the courtroom as a " + player.role);
+    console.log("sending player name to chat");
+    console.log(player);
+    console.log(player.name);
+    if(player != null)
+        io.emit('chatroomMessage', player.name + " has connected to the courtroom as a " + player.role);
 
     // Emit status updates to the client at regular intervals
     const interval = setInterval(() => {

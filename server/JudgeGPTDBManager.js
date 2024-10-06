@@ -7,8 +7,11 @@ class JudgeGPTDBManager {
     constructor(Server) {
         this.setData(Server);  // Initialize data
         this.dbAddress = dbAddress;
+        this.id = 0;        // Initialize ID as null to track later
+
         this.initializeDB();   // Ensure table exists and get ID
         this.saveToDB();       // Save to the database upon creation
+
     }
 
     setData(Server) {
@@ -57,7 +60,38 @@ class JudgeGPTDBManager {
                 return console.error(err.message);
             }
         });
+
+        //get highest ID
+        this.GetHighestId();
+
+        this.getLastXEntries(5);
+
     }
+
+    // Function to get the highest id from the database
+    GetHighestId() {
+        this.db = new sqlite3.Database(this.dbAddress, (err) => {
+            if (err) {
+                return console.error(err.message);
+            }
+        });
+
+        const getMaxIdSQL = `SELECT MAX(id) as max_id FROM judge_gpt_games`;
+        this.db.get(getMaxIdSQL, (err, row) => {
+            if (err) {
+                return console.error(err.message);
+            }
+            this.id = row.max_id;  // Pass the result back using a callback
+            console.log(this.id);
+        });
+
+        this.db.close((err) => {
+            if (err) {
+                return console.error(err.message);
+            }
+        });
+    }
+
 
     saveToDB() {
         // Open a new connection to the SQLite database using the provided dbAddress
@@ -71,6 +105,19 @@ class JudgeGPTDBManager {
             INSERT INTO judge_gpt_games (players, activeRoles, messages, gameCase, ruling, punishment, winner, timeStart, timeSaved)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
+
+// Debug log for data being inserted
+console.log("Inserting data into judge_gpt_games:", {
+    players: JSON.stringify(this.players),
+    activeRoles: JSON.stringify(this.activeRoles),
+    messages: JSON.stringify(this.messages),
+    gameCase: this.gameCase,
+    ruling: this.ruling,
+    punishment: this.punishment,
+    winner: this.winner,
+    timeStart: this.timeStart,
+    timeSaved: this.timeSaved
+});
 
         // Run the INSERT SQL command
         // The parameters provided in the second argument will replace the question marks in the SQL
@@ -93,9 +140,8 @@ class JudgeGPTDBManager {
                 }
                 // Retrieve and save the last inserted row's ID to the class instance
                 // this.lastID is provided by the sqlite3 library's context
-                this.id = this.lastID;
+                //this.id = this.lastID;
 
-                console.log("Successfully saved game to database with ID:", this.id);
             }.bind(this)  // Ensure the callback's context (this) remains the JudgeGPTDBManager instance
         );
 
@@ -105,6 +151,16 @@ class JudgeGPTDBManager {
                 return console.error(err.message);
             }
         });
+
+
+
+        //get highest ID
+        this.GetHighestId();
+
+        console.log("Successfully saved game to database with ID:", this.id);
+
+
+        this.getLastXEntries(5);
     }
 
 
@@ -118,6 +174,21 @@ class JudgeGPTDBManager {
                 return console.error(err.message);
             }
         });
+        
+        // Log the data being sent to the database for debugging
+console.log("Preparing to update database with the following data:");
+console.log({
+    players: JSON.stringify(this.players),
+    activeRoles: JSON.stringify(this.activeRoles),
+    messages: JSON.stringify(this.messages),
+    gameCase: this.gameCase,
+    ruling: this.ruling,
+    punishment: this.punishment,
+    winner: this.winner,
+    timeStart: this.timeStart,
+    timeSaved: this.timeSaved,
+    id: this.id
+});
         
         // Update the record corresponding to the saved ID
         const updateSQL = `
@@ -160,7 +231,39 @@ class JudgeGPTDBManager {
                 return console.error(err.message);
             }
         });
+
+
+        this.getLastXEntries(5);
     }
+
+    getLastXEntries(x) {
+        const db = new sqlite3.Database(dbAddress, sqlite3.OPEN_READONLY, (err) => {
+            if (err) {
+                return console.error('Error connecting to the database:', err.message);
+            }
+            console.log('Connected to the SQLite database.');
+        });
+
+        // Assuming you have an "id" field in your table that increments with each entry
+        const query = `SELECT * FROM judge_gpt_games ORDER BY id DESC LIMIT ?`; // Replace 'your_table' with your table name
+
+        db.all(query, [x], (err, rows) => {
+            if (err) {
+                return console.error('Error running query:', err.message);
+            }
+            
+            // Display the rows
+            console.log(`Last ${x} entries:`, rows);
+        });
+
+        db.close((err) => {
+            if (err) {
+                return console.error('Error closing the database:', err.message);
+            }
+            console.log('Closed the database connection.');
+        });
+    }
+
 }
 
 module.exports = JudgeGPTDBManager;
