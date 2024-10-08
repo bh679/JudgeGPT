@@ -98,29 +98,20 @@ app.post('/AskGPT', function (req, res) {
 
 });
 
-
-// 
-app.post('/GetCase', function (req, res) {
-    // Log the body of the request
+// Update the POST handler to be async
+app.post('/GetCase', async function (req, res) {
     console.log(req.body);
-
-    // Extract youtubeId from the request body
     const data = req.body.data;
+    console.log('Get case ' + JSON.stringify(data));
 
-    // Log the prompt
-    console.log(data);
-
-
-    console.log('Get case ' + data);
-    var gameCase = judgeGPTServer.GetCase(data);
-
-    console.log("case: " + gameCase);
-
-    res.json({case: gameCase});
-
-
-    console.log(res.case);
-
+    try {
+        const gameCase = await judgeGPTServer.GetCase(data);
+        console.log("case: " + JSON.stringify(gameCase));
+        res.json({ case: gameCase });
+    } catch (error) {
+        console.error("Error fetching case:", error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 
