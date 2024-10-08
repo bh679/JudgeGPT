@@ -123,15 +123,6 @@ class JudgeGPTDBManager {
         });
     }
 
-// Usage
-findLastID()
-    .then((maxId) => {
-        console.log("Max ID:", maxId);
-    })
-    .catch((err) => {
-        console.error("Error:", err);
-    });
-
 
 
     saveToDB() {

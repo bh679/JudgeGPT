@@ -229,6 +229,7 @@
         const chatDiv = document.getElementById('chat');
         const caseTitleElement = document.getElementById("CaseTitle");
         var caseId;
+        var gameCase;
 
         BackgroundImages.SetBackground();
 
@@ -236,13 +237,20 @@
 
         function LastCase()
         {
-            UpdateURL(caseId-1);
+            if(caseId == 0)
+                UpdateURL(gameCase.max_id);
+            else
+                UpdateURL(caseId-1);
             SetText();
         }
 
         function NextCase()
         {
-            UpdateURL(Number(caseId) + 1);
+            if(caseId == gameCase.max_id)
+                UpdateURL(0);
+            else
+                UpdateURL(Number(caseId) + 1);
+
             SetText();
         }
 
@@ -280,7 +288,7 @@
                 var gameCaseResponse = await historyManager.GetCase({ id: parseInt(caseId) });
 
                 // Now access the `case` property from the response
-                var gameCase = gameCaseResponse.case;
+                gameCase = gameCaseResponse.case;
                 console.log(gameCase);
 
                 if(gameCase == null)
