@@ -39,6 +39,7 @@ class JudgeGPTServer {
         this.ruling = "";
         this.punishment = "";
         this.winner = "";
+        this.caseTitle = "";
 
         this.messagesChat = new MessageBackEnd();
         this.prompts = new Prompts();
@@ -149,10 +150,20 @@ class JudgeGPTServer {
                 return;
         }
 
+        this.SetTitle();
+
         this.NextPlayerTurn();
+
+
 
     }
 
+    async SetTitle()
+    {
+        this.caseTitle = await AskGPT("Come up for a short title for this legal case: " + this.gameCase);
+    }
+
+        
 
 
     async OnPlayerConnected(clientID)
