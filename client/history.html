@@ -236,12 +236,25 @@
 
         messageUI = new MessageUI(chatDiv);
 
-        var historyManager = new HistoryManager();
-
-        historyManager.GetCase({id:10});
+        
 
         async function SetText()
         {
+            var historyManager = new HistoryManager();
+
+            //historyManager.GetCase({id: 4});
+            var gameCase = await historyManager.GetCase({id: 7}).case;
+            console.log(gameCase);
+
+
+            // Extract and format players
+            var playersData = JSON.parse(gameCase.players);
+            console.log(playersData);
+
+            // Extract and format messages
+            var messagesData = JSON.parse(gameCase.messages).messages;
+            console.log(messagesData);
+
             var JudgeGPT = {};
             JudgeGPT.name = "GPT";
             JudgeGPT.role = "Judge";
