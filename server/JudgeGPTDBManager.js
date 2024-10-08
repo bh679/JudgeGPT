@@ -95,6 +95,45 @@ class JudgeGPTDBManager {
     }
 
 
+    async FindLastID() {
+        return new Promise((resolve, reject) => {
+            const db = new sqlite3.Database(this.dbAddress, (err) => {
+                if (err) {
+                    reject(err);
+                }
+            });
+
+            const getMaxIdSQL = `SELECT MAX(id) as max_id FROM judge_gpt_games`;
+
+            db.get(getMaxIdSQL, (err, row) => {
+                if (err) {
+                    db.close(() => {
+                        reject(err);
+                    });
+                } else {
+                    db.close((closeErr) => {
+                        if (closeErr) {
+                            reject(closeErr);
+                        } else {
+                            resolve(row.max_id);
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+// Usage
+findLastID()
+    .then((maxId) => {
+        console.log("Max ID:", maxId);
+    })
+    .catch((err) => {
+        console.error("Error:", err);
+    });
+
+
+
     saveToDB() {
         // Open a new connection to the SQLite database using the provided dbAddress
         this.db = new sqlite3.Database(this.dbAddress, (err) => {
@@ -262,6 +301,7 @@ console.log({
                     console.error('Error running query:', err.message);
                     reject(err);
                 } else if (row) {
+                    //row.max_id = this.GetHighestId();
                     console.log(`Entry with ID ${id}:`, row);
                     resolve(row);
                 } else {
