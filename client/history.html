@@ -236,8 +236,11 @@
 
         messageUI = new MessageUI(chatDiv);
 
+        var forward = true;
+
         function LastCase()
         {
+            forward = false;
             if(caseId == 0)
                 UpdateURL(caseMaxID);
             else
@@ -250,6 +253,7 @@
 
         function NextCase()
         {
+            forward = true;
             if(caseId == caseMaxID)
                 UpdateURL(0);
             else
@@ -300,7 +304,16 @@
                 if(gameCase == null)
                 {
                     caseTitleElement.textContent = "Case "+caseId+" not found";
+
+                    var gameCaseMaxIDResponse = await historyManager.GetCaseMaxID();
+                    console.log(gameCaseMaxIDResponse);
+
+                    if(forward)
+                        NextCase();
+                    else
+                        LastCase();
                     return; 
+
                 }else if(gameCase.caseTitle == null)
                 {
                     caseTitleElement.textContent = "Case "+caseId;
@@ -318,6 +331,14 @@
                 // Extract and format messages
                 var messagesData = JSON.parse(gameCase.messages).messages;
                 console.log(messagesData);
+
+                if(messagesData.length == 0)
+                {
+                    if(forward)
+                        NextCase();
+                    else
+                        LastCase();
+                }
 
                 // Assuming messageUI.AddMessage(sender, message) is a function that accepts a sender and a message as parameters.
                 for (let i = 0; i < messagesData.length; i++) {

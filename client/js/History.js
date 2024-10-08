@@ -95,7 +95,6 @@ class HistoryManager
 	            headers: {
 	                'Content-Type': 'application/json',
 	            },
-	            body: JSON.stringify({ data: input }),
 	        });
 
 	        // Parse the response from the server into a JavaScript object.
