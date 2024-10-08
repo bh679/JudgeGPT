@@ -129,6 +129,7 @@ class JudgeGPTServer {
 
         this.running = true;
         this.aiTurn = true;
+        this.judgeGPTDBManager = new JudgeGPTDBManager(this);
 
         
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
