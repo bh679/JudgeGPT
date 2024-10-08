@@ -65,49 +65,58 @@
                 <center>
                     <h1><a href="/JudgeGPT" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">JudgeGPT</a></h1>
 
+                    <!-- Flex container for heading and button -->
+                    <div style="display: flex; justify-content: center; align-items: center; position: relative;">
+                        <h5 id="subheading" style="text-align: center; flex-grow: 1;">Archives</h5>
+                        <!-- Search Settings Button -->
+                        <button id="SearchSettingsButton" class="btn btn-outline-primary" style="position: absolute; right: 0;" onclick="ToggleSearchSettings()">
+                            <img class="audio-settings-icon" src="./images/icons/icon_tool_1.png">
+                        </button>
+                    </div>
 
-                    <h5 id="subheading">Archives</h5>
-
-                    <!-- Audio Settings Button -->
-                    <button id="audioSettingsButton" class="btn btn-outline-primary" style="display: none; margin-left: 10px;" onclick="UI.ToggleAudioSettings()"><img class="audio-settings-icon" src="./images/icons/icon_tool_1.png"></button>
-                    
                     <h4 style="display: flex; align-items: center;">
                         <img src="./images/icons/icon_common_40.png" width="25px" onclick="LastCase()">
                         <div id="CaseTitle" style="flex-grow: 1; text-align: center;">Your Case Title</div>
                         <img src="./images/icons/icon_common_40.png" width="25px" onclick="NextCase()" style="transform: scaleX(-1);">
                     </h4>
-
-                   
-
-
-
                 </center>
-                <div class="d-flex justify-content-center">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="voicesSwitch" onchange="messageUI.ToggleVoices(this.checked)">
-                        <label class="form-check-label" for="flexSwitchCheckChecked">Voiced</label>
+
+
+
+           <!-- Hidden Search Settings -->
+            <div class="container" id="SearchSettingsContainer">
+                <div id="SearchSettings" class="container" style="display: none; margin-top: 10px;">
+                    <div class="row">
+                        <div class="col">
+                            <label for="caseCompleteDropdown" class="form-label">Case Complete</label>
+                            <select class="form-select" id="caseCompleteDropdown">
+                                <option value="Not Started">Debug</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="Undecided">Undecided</option>
+                                <option value="Ruling" selected>Ruling</option>
+                                <option value="Punishment">Punishment</option>
+                                <option value="Lesson">Lesson</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col">
+                            <label for="playersDropdown" class="form-label">Players</label>
+                            <select class="form-select" id="playersDropdown">
+                                <option value="With Human" selected>With Human</option>
+                                <option value="Only Human">Only Human</option>
+                                <option value="Only AI">Only AI</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Hidden Audio Settings -->
-            <div class="container" id="audioSettingsContainer">
-                <div id="audioSettings" class="container" style="display: none; margin-top: 10px;">
-                    <div class="row">
-                        <div class="col">
-                            <label for="masterVolumeSlider" class="form-label">Master Volume</label>
-                            <input type="range" class="form-range" id="masterVolumeSlider" min="0" max="100" onchange="UI.audioManager.setMasterVolume(this.value/100)">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="musicVolumeSlider" class="form-label">Music Volume</label>
-                            <input type="range" class="form-range" id="musicVolumeSlider" min="0" max="100" onchange="UI.audioManager.setMusicVolume(this.value/100)">
-                        </div>
-                        <div class="col">
-                            <label for="voiceVolumeSlider" class="form-label">Voice Volume</label>
-                            <input type="range" class="form-range" id="voiceVolumeSlider" min="0" max="100" onchange="UI.audioManager.setVoiceVolume(this.value/100)">
-                        </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="voicesSwitch" onchange="messageUI.ToggleVoices(this.checked)">
+                        <label class="form-check-label" for="flexSwitchCheckChecked">Voiced</label>
                     </div>
                 </div>
             </div>
@@ -253,9 +262,12 @@
         const colin =  document.getElementById('colin');
         const chatDiv = document.getElementById('chat');
         const caseTitleElement = document.getElementById("CaseTitle");
+        const searchSettingsContainer = document.getElementById("SearchSettings");
+        const searchSettingsButton = document.getElementById("SearchSettingsButton");
         var caseId = -1;
         var gameCase;
         var caseMaxID = 22;
+        var searchSettingsVisible = false;
 
         BackgroundImages.SetBackground();
 
@@ -317,6 +329,116 @@
                 return;
             }
         }
+
+        const caseCompleteDropdown = document.getElementById('caseCompleteDropdown');
+        const playersDropdown = document.getElementById('playersDropdown');
+
+        function CheckCaseValid(messagesData, playersData)
+        {
+
+            if(!CheckCaseCompeleteValid(messagesData))
+                return false;
+
+            if(!CheckCasePlayersValid(playersData))
+                return false;
+
+            return true;
+
+
+        }
+
+
+        function CheckCaseCompeleteValid(messagesData)
+        {
+            const selectedCaseComplete = caseCompleteDropdown.options[caseCompleteDropdown.selectedIndex].value;
+            // Switch statement for 'Case Complete'
+            switch (selectedCaseComplete) {
+                case 'Debug':
+                    console.log('Case is in Debug mode.');
+                    // Add any logic for 'Debug' here
+                    
+                    return true;
+
+                    break;
+                case 'Not Started':
+                    console.log('Case is Not Started.');
+                    // Add any logic for 'Not Started' here
+
+                    if(messagesData.length >= 1)
+                        return true;
+
+                    break;
+                case 'Undecided':
+                    console.log('Case is Undecided.');
+                    // Add any logic for 'Undecided' here
+
+                    if(messagesData.length >= 3)
+                        return true;
+
+                    break;
+                case 'Ruling':
+                    console.log('Case is at the Ruling stage.');
+                    // Add any logic for 'Ruling' here
+                    if(gameCase.ruling != "")
+                        return true;
+
+                    break;
+                case 'Punishment':
+                    console.log('Case is at the Punishment stage.');
+                    // Add any logic for 'Punishment' here
+                    if(gameCase.punishment != "")
+                        return true;
+                    break;
+                case 'Lesson':
+                    console.log('Case is at the Lesson stage.');
+                    // Add any logic for 'Lesson' here
+                    if(gameCase.lesson != "")
+                        return true;
+                    break;
+                default:
+                    console.logError('Unknown Case Complete state.');
+                    return true;
+            }
+                    return false;
+        }
+
+        function CheckCasePlayersValid(playersData)
+        {
+
+            const selectedPlayers = playersDropdown.options[playersDropdown.selectedIndex].value;
+
+            // Switch statement for 'Players'
+            switch (selectedPlayers) {
+                case 'With Human':
+                    console.log('Players include both AI and Human.');
+
+                    if(playersData.length > 0)
+                        return true; 
+
+                    break;
+                case 'Only Human':
+                    console.log('Only Human players.');
+
+                    if(playersData.length >= 2)
+                        return true;
+
+                    // Add any logic for 'Only Human' here
+                    break;
+                case 'Only AI':
+                    console.log('Only AI players.');
+
+                    if(playersData.length == 0)
+                        return true;
+                    // Add any logic for 'Only AI' here
+                    break;
+                default:
+                    console.log('Unknown Players selection.');
+            }
+
+            return false;
+
+        }
+        
         
         async function SetText() {
             var historyManager = new HistoryManager();
@@ -339,10 +461,10 @@
                     var gameCaseMaxIDResponse = await historyManager.GetCaseMaxID();
                     console.log(gameCaseMaxIDResponse);
 
-                    if(forward)
+                    /*if(forward)
                         NextCase();
                     else
-                        LastCase();
+                        LastCase();*/
                     return; 
 
                 }else if(gameCase.caseTitle == null)
@@ -363,7 +485,10 @@
                 var messagesData = JSON.parse(gameCase.messages).messages;
                 console.log(messagesData);
 
-                if(messagesData.length == 0)
+
+
+
+                if(!CheckCaseValid(messagesData))
                 {
                     if(forward)
                         NextCase();
@@ -386,6 +511,21 @@
             } catch (error) {
                 console.error("Error fetching the case:", error);
             }
+        }
+
+        function ToggleSearchSettings()
+        {
+
+            searchSettingsVisible = !searchSettingsVisible;
+
+            if(searchSettingsVisible)
+                searchSettingsContainer.style.display = 'inline';
+            else
+            {
+                searchSettingsContainer.style.display = 'none';
+                searchSettingsButton.classList.remove('pressed');
+            }
+
         }
 
         SetText();
