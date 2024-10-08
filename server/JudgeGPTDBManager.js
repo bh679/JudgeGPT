@@ -20,7 +20,7 @@ class JudgeGPTDBManager {
         this.activeRoles = Server.activeRoles;
         this.messages = Server.messagesChat;
         this.gameCase = Server.gameCase;
-        this.gameTitle = Server.gameTitle;
+        this.caseTitle = Server.caseTitle;
         this.ruling = Server.ruling;
         this.punishment = Server.punishment;
         this.winner = Server.winner;
@@ -43,7 +43,7 @@ class JudgeGPTDBManager {
                 activeRoles TEXT,
                 messages TEXT,
                 gameCase TEXT,
-                gameTitle TEXT,
+                caseTitle TEXT,
                 ruling TEXT,
                 punishment TEXT,
                 winner TEXT,
@@ -104,8 +104,8 @@ class JudgeGPTDBManager {
         });
 
         const insertSQL = `
-            INSERT INTO judge_gpt_games (players, activeRoles, messages, gameCase, gameTitle, ruling, punishment, winner, timeStart, timeSaved)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO judge_gpt_games (players, activeRoles, messages, gameCase, caseTitle, ruling, punishment, winner, timeStart, timeSaved)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
 // Debug log for data being inserted
@@ -114,7 +114,7 @@ console.log("Inserting data into judge_gpt_games:", {
     activeRoles: JSON.stringify(this.activeRoles),
     messages: JSON.stringify(this.messages),
     gameCase: this.gameCase,
-    gameTitle: this.gameTitle,
+    caseTitle: this.caseTitle,
     ruling: this.ruling,
     punishment: this.punishment,
     winner: this.winner,
@@ -130,7 +130,7 @@ console.log("Inserting data into judge_gpt_games:", {
                 JSON.stringify(this.activeRoles),
                 JSON.stringify(this.messages),
                 this.gameCase,
-                this.gameTitle,
+                this.caseTitle,
                 this.ruling,
                 this.punishment,
                 this.winner,
@@ -186,7 +186,7 @@ console.log({
     activeRoles: JSON.stringify(this.activeRoles),
     messages: JSON.stringify(this.messages),
     gameCase: this.gameCase,
-    gameTitle: this.gameTitle,
+    caseTitle: this.caseTitle,
     ruling: this.ruling,
     punishment: this.punishment,
     winner: this.winner,
@@ -202,7 +202,7 @@ console.log({
                 activeRoles = ?, 
                 messages = ?, 
                 gameCase = ?, 
-                gameTitle = ?, 
+                caseTitle = ?, 
                 ruling = ?, 
                 punishment = ?, 
                 winner = ?, 
@@ -217,7 +217,7 @@ console.log({
                 JSON.stringify(this.activeRoles),
                 JSON.stringify(this.messages),
                 this.gameCase,
-                this.gameTitle,
+                this.caseTitle,
                 this.ruling,
                 this.punishment,
                 this.winner,

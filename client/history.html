@@ -65,13 +65,19 @@
                 <center>
                     <h1><a href="/JudgeGPT" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">JudgeGPT</a></h1>
 
-                    <h5 id="subheading">Case History</h5>
+
+                    <h5 id="subheading">Archives</h5>
+                    
+                    <h4 style="display: flex; align-items: center;">
+                        <img src="./images/icons/icon_common_40.png" width="25px" onclick="LastCase()">
+                        <div id="CaseTitle" style="margin: 0 10px;">Your Case Title</div>
+                        <img src="./images/icons/icon_common_40.png" width="25px" onclick="NextCase()" style="transform: scaleX(-1);">
+                    </h4>
+
+                   
 
 
 
-                    <div class="col-1">
-                        <img src="./images/icons/icon_common_40.png">
-                    </div>
                 </center>
                 <div class="d-flex justify-content-center">
                     <div class="form-check form-switch">
@@ -221,23 +227,53 @@
         const dale =  document.getElementById('dale');
         const colin =  document.getElementById('colin');
         const chatDiv = document.getElementById('chat');
+        const caseTitleElement = document.getElementById("CaseTitle");
+        var caseId;
 
         BackgroundImages.SetBackground();
 
         messageUI = new MessageUI(chatDiv);
 
+        function LastCase()
+        {
+            UpdateURL(caseId-1);
+            SetText();
+        }
+
+        function NextCase()
+        {
+            UpdateURL(Number(caseId) + 1);
+            SetText();
+        }
+
+
+        function UpdateURL(newCaseId)
+        {
+            // Update the URL without refreshing the page
+            const newUrl = `${window.location.pathname}?id=${newCaseId}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+
+            console.log("Case ID added to the URL:", newCaseId);
+        }
+
+        function GetCaseFromURL()
+        {
+            // Parse the ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            caseId = urlParams.get('id');
+            
+            if (!caseId) {
+                console.error("No case ID found in the URL.");
+
+                caseID = 0;
+                return;
+            }
+        }
         
         async function SetText() {
             var historyManager = new HistoryManager();
 
-            // Parse the ID from the URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const caseId = urlParams.get('id');
-            
-            if (!caseId) {
-                console.error("No case ID found in the URL.");
-                return;
-            }
+            GetCaseFromURL();
 
             // Wait for the promise to resolve and get the result
             try {
@@ -246,6 +282,20 @@
                 // Now access the `case` property from the response
                 var gameCase = gameCaseResponse.case;
                 console.log(gameCase);
+
+                if(gameCase == null)
+                {
+                    caseTitleElement.textContent = "Case "+caseId+" not found";
+                    return; 
+                }else if(gameCase.caseTitle == null)
+                {
+                    caseTitleElement.textContent = "Case "+caseId;
+                }
+
+                // Set the content of the element
+                
+                caseTitleElement.textContent = "Case: " + gameCase.caseTitle;
+
 
                 // Extract and format players
                 var playersData = JSON.parse(gameCase.players);

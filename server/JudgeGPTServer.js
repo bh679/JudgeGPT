@@ -134,6 +134,7 @@ class JudgeGPTServer {
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
 
         console.log("game case set");
+        this.SetTitle(); //sets title async
 
         this.messagesChat.AddToChat(this.judge, this.gameCase);
         await new Promise(resolve => setTimeout(resolve, 3000+this.gameCase.length*this.speechCharTime));
@@ -150,8 +151,6 @@ class JudgeGPTServer {
                 return;
         }
 
-        this.SetTitle();
-
         this.NextPlayerTurn();
 
 
@@ -161,6 +160,9 @@ class JudgeGPTServer {
     async SetTitle()
     {
         this.caseTitle = await AskGPT("Come up for a short title for this legal case: " + this.gameCase);
+        this.judgeGPTDBManager.UpdateData(this);
+
+        console.log("Title: " + this.caseTitle);
     }
 
         
@@ -691,6 +693,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.ruling);
+        this.judgeGPTDBManager.UpdateData(this);
         await new Promise(resolve => setTimeout(resolve, 3000 + this.ruling.length*this.speechCharTime));
     }
 
@@ -703,6 +706,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.punishment);
+        this.judgeGPTDBManager.UpdateData(this);
         await new Promise(resolve => setTimeout(resolve, 3000 + this.punishment.length*this.speechCharTime));
     }
 
@@ -715,6 +719,7 @@ class JudgeGPTServer {
             return;
 
         this.messagesChat.AddToChat(this.judge, this.lesson);
+        this.judgeGPTDBManager.UpdateData(this);
         await new Promise(resolve => setTimeout(resolve, 3000 + this.lesson.length*this.speechCharTime));
     }
 
@@ -727,6 +732,7 @@ class JudgeGPTServer {
             return;
         
         console.log(this.winner);
+        this.judgeGPTDBManager.UpdateData(this);
 
         if(this.winner.toLowerCase().includes("innocent"))//this.activeRoles[1].role.toLowerCase()))
         {
