@@ -415,10 +415,12 @@
             switch (selectedPlayers) {
                 case 'With Human':
                     console.log('Players include both AI and Human.');
-                    if(playersData == null)
+                    console.log(playersData);
+                    if(!playersData)
                         return false;
 
-                    if(playersData.length > 0)
+                    console.log(Object.keys(playersData).length);
+                    if(Object.keys(playersData).length > 0)
                         return true; 
 
                     break;
@@ -427,7 +429,7 @@
                     if(playersData == null)
                         return false;
 
-                    if(playersData.length >= 2)
+                    if(Object.keys(playersData).length >= 2)
                         return true;
 
                     // Add any logic for 'Only Human' here
@@ -437,7 +439,7 @@
                     if(playersData == null)
                         return true;
 
-                    if(playersData.length == 0)
+                    if(Object.keys(playersData).length == 0)
                         return true;
                     // Add any logic for 'Only AI' here
                     break;
@@ -469,7 +471,9 @@
                     caseTitleElement.textContent = "Case "+caseId+" not found";
 
                     var gameCaseMaxIDResponse = await historyManager.GetCaseMaxID();
-                    console.log(gameCaseMaxIDResponse);
+                    console.log("gameCaseMaxIDResponse: " + gameCaseMaxIDResponse);
+
+                    caseMaxID = gameCaseMaxIDResponse.MaxID;
 
                     /*if(forward)
                         NextCase();
@@ -493,9 +497,9 @@
 
                 // Extract and format messages
                 var messagesData = JSON.parse(gameCase.messages).messages;
-                //console.log(messagesData);
+                console.log(messagesData);
 
-                if(!CheckCaseValid(messagesData))
+                if(!CheckCaseValid(messagesData, playersData))
                 {
                     if(forward)
                         NextCase();
