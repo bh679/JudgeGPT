@@ -339,18 +339,22 @@
             if(!CheckCaseCompeleteValid(messagesData))
                 return false;
 
+            console.log("CheckCaseCompeleteValid");
+
             if(!CheckCasePlayersValid(playersData))
                 return false;
+
+            console.log("CheckCasePlayersValid");
 
             return true;
 
 
         }
 
-
         function CheckCaseCompeleteValid(messagesData)
         {
             const selectedCaseComplete = caseCompleteDropdown.options[caseCompleteDropdown.selectedIndex].value;
+
             // Switch statement for 'Case Complete'
             switch (selectedCaseComplete) {
                 case 'Debug':
@@ -411,6 +415,8 @@
             switch (selectedPlayers) {
                 case 'With Human':
                     console.log('Players include both AI and Human.');
+                    if(playersData == null)
+                        return false;
 
                     if(playersData.length > 0)
                         return true; 
@@ -418,6 +424,8 @@
                     break;
                 case 'Only Human':
                     console.log('Only Human players.');
+                    if(playersData == null)
+                        return false;
 
                     if(playersData.length >= 2)
                         return true;
@@ -426,6 +434,8 @@
                     break;
                 case 'Only AI':
                     console.log('Only AI players.');
+                    if(playersData == null)
+                        return true;
 
                     if(playersData.length == 0)
                         return true;
@@ -483,10 +493,7 @@
 
                 // Extract and format messages
                 var messagesData = JSON.parse(gameCase.messages).messages;
-                console.log(messagesData);
-
-
-
+                //console.log(messagesData);
 
                 if(!CheckCaseValid(messagesData))
                 {
