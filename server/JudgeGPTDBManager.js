@@ -66,7 +66,7 @@ class JudgeGPTDBManager {
         //get highest ID
         this.GetHighestId();
 
-        this.getLastXEntries(5);
+        //this.getLastXEntries(5);
 
     }
 
@@ -194,7 +194,7 @@ console.log("Inserting data into judge_gpt_games:", {
         console.log("Successfully saved game to database with ID:", this.id);
 
 
-        this.getLastXEntries(5);
+        //this.getLastXEntries(5);
     }
 
 
@@ -270,7 +270,7 @@ console.log({
         });
 
 
-        this.getLastXEntries(5);
+        //this.getLastXEntries(5);
     }
 
     // Update GetEntryById to return a Promise

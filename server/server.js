@@ -116,9 +116,9 @@ app.post('/GetCase', async function (req, res) {
 
 // Update the POST handler to be async
 app.post('/GetCaseMaxID', async function (req, res) {
-    console.log(req.body);
-    const data = req.body.data;
-    console.log('Get case ' + JSON.stringify(data));
+    //console.log(req.body);
+    //const data = req.body.data;
+    //console.log('Get case ' + JSON.stringify(data));
 
     try {
         const MaxID = await judgeGPTServer.GetCaseMaxID();

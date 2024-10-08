@@ -67,6 +67,9 @@
 
 
                     <h5 id="subheading">Archives</h5>
+
+                    <!-- Audio Settings Button -->
+                    <button id="audioSettingsButton" class="btn btn-outline-primary" style="display: none; margin-left: 10px;" onclick="UI.ToggleAudioSettings()"><img class="audio-settings-icon" src="./images/icons/icon_tool_1.png"></button>
                     
                     <h4 style="display: flex; align-items: center;">
                         <img src="./images/icons/icon_common_40.png" width="25px" onclick="LastCase()">
@@ -83,6 +86,28 @@
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" id="voicesSwitch" onchange="messageUI.ToggleVoices(this.checked)">
                         <label class="form-check-label" for="flexSwitchCheckChecked">Voiced</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden Audio Settings -->
+            <div class="container" id="audioSettingsContainer">
+                <div id="audioSettings" class="container" style="display: none; margin-top: 10px;">
+                    <div class="row">
+                        <div class="col">
+                            <label for="masterVolumeSlider" class="form-label">Master Volume</label>
+                            <input type="range" class="form-range" id="masterVolumeSlider" min="0" max="100" onchange="UI.audioManager.setMasterVolume(this.value/100)">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="musicVolumeSlider" class="form-label">Music Volume</label>
+                            <input type="range" class="form-range" id="musicVolumeSlider" min="0" max="100" onchange="UI.audioManager.setMusicVolume(this.value/100)">
+                        </div>
+                        <div class="col">
+                            <label for="voiceVolumeSlider" class="form-label">Voice Volume</label>
+                            <input type="range" class="form-range" id="voiceVolumeSlider" min="0" max="100" onchange="UI.audioManager.setVoiceVolume(this.value/100)">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -228,7 +253,7 @@
         const colin =  document.getElementById('colin');
         const chatDiv = document.getElementById('chat');
         const caseTitleElement = document.getElementById("CaseTitle");
-        var caseId;
+        var caseId = -1;
         var gameCase;
         var caseMaxID = 22;
 
@@ -241,10 +266,11 @@
         function LastCase()
         {
             forward = false;
+
             if(caseId == 0)
-                UpdateURL(caseMaxID);
+                UpdateCaseID(caseMaxID);
             else
-                UpdateURL(caseId-1);
+                UpdateCaseID(caseId-1);
 
             caseTitleElement.textContent = "Loading ... ";
             chatDiv.textContent = "";
@@ -254,10 +280,11 @@
         function NextCase()
         {
             forward = true;
+
             if(caseId == caseMaxID)
-                UpdateURL(0);
+                UpdateCaseID(0);
             else
-                UpdateURL(Number(caseId) + 1);
+                UpdateCaseID(Number(caseId) + 1);
 
             caseTitleElement.textContent = "Loading ... ";
             chatDiv.textContent = "";
@@ -265,8 +292,11 @@
         }
 
 
-        function UpdateURL(newCaseId)
+        function UpdateCaseID(newCaseId)
         {
+
+            caseId = newCaseId;
+
             // Update the URL without refreshing the page
             const newUrl = `${window.location.pathname}?id=${newCaseId}`;
             window.history.pushState({ path: newUrl }, '', newUrl);
@@ -291,7 +321,8 @@
         async function SetText() {
             var historyManager = new HistoryManager();
 
-            GetCaseFromURL();
+            if(caseId == -1)
+                GetCaseFromURL();
 
             // Wait for the promise to resolve and get the result
             try {
@@ -338,6 +369,8 @@
                         NextCase();
                     else
                         LastCase();
+
+                    return;
                 }
 
                 // Assuming messageUI.AddMessage(sender, message) is a function that accepts a sender and a message as parameters.
