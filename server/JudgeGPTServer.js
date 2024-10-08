@@ -756,10 +756,10 @@ class JudgeGPTServer {
         this.stop = true;
     }
 
-    GetCase(data)
+    async GetCase(data)
     {
         if(data.id != null)
-            return db.GetEntryById(data.id);
+            return await this.judgeGPTDBManager.GetEntryById(data.id);
 
         return;
     }

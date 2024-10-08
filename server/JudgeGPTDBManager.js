@@ -255,6 +255,9 @@ console.log({
             // Display the row
             if (row) {
                 console.log(`Entry with ID ${id}:`, row);
+
+                return row;
+                
             } else {
                 console.log(`No entry found with ID ${id}.`);
             }

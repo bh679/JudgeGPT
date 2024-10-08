@@ -99,7 +99,7 @@ app.post('/AskGPT', function (req, res) {
 });
 
 
-// Call to GPT for older version of JudgeGPT
+// 
 app.post('/GetCase', function (req, res) {
     // Log the body of the request
     console.log(req.body);
@@ -112,9 +112,14 @@ app.post('/GetCase', function (req, res) {
 
 
     console.log('Get case ' + data);
-    var case = judgeGPTServer.GetCase(data);
+    var gameCase = judgeGPTServer.GetCase(data);
 
-    res.json(case: case);
+    console.log("case: " + gameCase);
+
+    res.json({case: gameCase});
+
+
+    console.log(res.case);
 
 });
 

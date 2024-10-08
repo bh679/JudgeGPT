@@ -1,0 +1,290 @@
+</html>
+<!DOCTYPE html>
+<!-- This site was created in Webflow. https://www.webflow.com -->
+<!-- Last Published: Thu May 18 2023 15:06:15 GMT+0000 (Coordinated Universal Time) -->
+<html data-wf-domain="">
+    <head>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-1760E3YTQP"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-1760E3YTQP');
+        </script>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>JudgeGPT</title>
+
+        <!-- Bookstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <!-- Judge GPT Style Shee -->
+        <link rel="stylesheet" type="text/css" href="./style.css">
+        <link rel="stylesheet" type="text/css" href="./courtroomChat.css">
+
+        <!-- JdugeGPT -->
+        <script src="./js/backgroundImages.js"></script>
+        <script src="./js/History.js"></script>
+        <script src="./js/ElevenLabsClient.js"></script>
+        <script src="./js/courtroomChat.js"></script>
+
+
+        <!-- timer (needs a file namechage) -->
+        <link rel="stylesheet" type="text/css" href="./progresbar.css">
+
+
+    </head>
+
+    <body class="body">
+
+        <!-- tool tips -->
+        <script>
+            $(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
+
+        <!-- background -->
+        <div id="background">
+            <!-- This div will serve as your background. -->
+        </div>
+
+        
+
+        <!-- The Game -->
+        <div>
+
+            <!-- heading -->
+            <div class="container" id="hero" style="padding-top: 80px;">
+                <center>
+                    <h1><a href="/JudgeGPT" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">JudgeGPT</a></h1>
+
+                    <h5 id="subheading">About</h5>
+                </center>
+                <div class="d-flex justify-content-center">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="voicesSwitch" onchange="messageUI.ToggleVoices(this.checked)">
+                        <label class="form-check-label" for="flexSwitchCheckChecked">Voiced</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- chat -->
+            <div class="container">
+                <div class="row">
+
+                    <!-- Courtroom -->
+                    <div id="courtRoom" class="col-9 col-xs-12">
+
+                        <!-- Hearing -->
+                        <div id="chat">
+                            <div class="message row judge">
+                                <div class="col-4 col-s-3 col-xxs-2 sender" style="">Brennan Hatton</div>
+                                <div class="col messageContents rounded-3" id="brennan">Lead Dev & Designer. He made this.</div>
+                            </div>
+                            <div class="message row judge">
+                                <div class="col-4 col-s-3 col-xxs-2 sender" style="">Colin</div>
+                                <div class="col messageContents rounded-3 alt" id="colin">The OG Idea Man. He first came up with the idea.</div>
+                            </div>
+                            <div class="message row judge">
+                                <div class="col-4 col-s-3 col-xxs-2 sender" style="">Faith Louise</div>
+                                <div class="col messageContents rounded-3 alt" id="faith">The Ideas Woman.</div>
+                            </div>
+                            <div class="message row judge">
+                                <div class="col-4 col-s-3 col-xxs-2 sender" style="">Dale</div>
+                                <div class="col messageContents rounded-3 alt" id="dale">The Music Man.</div>
+                            </div>
+                            <div class="message row judge">
+                                <div class="col-4 col-s-3 col-xxs-2 sender" style="">Tim Christie</div>
+                                <div class="col messageContents rounded-3" id="tim">The Funny Man.</div>
+                            </div>
+                    </div>
+                        <div id="typing"></div>
+
+                        <center hidden>
+                            <button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()" style="margin: 10%;">Join</button>
+                        </center>
+                        <div id="endButtons">
+                            <div id="analysisGroup" class="row">
+                                <div id="analysis0" class="Analysis col-6"></div>
+                                <div id="analysis1" class="Analysis col-6"></div>
+                            </div>
+                            <div class="row" hidden>
+                                <button id="restartButton" class="button w-button col" onclick="location.reload()">
+                                    Restart
+                                </button>
+                                <button id="analysisButton" class="button w-button col" onclick="UI.Analysis()">
+                                    Analyze Responses
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div id="inputGroup" class="row">
+                            <div class="col-4 col-s-3 col-xxs-2 sender">You:</div>
+
+                            <div class="col">
+                                <div class="row">
+                                    <button id="submitButton" class="button w-button rounded-3 col" onclick="window.location.href = './'">
+                                        Back To Game
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audience / Gallery -->
+                    <div class="col" hidden>
+
+                        <!-- User Profile / Identity -->
+                        <div class="row" hidden>
+                            <div class="card" style="margin:5px">
+                                <center style="margin:20px">
+                                    <div id="courtRoomIdentity">
+                                    </div>
+                                    <!--button id="joinHearingButton" class="button w-button rounded" onclick="UI.TryJoinHearing()">Join</button-->
+                                </center>
+                            </div>
+                        </div>
+
+
+                        <!-- Hearing Participants -->
+                        <div class="row">
+                            <h3>In Court</h3>
+                        </div>
+                        <div id="playerList" class="row">
+                            <div class="card col-4" style="margin:5px" hidden>
+                                <center style="margin:5px;">
+                                        <img src="https://brennan.games/JudgeGPT/images/profiles/brennanhatton_profile_picture_of_person_preparing_to_go_to_cour_e2da51d0-fb44-4204-96fe-9bb4c311e862.png" class="rounded-circle" style="width:80%; margin:0%"/> 
+                                        <div>Name</div>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="row" id="audience">
+                        </div>
+                        <div id="chatRoom" class="chatRoom">
+                            <ul id="chatRoomMessages"></ul>
+                            <form id="chatRoomMessageForm">
+                              <input type="text" id="chatRoomInput" autocomplete="off" />
+                              <button type="submit">Send</button>
+                            </form>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Winner -->
+            <div class="container fixed-top" style="z-index: -1;   ">
+                <img id="winner" src="" style="opacity: 0.45;"/>
+                <img src="./images/guilty.png" hidden/>
+                <img src="./images/notguilty.png" hidden/> <!-- find a better way to preload these -->
+            </div>
+
+        </div>    
+        <!-- End of game-->
+
+        <div style="padding-bottom: 50px;"></div>
+
+       <!-- Header -->
+        <div class="container fixed-top">
+            <div class="row">
+                <div class="col" style="display: inline-block; background-color: white;">
+                    <p>
+                        <a href="./index.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">JudgeGPT</a> | 
+                        <a href="./about.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">About</a> | 
+                        <a href="./credits.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Team</a> | 
+                        <a href="https://github.com/bh679/JudgeGPT/blob/main/README.md" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">News</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings">
+            
+        </div>
+
+<!--
+
+<a href="https://life.brennanhatton.com" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">BrennanHatton.com</a> | 
+                    <a href="https://github.com/bh679" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">Github</a> | 
+                    <a href="https://discord.gg/4sXaaAYHDQ" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Discord</a> | 
+                    <a href="#" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" onclick="Restart();">Restart</a> | 
+                    <a href="https://brennan.games/JudgeGPT_v0/" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">V0</a> | 
+                    <a href="./credits.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Credits</a>
+                </p
+-->
+
+    <script>
+
+        // Define global variables
+        const hero =  document.getElementById('hero');
+        const brennan =  document.getElementById('brennan');
+        const faith =  document.getElementById('faith');
+        const tim =  document.getElementById('tim');
+        const dale =  document.getElementById('dale');
+        const colin =  document.getElementById('colin');
+        const chatDiv = document.getElementById('chat');
+
+        BackgroundImages.SetBackground();
+
+        messageUI = new MessageUI(chatDiv);
+
+        var historyManager = new HistoryManager();
+
+        historyManager.GetCase({id:10});
+
+        async function SetText()
+        {
+            var JudgeGPT = {};
+            JudgeGPT.name = "GPT";
+            JudgeGPT.role = "Judge";
+            JudgeGPT.class = "judge";
+            JudgeGPT.voiceId = '21m00Tcm4TlvDq8ikWAM';
+            JudgeGPT.profileUrl = GetRandomJudgeProfileImage();
+
+            var BrennanHatton = {};
+            BrennanHatton.name = "Brennan";
+            BrennanHatton.role = "";
+            BrennanHatton.class = "brennan";
+            BrennanHatton.voiceId = 'EZYvN1hBxpVgOy2hGxBs';
+            BrennanHatton.profileUrl = GetRandomBrennanProfileImage();
+
+
+
+            const messages = [
+                "JudgeGPT is an improv legal role-playing game based in the near future, where AI has replaced the legal system.",
+                "Your lawyer, judge, jury, and executioner.",
+                "Human vs Human, AI decides your shared fate.",
+                "In this AI courtroom, one case is held at a time. Connecting to the court, you stand as a defendant, Plaintiff, or audience member.",
+                "Defendant and Plaintiff are given one chance to make a statement supporting their argument.",
+                '<b><a href="./index.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Enter the courtroom</a></b> to witness the case, or find yourself in the middle of it.',
+                '',
+                'JudgeGPT is Open-Sourvce on <b><a href="https://github.com/bh679" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Github</a></b>',
+                'Join the community and contact the developers directly on our <b><a href="https://discord.gg/4sXaaAYHDQ" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Discord</a></b>',
+                'Find more about the developer Brennan at his website <b><a href="https://life.brennanhatton.com" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">BrennanHatton.com</a></b> or the whole team on our <b><a href="./credits.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Team Page</a></b>.'
+            ];
+
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    messageUI.AddMessage(BrennanHatton, message);
+                }, index * 1000); // Delay increases by 1000ms (1 second) for each message
+            });
+
+
+           
+        }
+
+        SetText();
+
+    </script>
+
+
+    </body>
+</html>
