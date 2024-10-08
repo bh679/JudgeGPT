@@ -114,6 +114,22 @@ app.post('/GetCase', async function (req, res) {
     }
 });
 
+// Update the POST handler to be async
+app.post('/GetCaseMaxID', async function (req, res) {
+    console.log(req.body);
+    const data = req.body.data;
+    console.log('Get case ' + JSON.stringify(data));
+
+    try {
+        const MaxID = await judgeGPTServer.GetCaseMaxID();
+        console.log("MaxID: " + JSON.stringify(MaxID));
+        res.json({ MaxID: MaxID });
+    } catch (error) {
+        console.error("Error fetching case:", error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 //-------------------------
 //  Socket.io

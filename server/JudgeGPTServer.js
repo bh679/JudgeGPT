@@ -777,11 +777,20 @@ class JudgeGPTServer {
     async GetCase(data) {
         if (data.id != null) {
             var res = await this.judgeGPTDBManager.GetEntryById(data.id);
-            res.max_id = await this.judgeGPTDBManager.FindLastID();
-            console.log("MaxID: " + res.max_id);
+            //res.max_id = await this.judgeGPTDBManager.FindLastID();
+            //console.log("MaxID: " + res.max_id);
             return res;
         }
         return null;
+    }
+
+    // Update GetCase to be async
+    async GetCaseMaxID() {
+
+        var res =await this.judgeGPTDBManager.FindLastID();
+        console.log("MaxID: " + res);
+        return res;
+        
     }
 
 }
