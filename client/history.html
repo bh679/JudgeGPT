@@ -237,61 +237,42 @@
         messageUI = new MessageUI(chatDiv);
 
         
-
-        async function SetText()
-        {
+        async function SetText() {
             var historyManager = new HistoryManager();
 
-            //historyManager.GetCase({id: 4});
-            var gameCase = await historyManager.GetCase({id: 7}).case;
-            console.log(gameCase);
+            // Parse the ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const caseId = urlParams.get('id');
+            
+            if (!caseId) {
+                console.error("No case ID found in the URL.");
+                return;
+            }
 
+            // Wait for the promise to resolve and get the result
+            try {
+                var gameCaseResponse = await historyManager.GetCase({ id: parseInt(caseId) });
 
-            // Extract and format players
-            var playersData = JSON.parse(gameCase.players);
-            console.log(playersData);
+                // Now access the `case` property from the response
+                var gameCase = gameCaseResponse.case;
+                console.log(gameCase);
 
-            // Extract and format messages
-            var messagesData = JSON.parse(gameCase.messages).messages;
-            console.log(messagesData);
+                // Extract and format players
+                var playersData = JSON.parse(gameCase.players);
+                console.log(playersData);
 
-            var JudgeGPT = {};
-            JudgeGPT.name = "GPT";
-            JudgeGPT.role = "Judge";
-            JudgeGPT.class = "judge";
-            JudgeGPT.voiceId = '21m00Tcm4TlvDq8ikWAM';
-            JudgeGPT.profileUrl = GetRandomJudgeProfileImage();
+                // Extract and format messages
+                var messagesData = JSON.parse(gameCase.messages).messages;
+                console.log(messagesData);
 
-            var BrennanHatton = {};
-            BrennanHatton.name = "Brennan";
-            BrennanHatton.role = "";
-            BrennanHatton.class = "brennan";
-            BrennanHatton.voiceId = 'EZYvN1hBxpVgOy2hGxBs';
-            BrennanHatton.profileUrl = GetRandomBrennanProfileImage();
-
-
-
-            const messages = [
-                "JudgeGPT is an improv legal role-playing game based in the near future, where AI has replaced the legal system.",
-                "Your lawyer, judge, jury, and executioner.",
-                "Human vs Human, AI decides your shared fate.",
-                "In this AI courtroom, one case is held at a time. Connecting to the court, you stand as a defendant, Plaintiff, or audience member.",
-                "Defendant and Plaintiff are given one chance to make a statement supporting their argument.",
-                '<b><a href="./index.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Enter the courtroom</a></b> to witness the case, or find yourself in the middle of it.',
-                '',
-                'JudgeGPT is Open-Sourvce on <b><a href="https://github.com/bh679" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Github</a></b>',
-                'Join the community and contact the developers directly on our <b><a href="https://discord.gg/4sXaaAYHDQ" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">Discord</a></b>',
-                'Find more about the developer Brennan at his website <b><a href="https://life.brennanhatton.com" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"target="_blank">BrennanHatton.com</a></b> or the whole team on our <b><a href="./credits.html" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Team Page</a></b>.'
-            ];
-
-            messages.forEach((message, index) => {
-                setTimeout(() => {
-                    messageUI.AddMessage(BrennanHatton, message);
-                }, index * 1000); // Delay increases by 1000ms (1 second) for each message
-            });
-
-
-           
+                // Assuming messageUI.AddMessage(sender, message) is a function that accepts a sender and a message as parameters.
+                for (let i = 0; i < messagesData.length; i++) {
+                    let messageData = messagesData[i];
+                    messageUI.AddMessage(messageData.sender, messageData.message);
+                }
+            } catch (error) {
+                console.error("Error fetching the case:", error);
+            }
         }
 
         SetText();
