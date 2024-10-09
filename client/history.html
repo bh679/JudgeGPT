@@ -267,7 +267,7 @@
         const searchSettingsButton = document.getElementById("SearchSettingsButton");
         var caseId = -1;
         var gameCase;
-        var caseMaxID = 22;
+        var caseMaxID = -1;
         var searchSettingsVisible = false;
 
 
@@ -338,7 +338,11 @@
             if (!caseId) {
                 console.error("No case ID found in the URL.");
 
-                caseID = 0;
+                if(caseMaxID != -1)
+                    caseId = caseMaxID;
+                else
+                    caseID = 0;
+
                 return;
             }
         }
@@ -509,6 +513,14 @@
         
         async function SetText() {
             var historyManager = new HistoryManager();
+
+            if(caseMaxID == -1)
+            {
+                var gameCaseMaxIDResponse = await historyManager.GetCaseMaxID();
+                console.log("gameCaseMaxIDResponse: " + gameCaseMaxIDResponse);
+
+                caseMaxID = gameCaseMaxIDResponse.MaxID;
+            }
 
             if(caseId == -1)
                 GetCaseFromURL();
