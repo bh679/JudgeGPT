@@ -74,6 +74,8 @@
                         </button>
                     </div>
 
+                    <h8 id="CaseDate">
+                    </h8>
                     <h4 style="display: flex; align-items: center;">
                         <img src="./images/icons/icon_common_40.png" width="25px" onclick="LastCase()">
                         <div id="CaseTitle" style="flex-grow: 1; text-align: center;">Your Case Title</div>
@@ -263,6 +265,7 @@
         const colin =  document.getElementById('colin');
         const chatDiv = document.getElementById('chat');
         const caseTitleElement = document.getElementById("CaseTitle");
+        const caseDateElement = document.getElementById("CaseDate");
         const searchSettingsContainer = document.getElementById("SearchSettings");
         const searchSettingsButton = document.getElementById("SearchSettingsButton");
         var caseId = -1;
@@ -559,6 +562,16 @@
                 // Set the content of the element
                 
                 caseTitleElement.textContent = "Case: " + gameCase.caseTitle;
+
+                // Assuming gameCase.timeSaved is in milliseconds since the Unix epoch
+                const timestamp = gameCase.timeSaved;
+                const dateObject = new Date(timestamp);
+
+                // You can format the date however you'd like
+                const formattedDate = dateObject.toLocaleString(); // This will give a readable date and time string
+
+                // Setting the formatted date to the textContent
+                caseDateElement.textContent = formattedDate;
 
 
                 // Extract and format players
