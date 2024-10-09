@@ -279,7 +279,7 @@
         {
             forward = false;
 
-            if(caseId == 0)
+            if(caseId <= 0)
                 UpdateCaseID(caseMaxID);
             else
                 UpdateCaseID(caseId-1);
@@ -293,7 +293,7 @@
         {
             forward = true;
 
-            if(caseId == caseMaxID)
+            if(caseId >= caseMaxID)
                 UpdateCaseID(0);
             else
                 UpdateCaseID(Number(caseId) + 1);
