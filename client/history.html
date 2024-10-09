@@ -87,30 +87,30 @@
             <div class="container" id="SearchSettingsContainer">
                 <div id="SearchSettings" class="container" style="display: none; margin-top: 10px;">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-sm-6 col-md-6">
                             <label for="caseCompleteDropdown" class="form-label">Case Complete</label>
                             <select class="form-select" id="caseCompleteDropdown">
                                 <option value="Not Started">Debug</option>
                                 <option value="Not Started">Case Presented</option>
-                                <option value="Undecided">Defendant Responsed</option>
+                                <option value="Undecided">Defendant Responded</option>
                                 <option value="Ruling" selected>Ruling</option>
                                 <option value="Punishment">Punishment</option>
                                 <option value="Lesson">Lesson</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row" style="margin-top: 10px;">
-                        <div class="col">
+                        <div class="col-sm-6 col-md-6">
                             <label for="playersDropdown" class="form-label">Players</label>
                             <select class="form-select" id="playersDropdown">
                                 <option value="With Human" selected>With Human</option>
                                 <option value="Only Human">Only Human</option>
                                 <option value="Only AI">Only AI</option>
+                                <option value="Any">Include None</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
+
 
 
                 <div class="d-flex justify-content-center">
@@ -491,6 +491,10 @@
 
                     if(Object.keys(playersData).length == 0)
                         return true;
+                    // Add any logic for 'Only AI' here
+                    break;
+                case 'Any':
+                    return true;
                     // Add any logic for 'Only AI' here
                     break;
                 default:
