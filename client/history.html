@@ -286,7 +286,7 @@
 
         messageUI = new MessageUI(chatDiv);
 
-        var forward = true;
+        var forward = false;
 
         function LastCase()
         {
@@ -341,7 +341,8 @@
                 if(caseMaxID != -1)
                     caseId = caseMaxID;
                 else
-                    caseID = 0;
+                    caseId = 0;
+                console.log("caseID:"+caseId);
 
                 return;
             }
