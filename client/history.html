@@ -458,6 +458,8 @@
             if(caseId == -1)
                 GetCaseFromURL();
 
+
+
             // Wait for the promise to resolve and get the result
             try {
                 var gameCaseResponse = await historyManager.GetCase({ id: parseInt(caseId) });
@@ -508,6 +510,9 @@
 
                     return;
                 }
+
+                //reset chat
+                messageUI = new MessageUI(chatDiv);
 
                 // Assuming messageUI.AddMessage(sender, message) is a function that accepts a sender and a message as parameters.
                 for (let i = 0; i < messagesData.length; i++) {
