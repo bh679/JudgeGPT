@@ -40,6 +40,7 @@ class JudgeGPTServer {
         this.punishment = "";
         this.winner = "";
         this.caseTitle = "";
+        this.backgroundImage = "";
 
         this.messagesChat = new MessageBackEnd();
         this.prompts = new Prompts();
@@ -131,7 +132,8 @@ class JudgeGPTServer {
         this.aiTurn = true;
         this.judgeGPTDBManager = new JudgeGPTDBManager(this);
 
-        
+        this.backgroundImage = BackgroundImages.GetRandomBackgroundImage();
+
         this.gameCase = await AskGPT(this.prompts.cases[Math.floor(Math.random() * this.prompts.cases.length)]);
 
         console.log("game case set");
