@@ -186,6 +186,7 @@ io.on('connection', async (socket) => {
             messages: judgeGPTServer.messagesChat.messages,
             playerTurn: judgeGPTServer.GetPlayersTurn(),
             playerList: judgeGPTServer.GetPlayers(),
+            bg: judgeGPTServer.backgroundImage,
             winner: judgeGPTServer.winner
         });
         //console.log(judgeGPTServer.messagesChat.messages);
