@@ -91,8 +91,8 @@
                             <label for="caseCompleteDropdown" class="form-label">Case Complete</label>
                             <select class="form-select" id="caseCompleteDropdown">
                                 <option value="Not Started">Debug</option>
-                                <option value="Not Started">Not Started</option>
-                                <option value="Undecided">Undecided</option>
+                                <option value="Not Started">Case Presented</option>
+                                <option value="Undecided">Defendant Responsed</option>
                                 <option value="Ruling" selected>Ruling</option>
                                 <option value="Punishment">Punishment</option>
                                 <option value="Lesson">Lesson</option>
@@ -365,7 +365,7 @@
 
                     break;
                 case 'Not Started':
-                    console.log('Case is Not Started.');
+                    console.log('Case Presented');
                     // Add any logic for 'Not Started' here
 
                     if(messagesData.length >= 1)
@@ -373,7 +373,7 @@
 
                     break;
                 case 'Undecided':
-                    console.log('Case is Undecided.');
+                    console.log('Case Responded.');
                     // Add any logic for 'Undecided' here
 
                     if(messagesData.length >= 3)
