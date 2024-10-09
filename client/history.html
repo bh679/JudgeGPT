@@ -269,6 +269,18 @@
         var caseMaxID = 22;
         var searchSettingsVisible = false;
 
+
+
+        // Get selected values from dropdowns
+        const caseCompleteDropDown = document.getElementById('caseCompleteDropdown');
+        const playersDropDown = document.getElementById('playersDropdown');
+
+        // Add event listeners to call UpdateSettings when dropdown values are changed
+        caseCompleteDropDown.addEventListener('change', UpdateSettings);
+        playersDropDown.addEventListener('change', UpdateSettings);
+
+
+
         BackgroundImages.SetBackground();
 
         messageUI = new MessageUI(chatDiv);
@@ -330,6 +342,44 @@
             }
         }
 
+
+        // Function to get settings from the URL
+        function GetSettingsFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Get the 'caseComplete' and 'players' parameters from the URL
+            const caseComplete = urlParams.get('caseComplete');
+            const players = urlParams.get('players');
+
+            // Update dropdown values only if they are present in the URL
+            if (caseComplete) {
+                caseCompleteDropDown.value = caseComplete;
+                console.log("Case Complete setting found in URL:", caseComplete);
+            } else {
+                console.log("No Case Complete setting found in the URL.");
+            }
+
+            if (players) {
+                playersDropDown.value = players;
+                console.log("Players setting found in URL:", players);
+            } else {
+                console.log("No Players setting found in the URL.");
+            }
+        }
+
+        // Function to update settings and reflect them in the URL
+        function UpdateSettings() {
+
+            // Build the new URL with the updated settings
+            const newUrl = `${window.location.pathname}?caseComplete=${encodeURIComponent(caseCompleteDropDown.value)}&players=${encodeURIComponent(playersDropDown.value)}`;
+            
+            // Update the URL without refreshing the page
+            window.history.pushState({ path: newUrl }, '', newUrl);
+
+            console.log("Settings updated in the URL:", newUrl);
+        }
+
+
         const caseCompleteDropdown = document.getElementById('caseCompleteDropdown');
         const playersDropdown = document.getElementById('playersDropdown');
 
@@ -365,7 +415,7 @@
 
                     break;
                 case 'Not Started':
-                    console.log('Case Presented');
+                    console.log('Case Presented: ' + messagesData.length);
                     // Add any logic for 'Not Started' here
 
                     if(messagesData.length >= 1)
@@ -373,7 +423,7 @@
 
                     break;
                 case 'Undecided':
-                    console.log('Case Responded.');
+                    console.log('Case Responded: ' + messagesData.length);
                     // Add any logic for 'Undecided' here
 
                     if(messagesData.length >= 3)
