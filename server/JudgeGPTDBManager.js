@@ -2,6 +2,7 @@
 const sqlite3 = require('sqlite3').verbose();
 
 const dbAddress = './jgptdb.sqlite3';
+const debug = false;
 
 class JudgeGPTDBManager {
     constructor(Server) {
@@ -26,6 +27,7 @@ class JudgeGPTDBManager {
         this.winner = Server.winner;
         this.timeStart = Server.timeStart;
         this.timeSaved = Date.now();
+        this.backgroundImage = Server.backgroundImage;
     }
 
     initializeDB() {
@@ -48,7 +50,8 @@ class JudgeGPTDBManager {
                 punishment TEXT,
                 winner TEXT,
                 timeStart INTEGER,
-                timeSaved INTEGER
+                timeSaved INTEGER,
+                backgroundImage TEXT
             )
         `;
         this.db.run(createTableSQL, (err) => {
@@ -134,8 +137,8 @@ class JudgeGPTDBManager {
         });
 
         const insertSQL = `
-            INSERT INTO judge_gpt_games (players, activeRoles, messages, gameCase, caseTitle, ruling, punishment, winner, timeStart, timeSaved)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO judge_gpt_games (players, activeRoles, messages, gameCase, caseTitle, ruling, punishment, winner, timeStart, timeSaved, backgroundImage)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
 // Debug log for data being inserted
@@ -149,7 +152,8 @@ console.log("Inserting data into judge_gpt_games:", {
     punishment: this.punishment,
     winner: this.winner,
     timeStart: this.timeStart,
-    timeSaved: this.timeSaved
+    timeSaved: this.timeSaved,
+    backgroundImage: this.backgroundImage;
 });
 
         // Run the INSERT SQL command
@@ -165,7 +169,8 @@ console.log("Inserting data into judge_gpt_games:", {
                 this.punishment,
                 this.winner,
                 this.timeStart,
-                this.timeSaved
+                this.timeSaved,
+                this.backgroundImage
             ],
             function(err) {
                 if (err) {
@@ -191,7 +196,8 @@ console.log("Inserting data into judge_gpt_games:", {
         //get highest ID
         this.GetHighestId();
 
-        console.log("Successfully saved game to database with ID:", this.id);
+        if(debug)
+            console.log("Successfully saved game to database with ID:", this.id);
 
 
         //this.getLastXEntries(5);
@@ -210,20 +216,24 @@ console.log("Inserting data into judge_gpt_games:", {
         });
 
         // Log the data being sent to the database for debugging
-console.log("Preparing to update database with the following data:");
-console.log({
-    players: JSON.stringify(this.players),
-    activeRoles: JSON.stringify(this.activeRoles),
-    messages: JSON.stringify(this.messages),
-    gameCase: this.gameCase,
-    caseTitle: this.caseTitle,
-    ruling: this.ruling,
-    punishment: this.punishment,
-    winner: this.winner,
-    timeStart: this.timeStart,
-    timeSaved: this.timeSaved,
-    id: this.id
-});
+        if(debug)
+        {
+            console.log("Preparing to update database with the following data:");
+            console.log({
+                players: JSON.stringify(this.players),
+                activeRoles: JSON.stringify(this.activeRoles),
+                messages: JSON.stringify(this.messages),
+                gameCase: this.gameCase,
+                caseTitle: this.caseTitle,
+                ruling: this.ruling,
+                punishment: this.punishment,
+                winner: this.winner,
+                timeStart: this.timeStart,
+                timeSaved: this.timeSaved,
+                backgroundImage: this.backgroundImage,
+                id: this.id
+            });
+        }
         
         // Update the record corresponding to the saved ID
         const updateSQL = `
@@ -237,7 +247,8 @@ console.log({
                 punishment = ?, 
                 winner = ?, 
                 timeStart = ?, 
-                timeSaved = ?
+                timeSaved = ?,
+                backgroundImage = ?
             WHERE id = ?
         `;
         this.db.run(
@@ -259,7 +270,9 @@ console.log({
                 if (err) {
                     return console.error(err.message);
                 }
-                console.log("Successfully updated game in database with ID:", this.id);
+                
+                if(debug)
+                    console.log("Successfully updated game in database with ID:", this.id);
             }
         );
 
@@ -281,7 +294,8 @@ console.log({
                     console.error('Error connecting to the database:', err.message);
                     reject(err);
                 } else {
-                    console.log('Connected to the SQLite database.');
+                    if(debug)
+                        console.log('Connected to the SQLite database.');
                 }
             });
 
@@ -293,7 +307,8 @@ console.log({
                     reject(err);
                 } else if (row) {
                     //row.max_id = this.GetHighestId();
-                    console.log(`Entry with ID ${id}:`, row);
+                    if(debug)
+                        console.log(`Entry with ID ${id}:`, row);
                     resolve(row);
                 } else {
                     console.log(`No entry found with ID ${id}.`);
@@ -305,7 +320,8 @@ console.log({
                 if (err) {
                     console.error('Error closing the database:', err.message);
                 }
-                console.log('Closed the database connection.');
+                if(debug)
+                    console.log('Closed the database connection.');
             });
         });
     }
@@ -316,7 +332,8 @@ console.log({
             if (err) {
                 return console.error('Error connecting to the database:', err.message);
             }
-            console.log('Connected to the SQLite database.');
+            if(debug)
+                console.log('Connected to the SQLite database.');
         });
 
         // Assuming you have an "id" field in your table that increments with each entry
@@ -328,14 +345,16 @@ console.log({
             }
             
             // Display the rows
-            console.log(`Last ${x} entries:`, rows);
+            if(debug)
+                console.log(`Last ${x} entries:`, rows);
         });
 
         db.close((err) => {
             if (err) {
                 return console.error('Error closing the database:', err.message);
             }
-            console.log('Closed the database connection.');
+            if(debug)
+                console.log('Closed the database connection.');
         });
     }
 
