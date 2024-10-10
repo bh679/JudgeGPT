@@ -150,12 +150,9 @@ class BackgroundImages
 
         backgroundImage = bgImage;
 
-        console.log(bgImage);
-        //bgId = Math.floor(Math.random() * backgroundImages.length);
-        //var bgImage = backgroundImages[bgId];
         document.body.style.setProperty('--bg-opacity', 0);
 
-                // Create new image object
+        // Create new image object
         var img = new Image();
 
         var imageLoadPromise = new Promise((resolve, reject) => {

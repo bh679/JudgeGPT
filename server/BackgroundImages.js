@@ -248,7 +248,7 @@ class BackgroundImages
 
     static GetRandomBackgroundImage()
     {
-        return /*url+'/images/' +*/ backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+        return backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
     }
 }
 
