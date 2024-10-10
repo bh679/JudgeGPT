@@ -181,6 +181,8 @@ io.on('connection', async (socket) => {
     // Emit status updates to the client at regular intervals
     const interval = setInterval(() => {
 
+        console.log(judgeGPTServer.backgroundImage);
+
         //All details of game
         socket.emit('GameUpdate', { 
             messages: judgeGPTServer.messagesChat.messages,

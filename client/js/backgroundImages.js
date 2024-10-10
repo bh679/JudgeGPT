@@ -141,6 +141,7 @@ class BackgroundImages
 
     static async SetBackground(bgImage)
     {
+        console.log(bgImage);
         //bgId = Math.floor(Math.random() * backgroundImages.length);
         //var bgImage = backgroundImages[bgId];
         document.body.style.setProperty('--bg-opacity', 0);

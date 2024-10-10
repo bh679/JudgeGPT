@@ -248,7 +248,7 @@ class BackgroundImages
 
     static GetRandomBackgroundImage()
     {
-        return url+'/images/profiles/judge/' + backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+        return url+'/images/' + backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
     }
 }
 
