@@ -145,12 +145,14 @@ class BackgroundImages
 
     static async SetBackground(bgImage)
     {
-        if(backgroundImage == bgImage)
+        if (backgroundImage === bgImage)
             return;
 
         backgroundImage = bgImage;
 
-        document.body.style.setProperty('--bg-opacity', 0);
+        // Disable the transition for the immediate opacity change
+        document.body.style.transition = 'none';
+        document.body.style.setProperty('--bg-opacity', 0);  // Instantly set opacity to 0
 
         // Create new image object
         var img = new Image();
@@ -158,24 +160,27 @@ class BackgroundImages
         var imageLoadPromise = new Promise((resolve, reject) => {
             img.onload = resolve;
             img.onerror = reject;
-            img.src = url+'/images/' + bgImage;
+            img.src = url + '/images/' + bgImage;
         });
 
         try 
         {
             await imageLoadPromise;
 
-            // Image has loaded, you can continue with the next part of your code.
-            document.body.style.setProperty('--bg-opacity', 0);
+            document.body.style.transition = 'opacity 0s ease-in-out';  // Set the transition back
+            document.body.style.setProperty('--bg-opacity', 0);  // Instantly set opacity to 0
+
+            // Image has loaded, now apply the new background image
             document.documentElement.style.setProperty('--bg-image', `url('${img.src}')`);
 
-            // Then, fade in the background
-            document.body.style.setProperty('--bg-opacity', 0.75);
-        } catch (error) {
+             document.body.style.transition = 'opacity 5s ease-in-out';  // Set the transition back
+            document.body.style.setProperty('--bg-opacity', 0.75);  // Fade in to opacity 0.75
+        } 
+        catch (error) 
+        {
             console.error("Failed to load image: ", error);
             this.SetBackground();
         }
-
     }
 
     /*static async GlitchBackground() {

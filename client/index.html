@@ -315,6 +315,10 @@
 
         UI.Start();
 
+        document.body.style.setProperty('--bg-opacity', 0); 
+
+        //BackgroundImages.SetBackground(); -- I moved the function from here as it now needs to take the image from the server
+
         restartButton.innerText = RandomLines.GetRestartButtonLabel();
         subheading.innerText = RandomLines.GetTagLine();
 
@@ -371,7 +375,7 @@
             if (data.winner != "")
                 UI.SetWinner(data.winner);
 
-            BackgroundImages.SetBackground(data.bg);
+            BackgroundImages.SetBackground(data.bg); //takes image from server, but loading at full opacity rather then 0 as desired
         });
         
         socket.on('AiResponse', (data) => {
