@@ -89,10 +89,13 @@
             <div class="container" id="SearchSettingsContainer">
                 <div id="SearchSettings" class="container" style="display: none; margin-top: 10px;">
                     <div class="row">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="debugSwitch">
+                            <label class="form-check-label" for="flexSwitchCheckChecked">Debug</label>
+                        </div>
                         <div class="col-sm-6 col-md-6">
                             <label for="caseCompleteDropdown" class="form-label">Case Complete</label>
                             <select class="form-select" id="caseCompleteDropdown">
-                                <option value="Not Started">Debug</option>
                                 <option value="Not Started">Case Presented</option>
                                 <option value="Undecided">Defendant Responded</option>
                                 <option value="Ruling" selected>Ruling</option>
@@ -125,6 +128,11 @@
 
             <!-- chat -->
             <div class="container">
+
+                <div class="row">
+                    <pre id="debugOutput"></pre>
+                </div>
+
                 <div class="row">
 
                     <!-- Courtroom -->
@@ -268,11 +276,13 @@
         const caseDateElement = document.getElementById("CaseDate");
         const searchSettingsContainer = document.getElementById("SearchSettings");
         const searchSettingsButton = document.getElementById("SearchSettingsButton");
+        const debugSwitchElement = document.getElementById("debugSwitch");
+        const debugOutputElement = document.getElementById("debugOutput");
         var caseId = -1;
         var gameCase;
         var caseMaxID = -1;
         var searchSettingsVisible = false;
-
+        var userDebugMode = false;
 
 
         // Get selected values from dropdowns
@@ -282,6 +292,7 @@
         // Add event listeners to call UpdateSettings when dropdown values are changed
         caseCompleteDropDown.addEventListener('change', UpdateSettings);
         playersDropDown.addEventListener('change', UpdateSettings);
+        debugSwitchElement.addEventListener('change', DebugSwitch);
 
 
 
@@ -359,6 +370,7 @@
             // Get the 'caseComplete' and 'players' parameters from the URL
             const caseComplete = urlParams.get('caseComplete');
             const players = urlParams.get('players');
+            const debug = urlParams.get('debug');
 
             // Update dropdown values only if they are present in the URL
             if (caseComplete) {
@@ -374,13 +386,24 @@
             } else {
                 console.log("No Players setting found in the URL.");
             }
+
+            if(debug)
+            {
+                debugSwitchElement.checked = true;
+                DebugSwitch();
+            }
         }
 
         // Function to update settings and reflect them in the URL
         function UpdateSettings() {
 
             // Build the new URL with the updated settings
-            const newUrl = `${window.location.pathname}?caseComplete=${encodeURIComponent(caseCompleteDropDown.value)}&players=${encodeURIComponent(playersDropDown.value)}`;
+            var newUrl = `${window.location.pathname}?caseComplete=${encodeURIComponent(caseCompleteDropDown.value)}&players=${encodeURIComponent(playersDropDown.value)}`;
+
+            // Add debug parameter if the debug flag is on
+            if (userDebugMode) {
+                newUrl += `&debug=${encodeURIComponent(userDebugMode)}`;
+            }
             
             // Update the URL without refreshing the page
             window.history.pushState({ path: newUrl }, '', newUrl);
@@ -395,6 +418,9 @@
         function CheckCaseValid(messagesData, playersData)
         {
 
+            if(userDebugMode)
+                return true;
+
             if(!CheckCaseCompeleteValid(messagesData))
                 return false;
 
@@ -408,6 +434,22 @@
             return true;
 
 
+        }
+
+        function DebugSwitch()
+        {
+            console.log(debugSwitchElement.checked );
+            userDebugMode = (debugSwitchElement.checked);
+
+            debugOutputElement.style.display = userDebugMode ? "inline" : "none";
+
+            caseCompleteDropDown.disabled = userDebugMode;
+            playersDropDown.disabled = userDebugMode;
+
+            UpdateSettings();
+
+            SetText();//The way this is called here means if the switch is switched while SetTExt is running, it will adjust the ID
+            
         }
 
         function CheckCaseCompeleteValid(messagesData)
@@ -558,6 +600,11 @@
                 {
                     caseTitleElement.textContent = "Case "+caseId;
                 }
+
+                if (userDebugMode) {
+                    debugOutputElement.textContent = JSON.stringify(gameCase, null, 2);
+                }
+
 
                 // Set the content of the element
                 

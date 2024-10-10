@@ -153,7 +153,7 @@ console.log("Inserting data into judge_gpt_games:", {
     winner: this.winner,
     timeStart: this.timeStart,
     timeSaved: this.timeSaved,
-    backgroundImage: this.backgroundImage;
+    backgroundImage: this.backgroundImage
 });
 
         // Run the INSERT SQL command

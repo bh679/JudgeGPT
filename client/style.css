@@ -210,3 +210,13 @@ Identity
     height: 20px; /* Match the height of the toggle switch */
     width: 20px; /* Ensure button has the same size width */
 }
+
+#debugOutput {
+    display: none;
+    font-family: monospace; /* Makes the JSON more readable */
+    white-space: pre-wrap;  /* Ensures that lines break nicely within the container */
+    background-color: #f8f8f8; /* Light background for better visibility */
+    padding: 10px;           /* Adds some space around the text */
+    border: 1px solid #ccc;  /* Adds a border to differentiate from the rest of the content */
+    overflow-x: auto;        /* Handles long lines of text without breaking the layout */
+}
