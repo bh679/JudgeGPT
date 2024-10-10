@@ -145,6 +145,13 @@ class BackgroundImages
 
     static async SetBackground(bgImage)
     {
+
+        if(bgImage == "" || bgImage == null) //for backwards compatability on other pages
+        {
+            bgId = Math.floor(Math.random() * backgroundImages.length);
+            bgImage = backgroundImages[bgId];
+        }
+
         if (backgroundImage === bgImage)
             return;
 
