@@ -136,11 +136,20 @@ const backgroundImages = [
 var bgId = 0;
 var url = 'https://brennan.games/JudgeGPT/';
 
+var backgroundImage = "";
+
 class BackgroundImages
 {
 
+    
+
     static async SetBackground(bgImage)
     {
+        if(backgroundImage == bgImage)
+            return;
+
+        backgroundImage = bgImage;
+
         console.log(bgImage);
         //bgId = Math.floor(Math.random() * backgroundImages.length);
         //var bgImage = backgroundImages[bgId];
