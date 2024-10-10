@@ -139,10 +139,10 @@ var url = 'https://brennan.games/JudgeGPT/';
 class BackgroundImages
 {
 
-    static async SetBackground()
+    static async SetBackground(bgImage)
     {
-        bgId = Math.floor(Math.random() * backgroundImages.length);
-        var bgImage = backgroundImages[bgId];
+        //bgId = Math.floor(Math.random() * backgroundImages.length);
+        //var bgImage = backgroundImages[bgId];
         document.body.style.setProperty('--bg-opacity', 0);
 
                 // Create new image object

@@ -315,8 +315,6 @@
 
         UI.Start();
 
-        BackgroundImages.SetBackground();
-
         restartButton.innerText = RandomLines.GetRestartButtonLabel();
         subheading.innerText = RandomLines.GetTagLine();
 
@@ -372,6 +370,10 @@
             client.UpdatePlayerList(data.playerList);
             if (data.winner != "")
                 UI.SetWinner(data.winner);
+
+
+
+            BackgroundImages.SetBackground(data.bg);
         });
         
         socket.on('AiResponse', (data) => {
